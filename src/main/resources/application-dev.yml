@@ -1,0 +1,52 @@
+spring:
+  datasource:
+    druid:
+      #基本属性 url、user、password
+      url: jdbc:mariadb://localhost:3306/am-dev?characterEncoding=utf-8&serverTimezone=UTC
+      username: ruanxuefeng
+      #java -cp druid-1.1.9.jar com.alibaba.druid.filter.config.ConfigTools you_password 加密密码命令
+      #生成public-key和加密后的密码
+      password: GhY3T30MVxj5Lg995Wu034HMtpKBNFnkpage++cM4WpH+rDZRyinQ+Mv5Jc/sHC22VuP8qibgFX0fTVRFDc5mA==
+      connection-properties: config.decrypt=true;config.decrypt.key=${public-key}
+      filter:
+        config:
+          enabled: true
+  data:
+    mongodb:
+      host: localhost
+      database: am-dev
+      option:
+        heartbeat-socket-timeout: 1000
+        socket-timeout: 3000
+        connectTimeout: 3000
+        socket-keep-alive: false
+        min-heartbeat-frequency: 50
+        heartbeat-frequency: 80
+        max-connection-idle-time: 30000
+        heartbeat-connect-timeout: 1000
+  jpa:
+    hibernate:
+      ddl-auto: none
+  redis:
+    host: localhost
+    port: 6479
+    timeout: 1s
+    lettuce:
+      shutdown-timeout: 5s
+      pool:
+        max-idle: 20
+        min-idle: 1
+        max-active: 8
+server:
+  port: 9527
+public-key: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAIGZ7YV84EEM1bLwpMvlrLU0gFsbSMIIesR0+imr/dlzcCC4mIIdziHb+zUuVLd7Pewg28/yE+455rEQQVG1rEUCAwEAAQ==
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+local:
+  file:
+    file-path: D://file/
+    uri: /file
+    request-url: http://localhost:${server.port}
