@@ -36,4 +36,6 @@
     - 基本遵循阿里开发手册
     - 功能少，基本框架，想怎么改就怎么改
 
+配备前端框架：[am-admin](https://gitee.com/ruanxuefeng/am-admin)，在[vue-element-admin](https://github.com/PanJiaChen/vue-element-admin)基础上开发
+
 #### 交流群：854391197
