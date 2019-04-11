@@ -1,7 +1,7 @@
 ## 项目介绍
     简单的后台管理系统。
     - SpringBoot + Mybatis + Druid + MySQL + MongoDB（详见master分支）
-    - SpringBoot + Spring-data-jpa + queryDSL + Druid + MySQL + MongoDB（详见jpa分支，jpa没有使用@ManyToMany之类的注解）
+    - SpringBoot + Spring-data-jpa + queryDSL + Druid + MariaDB + MongoDB（存放操作日志） + Redis（缓存用户权限）
     - JDK1.8+
     - 实现功能：用户管理、角色管理、菜单管理、日志管理、公告管理（websocket实现，对登录用户推送，没有实现点对点和选择性推送）
     
