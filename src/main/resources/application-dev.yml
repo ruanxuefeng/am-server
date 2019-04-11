@@ -2,8 +2,8 @@ spring:
   datasource:
     druid:
       #基本属性 url、user、password
-      url: jdbc:mariadb://localhost:3306/am-dev?characterEncoding=utf-8&serverTimezone=UTC
-      username: ruanxuefeng
+      url: jdbc:mariadb://localhost:3306/am-server?characterEncoding=utf-8&serverTimezone=UTC
+      username: root
       #java -cp druid-1.1.9.jar com.alibaba.druid.filter.config.ConfigTools you_password 加密密码命令
       #生成public-key和加密后的密码
       password: GhY3T30MVxj5Lg995Wu034HMtpKBNFnkpage++cM4WpH+rDZRyinQ+Mv5Jc/sHC22VuP8qibgFX0fTVRFDc5mA==
@@ -29,7 +29,7 @@ spring:
       ddl-auto: none
   redis:
     host: localhost
-    port: 6479
+    port: 6379
     timeout: 1s
     lettuce:
       shutdown-timeout: 5s

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
  * @author 阮雪峰
  * @date 2019/1/16 13:10
  */
-@Repository("userRoleDao")
+@Repository
 public interface UserRoleDao extends JpaRepository<UserRole, Long>, JpaSpecificationExecutor<UserRole> {
     /**
      * 删除用户角色关联

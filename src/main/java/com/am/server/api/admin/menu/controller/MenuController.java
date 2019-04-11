@@ -20,8 +20,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
-
 /**
  *  菜单管理
  * @author 阮雪峰
@@ -34,8 +32,11 @@ import javax.annotation.Resource;
 public class MenuController extends BaseController {
 
 
-    @Resource(name = "menuService")
-    private MenuService menuService;
+    private final MenuService menuService;
+
+    public MenuController(MenuService menuService) {
+        this.menuService = menuService;
+    }
 
     /**
      * 列表

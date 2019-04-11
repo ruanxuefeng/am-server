@@ -21,8 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
-
 /**
  *  角色管理
  * @author 阮雪峰
@@ -34,11 +32,14 @@ import javax.annotation.Resource;
 @RequestMapping(Constant.ADMIN_ROOT + "/role")
 public class RoleController extends BaseController {
 
-    @Resource(name = "roleService")
-    private RoleService roleService;
+    private final RoleService roleService;
 
-    @Resource(name = "menuService")
-    private MenuService menuService;
+    private final MenuService menuService;
+
+    public RoleController(RoleService roleService, MenuService menuService) {
+        this.roleService = roleService;
+        this.menuService = menuService;
+    }
 
     /**
      * 列表

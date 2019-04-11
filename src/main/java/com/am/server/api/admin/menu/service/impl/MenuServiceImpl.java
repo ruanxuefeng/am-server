@@ -7,6 +7,7 @@ import com.am.server.api.admin.menu.service.MenuService;
 import com.am.server.api.admin.user.dao.mongo.UserPermissionCacheDao;
 import com.am.server.advice.update.annotation.Save;
 import com.am.server.api.admin.user.entity.QAdminUser;
+import com.am.server.api.admin.user.service.UserPermissionCacheService;
 import com.am.server.common.annotation.transaction.Commit;
 import com.am.server.common.annotation.transaction.ReadOnly;
 import com.am.server.common.base.page.Page;
@@ -14,6 +15,7 @@ import com.am.server.common.constant.Constant;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -34,11 +36,14 @@ public class MenuServiceImpl implements MenuService {
     @Resource(name = "menuDao")
     private MenuDao menuDao;
 
-    @Resource(name = "mongoUserPermissionCacheDao")
-    private UserPermissionCacheDao userPermissionCacheDao;
+    private final UserPermissionCacheService userPermissionCacheService;
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    public MenuServiceImpl(UserPermissionCacheService userPermissionCacheService) {
+        this.userPermissionCacheService = userPermissionCacheService;
+    }
 
     @ReadOnly
     @Override
@@ -117,7 +122,7 @@ public class MenuServiceImpl implements MenuService {
     public void delete(Menu menu) {
         menuDao.delete(menu);
         menuDao.deleteRelateRoles(menu.getId());
-        userPermissionCacheDao.deleteAll();
+        userPermissionCacheService.removeAll();
     }
 
     @ReadOnly

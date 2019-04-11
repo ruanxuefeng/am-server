@@ -8,6 +8,7 @@ import com.am.server.config.i18n.interceptor.CustomLocaleChangeInterceptor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -80,10 +81,15 @@ public class WebConfig implements WebMvcConfigurer {
         return new I18nMessageImpl();
     }
 
+    @Bean
+    public PermissionInterceptor permissionInterceptor() {
+        return new PermissionInterceptor();
+    }
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new CustomLocaleChangeInterceptor()).addPathPatterns(Constant.ADMIN_ROOT + "/**");
-        registry.addInterceptor(new PermissionInterceptor()).addPathPatterns(Constant.ADMIN_ROOT + "/**");
+        registry.addInterceptor(permissionInterceptor()).addPathPatterns(Constant.ADMIN_ROOT + "/**");
     }
 
 

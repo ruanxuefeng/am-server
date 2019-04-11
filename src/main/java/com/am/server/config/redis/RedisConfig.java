@@ -47,9 +47,9 @@ public class RedisConfig {
     }
 
     @Bean("userPermissionCacheRedisTemplate")
-    public RedisTemplate<Long, List<String>> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
+    public RedisTemplate<String, List<String>> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
 
-        RedisTemplate<Long, List<String>> template = new RedisTemplate<>();
+        RedisTemplate<String, List<String>> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory);
 
         //使用Jackson2JsonRedisSerializer来序列化和反序列化redis的value值

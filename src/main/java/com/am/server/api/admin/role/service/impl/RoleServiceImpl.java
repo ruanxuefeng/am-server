@@ -7,9 +7,9 @@ import com.am.server.api.admin.role.entity.QRoleMenu;
 import com.am.server.api.admin.role.entity.Role;
 import com.am.server.api.admin.role.entity.RoleMenu;
 import com.am.server.api.admin.role.service.RoleService;
-import com.am.server.api.admin.user.dao.mongo.UserPermissionCacheDao;
 import com.am.server.advice.update.annotation.Save;
 import com.am.server.api.admin.user.entity.QAdminUser;
+import com.am.server.api.admin.user.service.UserPermissionCacheService;
 import com.am.server.common.annotation.transaction.Commit;
 import com.am.server.common.annotation.transaction.ReadOnly;
 import com.am.server.common.base.page.Page;
@@ -21,7 +21,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
@@ -36,17 +35,20 @@ import java.util.stream.Collectors;
 @Service("roleService")
 public class RoleServiceImpl implements RoleService {
 
-    @Resource(name = "roleDao")
-    private RoleDao roleDao;
+    private final RoleDao roleDao;
 
-    @Resource
-    private RoleMenuDao roleMenuDao;
+    private final RoleMenuDao roleMenuDao;
 
-    @Resource(name = "mongoUserPermissionCacheDao")
-    private UserPermissionCacheDao userPermissionCacheDao;
+    private final UserPermissionCacheService userPermissionCacheService;
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    public RoleServiceImpl(RoleDao roleDao, RoleMenuDao roleMenuDao, UserPermissionCacheService userPermissionCacheService) {
+        this.roleDao = roleDao;
+        this.roleMenuDao = roleMenuDao;
+        this.userPermissionCacheService = userPermissionCacheService;
+    }
 
     @ReadOnly
     @Override
@@ -101,7 +103,7 @@ public class RoleServiceImpl implements RoleService {
         roleDao.deleteById(role.getId());
         roleDao.deleteRelateUserById(role.getId());
         roleDao.deleteRelateMenuById(role.getId());
-        userPermissionCacheDao.deleteAll();
+        userPermissionCacheService.removeAll();
     }
 
     @ReadOnly

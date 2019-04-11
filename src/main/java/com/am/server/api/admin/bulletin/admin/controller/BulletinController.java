@@ -14,8 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
-
 /**
  * 公告
  * @author 阮雪峰
@@ -27,9 +25,11 @@ import javax.annotation.Resource;
 @RequestMapping(Constant.ADMIN_ROOT + "/bulletin")
 public class BulletinController extends BaseController {
 
-    @Resource(name = "adminBulletinService")
-    private BulletinService bulletinService;
+    private final BulletinService bulletinService;
 
+    public BulletinController(BulletinService bulletinService) {
+        this.bulletinService = bulletinService;
+    }
 
 
     /**

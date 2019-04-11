@@ -1,7 +1,6 @@
 package com.am.server.api.admin.user.controller;
 
 import com.am.server.api.admin.user.entity.AdminUser;
-import com.am.server.api.admin.user.entity.UserPermissionCache;
 import com.am.server.api.admin.user.service.AdminUserService;
 import com.am.server.api.admin.user.service.UserPermissionCacheService;
 import com.am.server.common.base.controller.BaseController;
@@ -9,7 +8,6 @@ import com.am.server.common.base.validator.Login;
 import com.am.server.common.constant.Constant;
 import com.am.server.common.util.DesUtils;
 import com.am.server.common.util.JwtUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -21,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.annotation.Resource;
 
 
 import java.util.Base64;
@@ -41,12 +37,12 @@ public class LoginController extends BaseController {
     private static final String EMAIL_DOES_NOT_EXIST = "login.email.does_not_exist";
     private static final String PASSWORD_ERROR = "login.password.error";
 
-    @Resource(name = "adminUserService")
-    private AdminUserService adminUserService;
+    private final AdminUserService adminUserService;
 
     private final UserPermissionCacheService userPermissionCacheService;
 
-    public LoginController(UserPermissionCacheService userPermissionCacheService) {
+    public LoginController(AdminUserService adminUserService, UserPermissionCacheService userPermissionCacheService) {
+        this.adminUserService = adminUserService;
         this.userPermissionCacheService = userPermissionCacheService;
     }
 

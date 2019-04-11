@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
  * @author 阮雪峰
  * @date 2019/2/13 15:33
  */
-@Repository("roleMenuDao")
+@Repository
 public interface RoleMenuDao extends BaseDao<RoleMenu> {
     /**
      * 删除角色权限管理关系

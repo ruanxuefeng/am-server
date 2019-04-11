@@ -7,14 +7,7 @@ import com.am.server.common.constant.Constant;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.annotation.Resource;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Optional;
 
 /**
  *  日志
@@ -25,8 +18,11 @@ import java.util.Optional;
 @RequestMapping(Constant.ADMIN_ROOT+"/log")
 public class LogController {
 
-    @Resource(name = "logService")
-    private LogService logService;
+    private final LogService logService;
+
+    public LogController(LogService logService) {
+        this.logService = logService;
+    }
 
     /**
      * 分页

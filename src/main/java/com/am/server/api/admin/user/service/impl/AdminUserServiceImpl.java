@@ -2,7 +2,6 @@ package com.am.server.api.admin.user.service.impl;
 
 import com.am.server.api.admin.upload.service.FileUploadService;
 import com.am.server.api.admin.user.dao.jpa.AdminUserDao;
-import com.am.server.api.admin.user.dao.mongo.UserPermissionCacheDao;
 import com.am.server.api.admin.user.dao.jpa.UserRoleDao;
 import com.am.server.api.admin.user.entity.AdminUser;
 import com.am.server.api.admin.user.entity.QAdminUser;
@@ -10,6 +9,7 @@ import com.am.server.api.admin.user.entity.QUserRole;
 import com.am.server.api.admin.user.entity.UserRole;
 import com.am.server.api.admin.user.service.AdminUserService;
 import com.am.server.advice.update.annotation.Save;
+import com.am.server.api.admin.user.service.UserPermissionCacheService;
 import com.am.server.common.annotation.transaction.Commit;
 import com.am.server.common.annotation.transaction.ReadOnly;
 import com.am.server.common.base.page.Page;
@@ -21,10 +21,10 @@ import com.am.server.common.util.StringUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.querydsl.jpa.impl.JPAUpdateClause;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
@@ -39,23 +39,32 @@ import java.util.Optional;
 @Service("adminUserService")
 public class AdminUserServiceImpl implements AdminUserService {
 
+    /**
+     * 密码加密key的长度，
+     */
     private static final int RANDOM_STRING_LENGTH = 512;
+    /**
+     * 存储头像的相对路径
+     */
     private static final String AVATAR_FOLDER = "/avatar/";
 
-    @Resource(name = "adminUserDao")
-    private AdminUserDao adminUserDao;
+    private final AdminUserDao adminUserDao;
 
-    @Resource(name = "mongoUserPermissionCacheDao")
-    private UserPermissionCacheDao userPermissionCacheDao;
+    private final UserPermissionCacheService userPermissionCacheService;
 
-    @Resource(name = "userRoleDao")
-    private UserRoleDao userRoleDao;
+    private final UserRoleDao userRoleDao;
 
-    @Resource(name = "fileUploadService")
-    private FileUploadService fileUploadService;
+    private final FileUploadService fileUploadService;
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    public AdminUserServiceImpl(UserPermissionCacheService userPermissionCacheService, AdminUserDao adminUserDao, UserRoleDao userRoleDao, FileUploadService fileUploadService) {
+        this.userPermissionCacheService = userPermissionCacheService;
+        this.adminUserDao = adminUserDao;
+        this.userRoleDao = userRoleDao;
+        this.fileUploadService = fileUploadService;
+    }
 
     @Override
     public AdminUser login(AdminUser user) {
@@ -147,7 +156,7 @@ public class AdminUserServiceImpl implements AdminUserService {
     @Override
     public void delete(AdminUser user) {
         adminUserDao.deleteById(user.getId());
-        userPermissionCacheDao.deleteById(user.getId());
+        userPermissionCacheService.remove(user.getId());
     }
 
     @ReadOnly
@@ -185,17 +194,28 @@ public class AdminUserServiceImpl implements AdminUserService {
                     list.forEach(item -> userRoles.add(new UserRole(IdUtils.getId(), user.getId(), item)));
 
                     userRoleDao.saveAll(userRoles);
-                    userPermissionCacheDao.deleteAll();
+                    userPermissionCacheService.remove(user.getId());
                 });
     }
 
     @Commit
     @Override
     public void update(AdminUser user, MultipartFile img) {
+        QAdminUser qAdminUser = QAdminUser.adminUser;
+        JPAUpdateClause jpaUpdateClause = new JPAUpdateClause(entityManager, qAdminUser);
         if (img != null && !img.isEmpty()) {
             uploadAvatar(user, img);
+            jpaUpdateClause.set(qAdminUser.avatar, user.getAvatar());
         }
-        adminUserDao.save(user);
+
+        jpaUpdateClause.set(qAdminUser.email, user.getEmail())
+                .set(qAdminUser.name, user.getName())
+                .set(qAdminUser.gender, user.getGender())
+                .set(qAdminUser.username, user.getUsername())
+                .where(qAdminUser.id.eq(user.getId()))
+                .execute();
+
+//        adminUserDao.save(user);
     }
 
     @Override

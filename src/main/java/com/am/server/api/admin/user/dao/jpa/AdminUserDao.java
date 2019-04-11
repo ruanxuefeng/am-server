@@ -15,7 +15,7 @@ import java.util.Optional;
  * @author 阮雪峰
  * @date 2019/1/16 12:07
  */
-@Repository("adminUserDao")
+@Repository
 public interface AdminUserDao extends BaseDao<AdminUser> {
     /**
      * 邮箱查询用户

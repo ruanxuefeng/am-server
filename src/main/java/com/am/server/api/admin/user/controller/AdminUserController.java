@@ -44,8 +44,11 @@ public class AdminUserController extends BaseController {
     private static final String PASSWORD_RESET_SUCCESS = "user.password.reset.success";
     private static final String NOT_ALLOW_DELETE_YOURSELF = "user.not.allow.deleteYourself";
 
-    @Resource(name = "adminUserService")
-    private AdminUserService adminUserService;
+    private final AdminUserService adminUserService;
+
+    public AdminUserController(AdminUserService adminUserService) {
+        this.adminUserService = adminUserService;
+    }
 
     /**
      * 列表

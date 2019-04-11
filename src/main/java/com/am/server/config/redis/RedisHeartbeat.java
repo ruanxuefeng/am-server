@@ -20,9 +20,9 @@ import java.util.List;
 @Component
 public class RedisHeartbeat {
 
-    private final RedisTemplate<Long, List<String>> redisTemplate;
+    private final RedisTemplate<String, List<String>> redisTemplate;
 
-    public RedisHeartbeat(RedisTemplate<Long, List<String>> redisTemplate) {
+    public RedisHeartbeat(RedisTemplate<String, List<String>> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
 

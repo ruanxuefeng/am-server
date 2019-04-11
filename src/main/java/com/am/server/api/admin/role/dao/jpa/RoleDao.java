@@ -13,7 +13,7 @@ import java.util.List;
  * @author 阮雪峰
  * @date 2019/1/16 13:54
  */
-@Repository("roleDao")
+@Repository
 public interface RoleDao extends BaseDao<Role> {
 
     /**

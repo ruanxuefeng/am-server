@@ -6,20 +6,13 @@ import com.am.server.api.admin.log.service.LogService;
 import com.am.server.advice.update.annotation.Save;
 import com.am.server.common.base.page.Page;
 import com.am.server.common.util.MongoUtil;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.temporal.TemporalField;
-import java.util.Locale;
 import java.util.Optional;
 
 /**
@@ -30,11 +23,14 @@ import java.util.Optional;
 @Service("logService")
 public class LogServiceImpl implements LogService {
 
-    @Resource(name = "adminLogDao")
-    private LogDao logDao;
+    private final LogDao logDao;
 
-    @Resource(name = "mongoTemplate")
-    private MongoTemplate mongoTemplate;
+    private final MongoTemplate mongoTemplate;
+
+    public LogServiceImpl(LogDao logDao, MongoTemplate mongoTemplate) {
+        this.logDao = logDao;
+        this.mongoTemplate = mongoTemplate;
+    }
 
     @Save
     @Override

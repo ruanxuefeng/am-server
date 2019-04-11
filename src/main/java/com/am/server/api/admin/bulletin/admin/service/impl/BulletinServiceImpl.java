@@ -19,12 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.DelayQueue;
@@ -36,12 +34,10 @@ import java.util.concurrent.DelayQueue;
 @Service("adminBulletinService")
 public class BulletinServiceImpl implements BulletinService {
 
-    @Resource(name = "adminBulletinDao")
-    private BulletinDao bulletinDao;
+    private final BulletinDao bulletinDao;
 
 
-    @Resource(name = "delayQueue")
-    private DelayQueue<BulletinExpiredDelayedImpl> delayQueue;
+    private final DelayQueue<BulletinExpiredDelayedImpl> delayQueue;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -49,7 +45,9 @@ public class BulletinServiceImpl implements BulletinService {
     private final SimpMessagingTemplate simpMessagingTemplate;
 
     @Autowired
-    public BulletinServiceImpl(SimpMessagingTemplate simpMessagingTemplate) {
+    public BulletinServiceImpl(BulletinDao bulletinDao, DelayQueue<BulletinExpiredDelayedImpl> delayQueue, SimpMessagingTemplate simpMessagingTemplate) {
+        this.bulletinDao = bulletinDao;
+        this.delayQueue = delayQueue;
         this.simpMessagingTemplate = simpMessagingTemplate;
     }
 

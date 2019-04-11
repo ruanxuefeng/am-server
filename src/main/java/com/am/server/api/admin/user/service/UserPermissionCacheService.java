@@ -49,4 +49,6 @@ public interface UserPermissionCacheService {
      * @author 阮雪峰
      */
     void remove(Long uid);
+
+    void removeAll();
 }

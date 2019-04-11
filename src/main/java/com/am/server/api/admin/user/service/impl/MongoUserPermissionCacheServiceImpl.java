@@ -4,7 +4,6 @@ import com.am.server.api.admin.user.dao.jpa.AdminUserDao;
 import com.am.server.api.admin.user.dao.mongo.UserPermissionCacheDao;
 import com.am.server.api.admin.user.entity.UserPermissionCache;
 import com.am.server.api.admin.user.service.UserPermissionCacheService;
-import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -17,8 +16,11 @@ import java.util.Optional;
  */
 public class MongoUserPermissionCacheServiceImpl implements UserPermissionCacheService {
 
-    @Resource(name = "mongoUserPermissionCacheDao")
-    private UserPermissionCacheDao userPermissionCacheDao;
+    private final UserPermissionCacheDao userPermissionCacheDao;
+
+    public MongoUserPermissionCacheServiceImpl(UserPermissionCacheDao userPermissionCacheDao) {
+        this.userPermissionCacheDao = userPermissionCacheDao;
+    }
 
     @Resource
     private AdminUserDao adminUserDao;
@@ -55,5 +57,10 @@ public class MongoUserPermissionCacheServiceImpl implements UserPermissionCacheS
     @Override
     public void remove(Long uid) {
         userPermissionCacheDao.deleteById(uid);
+    }
+
+    @Override
+    public void removeAll() {
+        userPermissionCacheDao.deleteAll();
     }
 }

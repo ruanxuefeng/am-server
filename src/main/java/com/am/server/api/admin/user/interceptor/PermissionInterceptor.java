@@ -8,6 +8,7 @@ import com.am.server.api.admin.user.exception.TokenExpiredException;
 import com.am.server.api.admin.user.uitl.UserUtils;
 import com.am.server.common.constant.Constant;
 import com.am.server.common.util.JwtUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -25,7 +26,7 @@ import java.util.Optional;
  */
 public class PermissionInterceptor implements HandlerInterceptor {
 
-    @Resource(name = "userPermissionCacheService")
+    @Autowired
     private UserPermissionCacheService userPermissionCacheService;
 
     private static final String OPTION = "OPTIONS";
