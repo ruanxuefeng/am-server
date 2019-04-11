@@ -47,6 +47,6 @@ server:
 public-key: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAIGZ7YV84EEM1bLwpMvlrLU0gFsbSMIIesR0+imr/dlzcCC4mIIdziHb+zUuVLd7Pewg28/yE+455rEQQVG1rEUCAwEAAQ==
 local:
   file:
-    file-path: /home/file
+    file-path: /home/file/
     uri: /file
     request-url: http://am-server.ruanxuefeng.xyz
