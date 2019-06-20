@@ -1,4 +1,4 @@
-package com.am.server.api.admin.user.entity;
+package com.am.server.api.admin.user.pojo;
 
 import com.am.server.api.admin.role.entity.Role;
 import com.am.server.common.base.entity.BaseEntity;
@@ -10,6 +10,7 @@ import com.am.server.common.base.validator.Save;
 import com.am.server.common.base.validator.Update;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -17,7 +18,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.hibernate.annotations.SQLUpdate;
+import lombok.experimental.Accessors;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -37,8 +38,10 @@ import java.util.List;
 @Table(name = "admin_user")
 @Entity
 @EqualsAndHashCode(exclude = {"id"})
+@Accessors(chain = true)
 @Data
-public class AdminUser implements BaseEntity {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class AdminUser {
 
     @NotNull(message = "common.delete.primaryKey.null", groups = {Delete.class})
     @NotNull(message = "common.operate.primaryKey.null", groups = {Id.class})

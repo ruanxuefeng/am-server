@@ -1,31 +1,36 @@
 package com.am.server.api.admin.user.service;
 
-import com.am.server.api.admin.user.entity.AdminUser;
-import com.am.server.common.base.page.Page;
+import com.am.server.api.admin.user.pojo.AdminUser;
+import com.am.server.api.admin.user.pojo.param.SaveAdminUserAO;
+import com.am.server.api.admin.user.pojo.param.ListQuery;
+import com.am.server.api.admin.user.pojo.param.LoginQuery;
+import com.am.server.api.admin.user.pojo.param.UpdateAdminUserAO;
+import com.am.server.common.base.entity.PageVO;
 import com.am.server.common.base.service.BaseService;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 /**
- *
  * @author 阮雪峰
  * @date 2018/7/24 16:46
  */
 public interface AdminUserService extends BaseService {
     /**
      * 登录
+     *
      * @param user 用户信息
-     * @return com.am.server.api.admin.user.entity.AdminUser
+     * @return com.am.server.api.admin.user.pojo.AdminUser
      * @author 阮雪峰
      * @date 2018/8/23 8:36
      */
-    AdminUser login(AdminUser user);
+    AdminUser login(LoginQuery query);
 
     /**
      * 获取用户信息
+     *
      * @param id 用户信息
-     * @return com.am.server.api.admin.user.entity.AdminUser
+     * @return com.am.server.api.admin.user.pojo.AdminUser
      * @author 阮雪峰
      * @date 2018/8/23 8:36
      */
@@ -33,24 +38,26 @@ public interface AdminUserService extends BaseService {
 
     /**
      * 分页
+     *
      * @param page 分页
      * @param user 用户信息
      * @author 阮雪峰
      * @date 2018/7/25 15:51
      */
-    void list(Page<AdminUser> page, AdminUser user);
+    PageVO<AdminUser> list(ListQuery listQuery);
 
     /**
      * 新增
+     *
      * @param user 用户信息
-     * @param img
      * @author 阮雪峰
      * @date 2018/7/25 15:51
      */
-    void save(AdminUser user, MultipartFile img);
+    void save(SaveAdminUserAO user);
 
     /**
      * 删除
+     *
      * @param user 用户信息
      * @author 阮雪峰
      * @date 2018/7/25 16:23
@@ -59,15 +66,17 @@ public interface AdminUserService extends BaseService {
 
     /**
      * 邮箱是否已被使用
-     * @param user 用户信息
+     *
+     * @param email email
      * @return boolean
      * @author 阮雪峰
      * @date 2018/7/25 16:39
      */
-    boolean isEmailExist(AdminUser user);
+    Boolean isEmailExist(String email);
 
     /**
      * 重置密码
+     *
      * @param user 用户信息
      * @author 阮雪峰
      * @date 2018/7/25 17:03
@@ -76,6 +85,7 @@ public interface AdminUserService extends BaseService {
 
     /**
      * 修改角色
+     *
      * @param user 用户信息
      * @date 2018/7/27 15:56
      */
@@ -83,17 +93,18 @@ public interface AdminUserService extends BaseService {
 
     /**
      * 更新用户信息
+     *
      * @param user 用户信息
-     * @param img
      * @author 阮雪峰
      * @date 2018/8/3 16:55
      */
-    void update(AdminUser user, MultipartFile img);
+    void update(UpdateAdminUserAO user);
 
     /**
-     *findById
+     * findById
+     *
      * @param id id
-     * @return com.am.server.api.admin.user.entity.AdminUser
+     * @return com.am.server.api.admin.user.pojo.AdminUser
      * @author 阮雪峰
      * @date 2019/2/14 16:04
      */
@@ -101,6 +112,7 @@ public interface AdminUserService extends BaseService {
 
     /**
      * 查询角色id list
+     *
      * @param user user
      * @return java.util.List<java.lang.Long>
      * @date 2019/4/10 9:24
@@ -108,5 +120,29 @@ public interface AdminUserService extends BaseService {
      */
     List<Long> findRoleIdList(AdminUser user);
 
-    Boolean isUsernameExist(AdminUser user);
+    /**
+     * 在所有的用户中，判断用户名是否存在
+     *
+     * @param username username
+     * @return Boolean
+     */
+    Boolean isUsernameExist(String username);
+
+    /**
+     * 排除当前用户后，查询邮箱是否存在
+     *
+     * @param email email
+     * @param id    id
+     * @return Boolean
+     */
+    Boolean isEmailExistWithId(String email, Long id);
+
+    /**
+     * 排除当前用户后，查询用户名是否存在
+     *
+     * @param username username
+     * @param id    id
+     * @return Boolean
+     */
+    Boolean isUsernameExistWithId(String username, Long id);
 }

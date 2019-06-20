@@ -1,4 +1,4 @@
-package com.am.server.api.admin.user.entity;
+package com.am.server.api.admin.user.pojo;
 
 import lombok.Data;
 

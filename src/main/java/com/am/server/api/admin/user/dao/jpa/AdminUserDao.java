@@ -1,6 +1,6 @@
 package com.am.server.api.admin.user.dao.jpa;
 
-import com.am.server.api.admin.user.entity.AdminUser;
+import com.am.server.api.admin.user.pojo.AdminUser;
 import com.am.server.common.base.dao.BaseDao;
 import com.am.server.common.base.enumerate.Gender;
 import org.springframework.data.jpa.repository.Modifying;

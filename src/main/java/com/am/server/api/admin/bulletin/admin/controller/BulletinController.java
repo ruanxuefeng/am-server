@@ -5,7 +5,7 @@ import com.am.server.api.admin.bulletin.admin.service.BulletinService;
 import com.am.server.api.admin.log.aspect.annotation.WriteLog;
 import com.am.server.api.admin.user.interceptor.annotation.Permission;
 import com.am.server.common.base.controller.BaseController;
-import com.am.server.common.base.page.Page;
+import com.am.server.common.base.entity.PageVO;
 import com.am.server.common.base.validator.Delete;
 import com.am.server.common.base.validator.Id;
 import com.am.server.common.base.validator.Save;
@@ -41,7 +41,7 @@ public class BulletinController extends BaseController {
      * @date 2018/11/13 11:02
      */
     @GetMapping("/list")
-    public ResponseEntity list(Page<Bulletin> page, Bulletin bulletin) {
+    public ResponseEntity list(PageVO<Bulletin> page, Bulletin bulletin) {
         bulletinService.list(page, bulletin);
         return ResponseEntity.ok(page);
     }

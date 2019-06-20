@@ -1,8 +1,9 @@
-package com.am.server.common.base.page;
+package com.am.server.common.base.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.util.List;
@@ -12,20 +13,21 @@ import java.util.List;
  * @author 阮雪峰
  * @date 2018/7/26 14:40
  */
+@Accessors(chain = true)
 @Data
-public class Page<T> implements Serializable {
+public class PageVO<T> implements Serializable {
     /**
      * 当前页
      */
-    private int page = 1;
+    private Integer page;
     /**
      * 每页记录数
      */
-    private int pageSize = 20;
+    private Integer pageSize = 20;
     /**
      * 总记录数
      */
-    private int total;
+    private Integer total;
 
     /**
      * 查询的数据

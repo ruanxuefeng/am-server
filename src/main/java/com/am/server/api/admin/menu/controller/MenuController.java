@@ -5,7 +5,7 @@ import com.am.server.api.admin.menu.entity.Menu;
 import com.am.server.api.admin.menu.service.MenuService;
 import com.am.server.api.admin.user.interceptor.annotation.Permission;
 import com.am.server.common.base.controller.BaseController;
-import com.am.server.common.base.page.Page;
+import com.am.server.common.base.entity.PageVO;
 import com.am.server.common.base.validator.Delete;
 import com.am.server.common.base.validator.Id;
 import com.am.server.common.base.validator.Save;
@@ -21,7 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- *  菜单管理
+ * 菜单管理
+ *
  * @author 阮雪峰
  * @date 2018/7/30 14:57
  */
@@ -40,6 +41,7 @@ public class MenuController extends BaseController {
 
     /**
      * 列表
+     *
      * @param page 分页
      * @param menu 菜单信息
      * @return org.springframework.http.ResponseEntity
@@ -47,13 +49,14 @@ public class MenuController extends BaseController {
      * @date 2018/7/30 15:00
      */
     @GetMapping("/list")
-    public ResponseEntity list(Page<Menu> page, Menu menu) {
+    public ResponseEntity list(PageVO<Menu> page, Menu menu) {
         menuService.list(page, menu);
         return new ResponseEntity<>(page, HttpStatus.OK);
     }
 
     /**
      * 新增
+     *
      * @param menu 菜单信息
      * @return org.springframework.http.ResponseEntity
      * @author 阮雪峰
@@ -68,6 +71,7 @@ public class MenuController extends BaseController {
 
     /**
      * 详情
+     *
      * @param menu 菜单信息
      * @return org.springframework.http.ResponseEntity
      * @author 阮雪峰
@@ -80,6 +84,7 @@ public class MenuController extends BaseController {
 
     /**
      * 修改
+     *
      * @param menu 菜单信息
      * @return org.springframework.http.ResponseEntity
      * @author 阮雪峰
@@ -94,6 +99,7 @@ public class MenuController extends BaseController {
 
     /**
      * 删除
+     *
      * @param menu 菜单信息
      * @return org.springframework.http.ResponseEntity
      * @author 阮雪峰
@@ -101,13 +107,14 @@ public class MenuController extends BaseController {
      */
     @WriteLog("删除")
     @PostMapping("/delete")
-    public ResponseEntity delete(@Validated(Delete.class) Menu menu) {
+    public ResponseEntity delete(@Validated(Delete.class) @RequestBody Menu menu) {
         menuService.delete(menu);
         return ResponseEntity.ok(message.get(DELETE_SUCCESS));
     }
 
     /**
      * 查询父级
+     *
      * @return org.springframework.http.ResponseEntity
      * @author 阮雪峰
      * @date 2018/7/30 16:07

@@ -29,7 +29,6 @@ import java.util.Locale;
  * @date 2018/7/24 10:42
  */
 @Configuration
-@EnableWebMvc
 public class WebConfig implements WebMvcConfigurer {
 
     /**

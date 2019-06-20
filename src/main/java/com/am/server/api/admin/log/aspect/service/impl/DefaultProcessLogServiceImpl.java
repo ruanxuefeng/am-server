@@ -4,7 +4,7 @@ import com.am.server.api.admin.log.aspect.annotation.WriteLog;
 import com.am.server.api.admin.log.aspect.service.ProcessLogService;
 import com.am.server.api.admin.log.entity.Log;
 import com.am.server.api.admin.log.service.LogService;
-import com.am.server.api.admin.user.entity.AdminUser;
+import com.am.server.api.admin.user.pojo.AdminUser;
 import com.am.server.api.admin.user.exception.TokenExpiredException;
 import com.am.server.api.admin.user.exception.UserNotExistException;
 import com.am.server.api.admin.user.service.AdminUserService;

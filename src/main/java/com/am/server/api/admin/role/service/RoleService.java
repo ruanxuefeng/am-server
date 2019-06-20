@@ -1,7 +1,7 @@
 package com.am.server.api.admin.role.service;
 
 import com.am.server.api.admin.role.entity.Role;
-import com.am.server.common.base.page.Page;
+import com.am.server.common.base.entity.PageVO;
 import com.am.server.common.base.service.BaseService;
 
 import java.util.List;
@@ -20,7 +20,7 @@ public interface RoleService extends BaseService {
      * @author 阮雪峰
      * @date 2018/7/27 10:36
      */
-    void list(Page<Role> page, Role role);
+    void list(PageVO<Role> page, Role role);
 
     /**
      * 新增

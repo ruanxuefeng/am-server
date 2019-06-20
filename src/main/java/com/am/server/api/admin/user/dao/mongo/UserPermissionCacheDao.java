@@ -1,9 +1,8 @@
 package com.am.server.api.admin.user.dao.mongo;
 
-import com.am.server.api.admin.user.entity.UserPermissionCache;
+import com.am.server.api.admin.user.pojo.UserPermissionCache;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 
 /**
  *  用户权限缓存

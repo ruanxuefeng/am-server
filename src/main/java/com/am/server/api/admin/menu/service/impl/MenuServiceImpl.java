@@ -4,18 +4,16 @@ import com.am.server.api.admin.menu.dao.jpa.MenuDao;
 import com.am.server.api.admin.menu.entity.Menu;
 import com.am.server.api.admin.menu.entity.QMenu;
 import com.am.server.api.admin.menu.service.MenuService;
-import com.am.server.api.admin.user.dao.mongo.UserPermissionCacheDao;
 import com.am.server.advice.update.annotation.Save;
-import com.am.server.api.admin.user.entity.QAdminUser;
+import com.am.server.api.admin.user.pojo.QAdminUser;
 import com.am.server.api.admin.user.service.UserPermissionCacheService;
 import com.am.server.common.annotation.transaction.Commit;
 import com.am.server.common.annotation.transaction.ReadOnly;
-import com.am.server.common.base.page.Page;
+import com.am.server.common.base.entity.PageVO;
 import com.am.server.common.constant.Constant;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -47,7 +45,7 @@ public class MenuServiceImpl implements MenuService {
 
     @ReadOnly
     @Override
-    public void list(Page<Menu> page, Menu menu) {
+    public void list(PageVO<Menu> page, Menu menu) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
         QMenu qMenu = QMenu.menu;
         QMenu qParent = new QMenu("parent");

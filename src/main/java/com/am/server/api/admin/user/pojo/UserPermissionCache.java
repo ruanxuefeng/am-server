@@ -1,8 +1,7 @@
-package com.am.server.api.admin.user.entity;
+package com.am.server.api.admin.user.pojo;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 

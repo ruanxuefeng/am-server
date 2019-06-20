@@ -4,8 +4,8 @@ import com.am.server.api.admin.log.dao.mongo.LogDao;
 import com.am.server.api.admin.log.entity.Log;
 import com.am.server.api.admin.log.service.LogService;
 import com.am.server.advice.update.annotation.Save;
-import com.am.server.common.base.page.Page;
-import com.am.server.common.util.MongoUtil;
+import com.am.server.common.base.entity.PageVO;
+import com.am.server.common.util.MongoUtils;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -39,7 +39,7 @@ public class LogServiceImpl implements LogService {
     }
 
     @Override
-    public void list(Page<Log> page, Log log) {
+    public void list(PageVO<Log> page, Log log) {
 
         Query query = new Query()
                 .with(new Sort(Sort.Direction.DESC, "id"))
@@ -64,15 +64,15 @@ public class LogServiceImpl implements LogService {
 
         optional.map(Log::getName)
                 .filter(name -> !name.isEmpty())
-                .ifPresent(name -> query.addCriteria(new Criteria("name").regex(MongoUtil.getRegx(log.getName()))));
+                .ifPresent(name -> query.addCriteria(new Criteria("name").regex(MongoUtils.getRegx(log.getName()))));
 
         optional.map(Log::getMenu)
                 .filter(menu -> !menu.isEmpty())
-                .ifPresent(menu -> query.addCriteria(new Criteria("menu").regex(MongoUtil.getRegx(log.getMenu()))));
+                .ifPresent(menu -> query.addCriteria(new Criteria("menu").regex(MongoUtils.getRegx(log.getMenu()))));
 
         optional.map(Log::getOperate)
                 .filter(operate -> !operate.isEmpty())
-                .ifPresent(operate -> query.addCriteria(new Criteria("operate").regex(MongoUtil.getRegx(log.getOperate()))));
+                .ifPresent(operate -> query.addCriteria(new Criteria("operate").regex(MongoUtils.getRegx(log.getOperate()))));
 
         page.setRows(mongoTemplate.find(query, Log.class));
         page.setTotal((int) mongoTemplate.count(query, Log.class));

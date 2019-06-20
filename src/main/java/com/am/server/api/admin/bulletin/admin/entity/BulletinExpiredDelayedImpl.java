@@ -35,7 +35,7 @@ public class BulletinExpiredDelayedImpl implements Delayed {
         if (o instanceof BulletinExpiredDelayedImpl) {
             return this.executeTime.compareTo(((BulletinExpiredDelayedImpl) o).getExecuteTime());
         } else {
-            throw new RuntimeException("不是com.am.server.api.admin.bulletin.admin.entity.BulletinExpiredDelayedImpl");
+            throw new RuntimeException("不是com.am.server.api.admin.bulletin.admin.pojo.BulletinExpiredDelayedImpl");
         }
     }
 }

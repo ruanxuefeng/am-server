@@ -3,16 +3,19 @@ package com.am.server.api.admin.user.service.impl;
 import com.am.server.api.admin.upload.service.FileUploadService;
 import com.am.server.api.admin.user.dao.jpa.AdminUserDao;
 import com.am.server.api.admin.user.dao.jpa.UserRoleDao;
-import com.am.server.api.admin.user.entity.AdminUser;
-import com.am.server.api.admin.user.entity.QAdminUser;
-import com.am.server.api.admin.user.entity.QUserRole;
-import com.am.server.api.admin.user.entity.UserRole;
+import com.am.server.api.admin.user.pojo.AdminUser;
+import com.am.server.api.admin.user.pojo.QAdminUser;
+import com.am.server.api.admin.user.pojo.QUserRole;
+import com.am.server.api.admin.user.pojo.UserRole;
+import com.am.server.api.admin.user.pojo.param.SaveAdminUserAO;
+import com.am.server.api.admin.user.pojo.param.ListQuery;
+import com.am.server.api.admin.user.pojo.param.LoginQuery;
+import com.am.server.api.admin.user.pojo.param.UpdateAdminUserAO;
 import com.am.server.api.admin.user.service.AdminUserService;
-import com.am.server.advice.update.annotation.Save;
 import com.am.server.api.admin.user.service.UserPermissionCacheService;
 import com.am.server.common.annotation.transaction.Commit;
 import com.am.server.common.annotation.transaction.ReadOnly;
-import com.am.server.common.base.page.Page;
+import com.am.server.common.base.entity.PageVO;
 import com.am.server.common.constant.Constant;
 import com.am.server.common.util.DesUtils;
 import com.am.server.common.util.FileUtils;
@@ -27,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -67,8 +71,8 @@ public class AdminUserServiceImpl implements AdminUserService {
     }
 
     @Override
-    public AdminUser login(AdminUser user) {
-        return adminUserDao.findByUsername(user.getUsername()).orElse(null);
+    public AdminUser login(LoginQuery query) {
+        return adminUserDao.findByUsername(query.getUsername()).orElse(null);
     }
 
     @ReadOnly
@@ -81,7 +85,9 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     @ReadOnly
     @Override
-    public void list(Page<AdminUser> page, AdminUser user) {
+    public PageVO<AdminUser> list(ListQuery listQuery) {
+        PageVO<AdminUser> page = new PageVO<AdminUser>().setPageSize(listQuery.getPageSize()).setPage(listQuery.getPage());
+
         JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
         QAdminUser qAdminUser = QAdminUser.adminUser;
         QAdminUser creator = new QAdminUser("creator");
@@ -102,37 +108,41 @@ public class AdminUserServiceImpl implements AdminUserService {
                 .from(qAdminUser)
                 .leftJoin(creator).on(qAdminUser.creator.eq(creator.id))
                 .offset(page.getCol())
-                .limit(page.getPageSize())
+                .limit(listQuery.getPageSize())
                 .orderBy(qAdminUser.id.desc());
 
-        Optional<AdminUser> userOptional = Optional.of(user);
+        Optional<ListQuery> userOptional = Optional.of(listQuery);
 
-        userOptional.map(AdminUser::getName)
+        userOptional.map(ListQuery::getName)
                 .filter(name -> !name.isEmpty())
                 .ifPresent(name -> query.where(qAdminUser.name.like("%" + name + "%")));
 
-        userOptional.map(AdminUser::getEmail)
+        userOptional.map(ListQuery::getEmail)
                 .filter(email -> !email.isEmpty())
                 .ifPresent(email -> query.where(qAdminUser.email.like("%" + email + "%")));
 
-        userOptional.map(AdminUser::getUsername)
+        userOptional.map(ListQuery::getUsername)
                 .filter(username -> !username.isEmpty())
                 .ifPresent(username -> query.where(qAdminUser.username.like("%" + username + "%")));
 
-
-        page.setTotal((int) query.fetchCount());
-        page.setRows(query.fetch());
+        page.setTotal((int) query.fetchCount()).setRows(query.fetch());
+        return page;
     }
 
-    @Save
     @Commit
     @Override
-    public void save(AdminUser user, MultipartFile img) {
-
-        uploadAvatar(user, img);
-
-        user.setKey(StringUtils.getRandomStr(RANDOM_STRING_LENGTH));
-        user.setPassword(DesUtils.encrypt(Constant.INITIAL_PASSWORD, user.getKey()));
+    public void save(SaveAdminUserAO adminUser) {
+        String key = StringUtils.getRandomStr(RANDOM_STRING_LENGTH);
+        Long id = IdUtils.getId();
+        AdminUser user = new AdminUser()
+                .setId(id)
+                .setUsername(adminUser.getUsername())
+                .setCreateTime(LocalDateTime.now())
+                .setEmail(adminUser.getEmail())
+                .setGender(adminUser.getGender())
+                .setAvatar(uploadAvatar(id, adminUser.getImg()))
+                .setKey(key)
+                .setPassword(DesUtils.encrypt(Constant.INITIAL_PASSWORD, key));
 
         adminUserDao.save(user);
     }
@@ -145,11 +155,11 @@ public class AdminUserServiceImpl implements AdminUserService {
      * @author 阮雪峰
      * @date 2019/2/18 14:31
      */
-    private void uploadAvatar(AdminUser user, MultipartFile avatar) {
-        String key = AVATAR_FOLDER + user.getId()
+    private String uploadAvatar(Long id, MultipartFile avatar) {
+        String key = AVATAR_FOLDER + id
                 + FileUtils.getFileSuffix(Objects.requireNonNull(avatar.getOriginalFilename()));
 
-        user.setAvatar(fileUploadService.upload(avatar, key));
+        return fileUploadService.upload(avatar, key);
     }
 
     @Commit
@@ -161,12 +171,8 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     @ReadOnly
     @Override
-    public boolean isEmailExist(AdminUser user) {
-        if (Optional.of(user).map(AdminUser::getId).isPresent()) {
-            return adminUserDao.findByIdNotAndEmail(user.getId(), user.getEmail()).isPresent();
-        } else {
-            return adminUserDao.findByEmail(user.getEmail()).isPresent();
-        }
+    public Boolean isEmailExist(String email) {
+        return adminUserDao.findByEmail(email).isPresent();
     }
 
     @Commit
@@ -200,12 +206,11 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     @Commit
     @Override
-    public void update(AdminUser user, MultipartFile img) {
+    public void update(UpdateAdminUserAO user) {
         QAdminUser qAdminUser = QAdminUser.adminUser;
         JPAUpdateClause jpaUpdateClause = new JPAUpdateClause(entityManager, qAdminUser);
-        if (img != null && !img.isEmpty()) {
-            uploadAvatar(user, img);
-            jpaUpdateClause.set(qAdminUser.avatar, user.getAvatar());
+        if (user.getImg() != null && !user.getImg().isEmpty()) {
+            jpaUpdateClause.set(qAdminUser.avatar, uploadAvatar(user.getId(), user.getImg()));
         }
 
         jpaUpdateClause.set(qAdminUser.email, user.getEmail())
@@ -214,8 +219,6 @@ public class AdminUserServiceImpl implements AdminUserService {
                 .set(qAdminUser.username, user.getUsername())
                 .where(qAdminUser.id.eq(user.getId()))
                 .execute();
-
-//        adminUserDao.save(user);
     }
 
     @Override
@@ -235,11 +238,17 @@ public class AdminUserServiceImpl implements AdminUserService {
     }
 
     @Override
-    public Boolean isUsernameExist(AdminUser user) {
-        if (Optional.of(user).map(AdminUser::getId).isPresent()) {
-            return adminUserDao.findByIdNotAndUsername(user.getId(), user.getUsername()).isPresent();
-        } else {
-            return adminUserDao.findByUsername(user.getUsername()).isPresent();
-        }
+    public Boolean isUsernameExist(String username) {
+        return adminUserDao.findByUsername(username).isPresent();
+    }
+
+    @Override
+    public Boolean isEmailExistWithId(String email, Long id) {
+        return adminUserDao.findByIdNotAndEmail(id, email).isPresent();
+    }
+
+    @Override
+    public Boolean isUsernameExistWithId(String username, Long id) {
+        return adminUserDao.findByIdNotAndUsername(id, username).isPresent();
     }
 }

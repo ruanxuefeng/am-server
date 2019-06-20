@@ -2,7 +2,7 @@ package com.am.server.api.admin.user.service.impl;
 
 import com.am.server.api.admin.user.dao.jpa.AdminUserDao;
 import com.am.server.api.admin.user.dao.mongo.UserPermissionCacheDao;
-import com.am.server.api.admin.user.entity.UserPermissionCache;
+import com.am.server.api.admin.user.pojo.UserPermissionCache;
 import com.am.server.api.admin.user.service.UserPermissionCacheService;
 
 import javax.annotation.Resource;

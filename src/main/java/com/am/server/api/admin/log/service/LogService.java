@@ -1,7 +1,7 @@
 package com.am.server.api.admin.log.service;
 
 import com.am.server.api.admin.log.entity.Log;
-import com.am.server.common.base.page.Page;
+import com.am.server.common.base.entity.PageVO;
 
 /**
  *
@@ -24,5 +24,5 @@ public interface LogService {
      * @author 阮雪峰
      * @date 2018/9/17 9:30
      */
-    void list(Page<Log> page, Log log);
+    void list(PageVO<Log> page, Log log);
 }

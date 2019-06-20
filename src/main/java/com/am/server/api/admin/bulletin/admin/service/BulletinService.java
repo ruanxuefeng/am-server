@@ -1,7 +1,7 @@
 package com.am.server.api.admin.bulletin.admin.service;
 
 import com.am.server.api.admin.bulletin.admin.entity.Bulletin;
-import com.am.server.common.base.page.Page;
+import com.am.server.common.base.entity.PageVO;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ public interface BulletinService {
      * @author 阮雪峰
      * @date 2018/11/13 14:00
      */
-    void list(Page<Bulletin> page, Bulletin bulletin);
+    void list(PageVO<Bulletin> page, Bulletin bulletin);
 
     /**
      * save

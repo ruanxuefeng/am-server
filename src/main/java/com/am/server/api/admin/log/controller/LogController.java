@@ -2,7 +2,7 @@ package com.am.server.api.admin.log.controller;
 
 import com.am.server.api.admin.log.entity.Log;
 import com.am.server.api.admin.log.service.LogService;
-import com.am.server.common.base.page.Page;
+import com.am.server.common.base.entity.PageVO;
 import com.am.server.common.constant.Constant;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,7 +33,7 @@ public class LogController {
      * @date 2018/8/22 9:44
      */
     @GetMapping("list")
-    public ResponseEntity list(Page<Log> page, Log log) {
+    public ResponseEntity list(PageVO<Log> page, Log log) {
         logService.list(page, log);
         return ResponseEntity.ok(page);
     }

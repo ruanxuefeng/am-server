@@ -6,7 +6,7 @@ import com.am.server.api.admin.role.entity.Role;
 import com.am.server.api.admin.role.service.RoleService;
 import com.am.server.api.admin.user.interceptor.annotation.Permission;
 import com.am.server.common.base.controller.BaseController;
-import com.am.server.common.base.page.Page;
+import com.am.server.common.base.entity.PageVO;
 import com.am.server.common.base.validator.Delete;
 import com.am.server.common.base.validator.Id;
 import com.am.server.common.base.validator.Save;
@@ -50,7 +50,7 @@ public class RoleController extends BaseController {
      * @date 2018/7/27 10:33
      */
     @GetMapping("/list")
-    public ResponseEntity list(Page<Role> page, Role role) {
+    public ResponseEntity list(PageVO<Role> page, Role role) {
         roleService.list(page, role);
         return new ResponseEntity<>(page, HttpStatus.OK);
     }
@@ -92,7 +92,7 @@ public class RoleController extends BaseController {
      */
     @WriteLog("删除")
     @PostMapping("/delete")
-    public ResponseEntity delete(@Validated(Delete.class) Role role) {
+    public ResponseEntity delete(@Validated(Delete.class) @RequestBody Role role) {
         roleService.delete(role);
         return new ResponseEntity<>(message.get(DELETE_SUCCESS), HttpStatus.OK);
     }

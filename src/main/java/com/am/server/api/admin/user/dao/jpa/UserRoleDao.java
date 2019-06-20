@@ -1,6 +1,6 @@
 package com.am.server.api.admin.user.dao.jpa;
 
-import com.am.server.api.admin.user.entity.UserRole;
+import com.am.server.api.admin.user.pojo.UserRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;

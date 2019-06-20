@@ -7,10 +7,10 @@ import com.am.server.api.admin.bulletin.admin.entity.BulletinExpiredDelayedImpl;
 import com.am.server.api.admin.bulletin.admin.entity.QBulletin;
 import com.am.server.api.admin.bulletin.admin.entity.Status;
 import com.am.server.api.admin.bulletin.admin.service.BulletinService;
-import com.am.server.api.admin.user.entity.QAdminUser;
+import com.am.server.api.admin.user.pojo.QAdminUser;
 import com.am.server.common.annotation.transaction.Commit;
 import com.am.server.common.annotation.transaction.ReadOnly;
-import com.am.server.common.base.page.Page;
+import com.am.server.common.base.entity.PageVO;
 import com.am.server.common.constant.Constant;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -53,7 +53,7 @@ public class BulletinServiceImpl implements BulletinService {
 
     @ReadOnly
     @Override
-    public void list(Page<Bulletin> page, Bulletin bulletin) {
+    public void list(PageVO<Bulletin> page, Bulletin bulletin) {
         JPAQueryFactory jpaQueryFactory = new JPAQueryFactory(entityManager);
         QBulletin qBulletin = QBulletin.bulletin;
         QAdminUser qAdminUser = QAdminUser.adminUser;

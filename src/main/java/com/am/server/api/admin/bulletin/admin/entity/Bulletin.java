@@ -1,6 +1,5 @@
 package com.am.server.api.admin.bulletin.admin.entity;
 
-import com.am.server.api.admin.user.entity.AdminUser;
 import com.am.server.common.base.entity.BaseEntity;
 import com.am.server.common.base.validator.Delete;
 import com.am.server.common.base.validator.Id;
@@ -21,7 +20,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
