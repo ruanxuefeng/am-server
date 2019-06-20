@@ -29,6 +29,7 @@ import java.util.Locale;
  * @date 2018/7/24 10:42
  */
 @Configuration
+@EnableWebMvc
 public class WebConfig implements WebMvcConfigurer {
 
     /**
@@ -67,6 +68,18 @@ public class WebConfig implements WebMvcConfigurer {
         jackson2HttpMessageConverter.setObjectMapper(objectMapper);
         converters.add(jackson2HttpMessageConverter);
         converters.add(new StringHttpMessageConverter(Charset.forName("UTF-8")));
+    }
+
+    /**
+     * 过滤Swagger2的静态资源
+     */
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("swagger-ui.html")
+                .addResourceLocations("classpath:/META-INF/resources/");
+
+        registry.addResourceHandler("/webjars/**")
+                .addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 
     @Bean

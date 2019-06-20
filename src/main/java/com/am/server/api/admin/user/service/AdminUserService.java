@@ -5,6 +5,7 @@ import com.am.server.api.admin.user.pojo.param.SaveAdminUserAO;
 import com.am.server.api.admin.user.pojo.param.ListQuery;
 import com.am.server.api.admin.user.pojo.param.LoginQuery;
 import com.am.server.api.admin.user.pojo.param.UpdateAdminUserAO;
+import com.am.server.api.admin.user.pojo.vo.AdminUserListVO;
 import com.am.server.common.base.entity.PageVO;
 import com.am.server.common.base.service.BaseService;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,12 +40,12 @@ public interface AdminUserService extends BaseService {
     /**
      * 分页
      *
-     * @param page 分页
-     * @param user 用户信息
+     * @param listQuery listQuery
      * @author 阮雪峰
      * @date 2018/7/25 15:51
+     * @return PageVO<AdminUserListVO>
      */
-    PageVO<AdminUser> list(ListQuery listQuery);
+    PageVO<AdminUserListVO> list(ListQuery listQuery);
 
     /**
      * 新增

@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * 用户管理
@@ -180,7 +181,11 @@ public class AdminUserController extends BaseController {
     @PostMapping("/isEmailExist")
     public ResponseEntity isEmailExist(AdminUser user) {
         Map<String, Boolean> map = new HashMap<>(1);
-        map.put("isExist", adminUserService.isEmailExist(user.getEmail()));
+        boolean isExist = Optional.of(user)
+                .map(AdminUser::getId)
+                .map(id -> adminUserService.isEmailExistWithId(user.getUsername(), id))
+                .orElseGet(() -> adminUserService.isEmailExist(user.getUsername()));
+        map.put("isExist", isExist );
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
@@ -195,7 +200,12 @@ public class AdminUserController extends BaseController {
     @PostMapping("/isUsernameExist")
     public ResponseEntity isUsernameExist(AdminUser user) {
         Map<String, Boolean> map = new HashMap<>(1);
-        map.put("isExist", adminUserService.isUsernameExist(user.getUsername()));
+        boolean isExist = Optional.of(user)
+                .map(AdminUser::getId)
+                .map(id -> adminUserService.isUsernameExistWithId(user.getUsername(), id))
+                .orElseGet(() -> adminUserService.isUsernameExist(user.getUsername()));
+
+        map.put("isExist", isExist);
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 

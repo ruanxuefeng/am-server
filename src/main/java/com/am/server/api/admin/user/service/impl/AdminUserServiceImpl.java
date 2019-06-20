@@ -11,6 +11,7 @@ import com.am.server.api.admin.user.pojo.param.SaveAdminUserAO;
 import com.am.server.api.admin.user.pojo.param.ListQuery;
 import com.am.server.api.admin.user.pojo.param.LoginQuery;
 import com.am.server.api.admin.user.pojo.param.UpdateAdminUserAO;
+import com.am.server.api.admin.user.pojo.vo.AdminUserListVO;
 import com.am.server.api.admin.user.service.AdminUserService;
 import com.am.server.api.admin.user.service.UserPermissionCacheService;
 import com.am.server.common.annotation.transaction.Commit;
@@ -21,6 +22,7 @@ import com.am.server.common.util.DesUtils;
 import com.am.server.common.util.FileUtils;
 import com.am.server.common.util.IdUtils;
 import com.am.server.common.util.StringUtils;
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -35,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author 阮雪峰
@@ -85,25 +88,22 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     @ReadOnly
     @Override
-    public PageVO<AdminUser> list(ListQuery listQuery) {
-        PageVO<AdminUser> page = new PageVO<AdminUser>().setPageSize(listQuery.getPageSize()).setPage(listQuery.getPage());
+    public PageVO<AdminUserListVO> list(ListQuery listQuery) {
+        PageVO<AdminUserListVO> page = new PageVO<AdminUserListVO>().setPageSize(listQuery.getPageSize()).setPage(listQuery.getPage());
 
         JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
         QAdminUser qAdminUser = QAdminUser.adminUser;
         QAdminUser creator = new QAdminUser("creator");
 
-        JPAQuery<AdminUser> query = queryFactory.select(
-                Projections.bean(
-                        AdminUser.class,
-                        qAdminUser.id,
-                        qAdminUser.username,
-                        qAdminUser.name,
-                        qAdminUser.email,
-                        qAdminUser.avatar,
-                        qAdminUser.gender,
-                        qAdminUser.createTime,
-                        creator.name.as(Constant.CREATOR_NAME)
-                )
+        JPAQuery<Tuple> query = queryFactory.select(
+                qAdminUser.id,
+                qAdminUser.username,
+                qAdminUser.name,
+                qAdminUser.email,
+                qAdminUser.avatar,
+                qAdminUser.gender,
+                qAdminUser.createTime,
+                creator.name.as(Constant.CREATOR_NAME)
         )
                 .from(qAdminUser)
                 .leftJoin(creator).on(qAdminUser.creator.eq(creator.id))
@@ -125,7 +125,20 @@ public class AdminUserServiceImpl implements AdminUserService {
                 .filter(username -> !username.isEmpty())
                 .ifPresent(username -> query.where(qAdminUser.username.like("%" + username + "%")));
 
-        page.setTotal((int) query.fetchCount()).setRows(query.fetch());
+        List<AdminUserListVO> list = query.fetch()
+                .stream()
+                .map(tuple -> new AdminUserListVO()
+                        .setAvatar(tuple.get(qAdminUser.avatar))
+                        .setCreatorName(tuple.get(7, String.class))
+                        .setEmail(tuple.get(qAdminUser.email))
+                        .setGender(tuple.get(qAdminUser.gender))
+                        .setName(tuple.get(qAdminUser.name))
+                        .setId(tuple.get(qAdminUser.id))
+                        .setUsername(tuple.get(qAdminUser.username))
+                        .setCreateTime(tuple.get(qAdminUser.createTime))
+                )
+                .collect(Collectors.toList());
+        page.setTotal((int) query.fetchCount()).setRows(list);
         return page;
     }
 
