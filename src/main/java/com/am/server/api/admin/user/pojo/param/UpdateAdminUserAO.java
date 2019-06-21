@@ -24,6 +24,7 @@ import javax.validation.constraints.NotNull;
 @ApiModel
 @Data
 public class UpdateAdminUserAO {
+    @ApiModelProperty(value = "主键", example = "1234567890")
     @NotNull(message = "common.operate.primaryKey.null", groups = {Id.class})
     private Long id;
 
@@ -43,6 +44,9 @@ public class UpdateAdminUserAO {
     @ApiModelProperty("性别")
     private Gender gender;
 
-    @ApiModelProperty("头像")
+    @ApiModelProperty("头像链接")
+    private String avatar;
+
+    @ApiModelProperty("头像文件")
     private MultipartFile img;
 }

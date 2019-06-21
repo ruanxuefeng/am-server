@@ -28,7 +28,7 @@ import java.util.Objects;
  */
 @Slf4j
 @RestControllerAdvice
-public class ControllerValidateAdvice extends I18nMessageImpl {
+public class ControllerValidateAdvice {
 
     @Resource(name = "message")
     private Message<Map<String, String>> message;

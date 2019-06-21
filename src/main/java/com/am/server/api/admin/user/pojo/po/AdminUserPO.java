@@ -1,9 +1,6 @@
 package com.am.server.api.admin.user.pojo.po;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
 
 /**
  * admin_user

@@ -6,8 +6,10 @@ import com.am.server.api.admin.user.pojo.AdminUser;
 import com.am.server.api.admin.user.pojo.param.SaveAdminUserAO;
 import com.am.server.api.admin.user.pojo.param.ListQuery;
 import com.am.server.api.admin.user.pojo.param.UpdateAdminUserAO;
+import com.am.server.api.admin.user.pojo.vo.AdminUserListVO;
 import com.am.server.api.admin.user.service.AdminUserService;
 import com.am.server.common.base.controller.BaseController;
+import com.am.server.common.base.entity.PageVO;
 import com.am.server.common.base.validator.Delete;
 import com.am.server.common.base.validator.Id;
 import com.am.server.common.base.validator.Save;
@@ -64,7 +66,7 @@ public class AdminUserController extends BaseController {
      */
     @ApiOperation(value = "列表查询")
     @GetMapping("/list")
-    public ResponseEntity list(ListQuery listQuery) {
+    public ResponseEntity<PageVO<AdminUserListVO>> list(ListQuery listQuery) {
         return new ResponseEntity<>(adminUserService.list(listQuery), HttpStatus.OK);
     }
 
@@ -105,6 +107,7 @@ public class AdminUserController extends BaseController {
      * @author 阮雪峰
      * @date 2018/7/25 15:56
      */
+    @ApiOperation(value = "修改")
     @WriteLog("修改")
     @PostMapping("/update")
     public ResponseEntity update(@Validated(Save.class) UpdateAdminUserAO user) {
@@ -129,6 +132,7 @@ public class AdminUserController extends BaseController {
      * @author 阮雪峰
      * @date 2018/7/25 16:24
      */
+    @ApiOperation(value = "修改")
     @WriteLog("删除")
     @PostMapping("/delete")
     public ResponseEntity delete(@RequestHeader(Constant.TOKEN) String token, @Validated(Delete.class) @RequestBody AdminUser user) {
