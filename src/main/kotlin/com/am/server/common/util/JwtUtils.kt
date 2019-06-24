@@ -1,5 +1,6 @@
 package com.am.server.common.util
 
+import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import java.security.Key
@@ -25,7 +26,8 @@ object JwtUtils {
      * @author 阮雪峰
      * @date 2018/7/24 9:45
      */
-    @JvmStatic fun sign(uid: String): String {
+    @JvmStatic
+    fun sign(uid: String): String {
         val nowMillis = System.currentTimeMillis()
 
         val now = Date(nowMillis)
@@ -64,7 +66,8 @@ object JwtUtils {
      * @author 阮雪峰
      * @date 2018/7/25 9:21
      */
-    @JvmStatic fun getSubject(token: String): String {
+    @JvmStatic
+    fun getSubject(token: String): String {
         return Jwts.parser().setSigningKey(getKeyInstance()).parseClaimsJws(token).body.subject
     }
 }

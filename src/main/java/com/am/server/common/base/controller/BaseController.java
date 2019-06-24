@@ -1,5 +1,6 @@
 package com.am.server.common.base.controller;
 
+import com.am.server.common.base.pojo.vo.MessageVO;
 import com.am.server.common.base.service.Message;
 import com.am.server.config.i18n.component.I18nMessageImpl;
 
@@ -29,10 +30,18 @@ public class BaseController  {
     /**
      * 删除成功
      */
-
     protected static final String DELETE_SUCCESS = "common.delete.success";
 
+    /**
+     * 缺少删除主键
+     */
+    protected static final String COMMON_DELETE_PRIMARY_KEY_NULL = "common.delete.primaryKey.null";
+    /**
+     * 缺少操作主键
+     */
+    protected static final String COMMON_OPERATE_PRIMARY_KEY_NULL = "common.operate.primaryKey.null";
+
     @Resource(name = "message")
-    protected Message<Map<String, String>> message;
+    protected Message<MessageVO> message;
 
 }

@@ -1,15 +1,15 @@
 package com.am.server.api.admin.menu.service.impl;
 
+import com.am.server.advice.update.annotation.Save;
 import com.am.server.api.admin.menu.dao.jpa.MenuDao;
 import com.am.server.api.admin.menu.entity.Menu;
 import com.am.server.api.admin.menu.entity.QMenu;
 import com.am.server.api.admin.menu.service.MenuService;
-import com.am.server.advice.update.annotation.Save;
-import com.am.server.api.admin.user.pojo.QAdminUser;
+import com.am.server.api.admin.user.pojo.po.QAdminUserPO;
 import com.am.server.api.admin.user.service.UserPermissionCacheService;
 import com.am.server.common.annotation.transaction.Commit;
 import com.am.server.common.annotation.transaction.ReadOnly;
-import com.am.server.common.base.entity.PageVO;
+import com.am.server.common.base.pojo.vo.PageVO;
 import com.am.server.common.constant.Constant;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -49,8 +49,7 @@ public class MenuServiceImpl implements MenuService {
         JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
         QMenu qMenu = QMenu.menu;
         QMenu qParent = new QMenu("parent");
-        QAdminUser qAdminUser = QAdminUser.adminUser;
-
+        QAdminUserPO qAdminUser = QAdminUserPO.adminUserPO;
         JPAQuery<Menu> query = queryFactory.select(
                 Projections.bean(
                         Menu.class,

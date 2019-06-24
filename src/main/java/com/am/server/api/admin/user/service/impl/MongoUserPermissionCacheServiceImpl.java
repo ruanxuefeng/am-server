@@ -2,7 +2,7 @@ package com.am.server.api.admin.user.service.impl;
 
 import com.am.server.api.admin.user.dao.jpa.AdminUserDao;
 import com.am.server.api.admin.user.dao.mongo.UserPermissionCacheDao;
-import com.am.server.api.admin.user.pojo.UserPermissionCache;
+import com.am.server.api.admin.user.pojo.po.UserPermissionCachePO;
 import com.am.server.api.admin.user.service.UserPermissionCacheService;
 
 import javax.annotation.Resource;
@@ -28,7 +28,7 @@ public class MongoUserPermissionCacheServiceImpl implements UserPermissionCacheS
     @Override
     public void set(Long uid, List<String> permissions) {
         userPermissionCacheDao.save(
-                UserPermissionCache.builder()
+                UserPermissionCachePO.builder()
                         .id(uid)
                         .permissions(permissions)
                         .build()
@@ -37,20 +37,20 @@ public class MongoUserPermissionCacheServiceImpl implements UserPermissionCacheS
 
     @Override
     public List<String> get(Long uid) {
-        UserPermissionCache userPermissionCache = userPermissionCacheDao.findById(uid)
+        UserPermissionCachePO userPermissionCache = userPermissionCacheDao.findById(uid)
                 .orElseGet(() -> {
 
                     //缓存失效重新获取
                     List<String> menuList = adminUserDao.findMenuList(uid);
                     set(uid, menuList);
-                    return UserPermissionCache.builder()
+                    return UserPermissionCachePO.builder()
                             .id(uid)
                             .permissions(menuList)
                             .build();
                 });
 
         return Optional.ofNullable(userPermissionCache)
-                .map(UserPermissionCache::getPermissions)
+                .map(UserPermissionCachePO::getPermissions)
                 .orElse(new ArrayList<>());
     }
 

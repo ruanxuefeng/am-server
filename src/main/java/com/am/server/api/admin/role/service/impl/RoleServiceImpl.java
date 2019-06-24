@@ -1,5 +1,6 @@
 package com.am.server.api.admin.role.service.impl;
 
+import com.am.server.advice.update.annotation.Save;
 import com.am.server.api.admin.role.dao.jpa.RoleDao;
 import com.am.server.api.admin.role.dao.jpa.RoleMenuDao;
 import com.am.server.api.admin.role.entity.QRole;
@@ -7,12 +8,11 @@ import com.am.server.api.admin.role.entity.QRoleMenu;
 import com.am.server.api.admin.role.entity.Role;
 import com.am.server.api.admin.role.entity.RoleMenu;
 import com.am.server.api.admin.role.service.RoleService;
-import com.am.server.advice.update.annotation.Save;
-import com.am.server.api.admin.user.pojo.QAdminUser;
+import com.am.server.api.admin.user.pojo.po.QAdminUserPO;
 import com.am.server.api.admin.user.service.UserPermissionCacheService;
 import com.am.server.common.annotation.transaction.Commit;
 import com.am.server.common.annotation.transaction.ReadOnly;
-import com.am.server.common.base.entity.PageVO;
+import com.am.server.common.base.pojo.vo.PageVO;
 import com.am.server.common.constant.Constant;
 import com.am.server.common.util.IdUtils;
 import com.querydsl.core.types.Projections;
@@ -55,7 +55,7 @@ public class RoleServiceImpl implements RoleService {
     public void list(PageVO<Role> page, Role role) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
         QRole qRole = QRole.role;
-        QAdminUser qAdminUser = QAdminUser.adminUser;
+        QAdminUserPO qAdminUser = QAdminUserPO.adminUserPO;
         JPAQuery<Role> query = queryFactory.select(
                 Projections.bean(
                         Role.class,

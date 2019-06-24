@@ -24,11 +24,11 @@ import javax.validation.constraints.NotNull;
 @ApiModel
 @Data
 public class UpdateAdminUserAO {
-    @ApiModelProperty(value = "主键", example = "1234567890")
+    @ApiModelProperty(value = "主键", example = "1234567890", required = true)
     @NotNull(message = "common.operate.primaryKey.null", groups = {Id.class})
     private Long id;
 
-    @ApiModelProperty("用户名")
+    @ApiModelProperty(value = "用户名", required = true)
     @NotBlank(message = "login.username.blank", groups = {Save.class, Update.class})
     @Length(max = 64, message = "user.username.long", groups = {Save.class, Update.class})
     private String username;

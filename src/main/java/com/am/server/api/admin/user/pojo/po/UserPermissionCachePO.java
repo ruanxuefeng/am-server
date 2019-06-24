@@ -1,4 +1,4 @@
-package com.am.server.api.admin.user.pojo;
+package com.am.server.api.admin.user.pojo.po;
 
 import lombok.Builder;
 import lombok.Data;
@@ -15,7 +15,7 @@ import java.util.List;
 @Builder(toBuilder = true)
 @Data
 @Document
-public class UserPermissionCache {
+public class UserPermissionCachePO {
     @Id
     private Long id;
     private List<String> permissions;

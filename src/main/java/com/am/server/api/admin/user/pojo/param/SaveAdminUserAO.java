@@ -22,7 +22,7 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class SaveAdminUserAO {
 
-    @ApiModelProperty("用户名")
+    @ApiModelProperty(value = "用户名", required = true)
     @NotBlank(message = "login.username.blank", groups = {Save.class, Update.class})
     @Length(max = 64, message = "user.username.long", groups = {Save.class, Update.class})
     private String username;
@@ -40,4 +40,6 @@ public class SaveAdminUserAO {
 
     @ApiModelProperty("头像")
     private MultipartFile img;
+
+    private Long creator;
 }

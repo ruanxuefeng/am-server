@@ -1,6 +1,6 @@
 package com.am.server.api.admin.role.entity;
 
-import com.am.server.common.base.entity.BaseEntity;
+import com.am.server.common.base.pojo.BaseEntity;
 import com.am.server.common.base.validator.Delete;
 import com.am.server.common.base.validator.Id;
 import com.am.server.common.base.validator.Save;

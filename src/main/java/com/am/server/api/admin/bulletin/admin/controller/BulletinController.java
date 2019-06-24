@@ -5,7 +5,7 @@ import com.am.server.api.admin.bulletin.admin.service.BulletinService;
 import com.am.server.api.admin.log.aspect.annotation.WriteLog;
 import com.am.server.api.admin.user.interceptor.annotation.Permission;
 import com.am.server.common.base.controller.BaseController;
-import com.am.server.common.base.entity.PageVO;
+import com.am.server.common.base.pojo.vo.PageVO;
 import com.am.server.common.base.validator.Delete;
 import com.am.server.common.base.validator.Id;
 import com.am.server.common.base.validator.Save;

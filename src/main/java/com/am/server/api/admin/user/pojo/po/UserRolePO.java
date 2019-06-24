@@ -1,4 +1,4 @@
-package com.am.server.api.admin.user.pojo;
+package com.am.server.api.admin.user.pojo.po;
 
 import lombok.Data;
 
@@ -12,16 +12,16 @@ import javax.persistence.Id;
  */
 @Entity(name = "user_role")
 @Data
-public class UserRole {
+public class UserRolePO {
     @Id
     private Long id;
     private Long user;
     private Long role;
 
-    public UserRole() {
+    public UserRolePO() {
     }
 
-    public UserRole(Long id, Long user, Long role) {
+    public UserRolePO(Long id, Long user, Long role) {
         this.id = id;
         this.user = user;
         this.role = role;

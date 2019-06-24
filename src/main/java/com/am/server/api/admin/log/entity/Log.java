@@ -1,8 +1,7 @@
 package com.am.server.api.admin.log.entity;
 
-import com.am.server.common.base.entity.BaseEntity;
+import com.am.server.common.base.pojo.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;

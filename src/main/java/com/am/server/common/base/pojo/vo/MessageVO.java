@@ -1,7 +1,8 @@
-package com.am.server.common.base.entity;
+package com.am.server.common.base.pojo.vo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
@@ -9,6 +10,7 @@ import lombok.Data;
  * @author 阮雪峰
  */
 @ApiModel
+@AllArgsConstructor
 @Data
 public class MessageVO {
 

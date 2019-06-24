@@ -4,7 +4,7 @@ import com.am.server.api.admin.log.dao.mongo.LogDao;
 import com.am.server.api.admin.log.entity.Log;
 import com.am.server.api.admin.log.service.LogService;
 import com.am.server.advice.update.annotation.Save;
-import com.am.server.common.base.entity.PageVO;
+import com.am.server.common.base.pojo.vo.PageVO;
 import com.am.server.common.util.MongoUtils;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;

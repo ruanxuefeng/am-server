@@ -1,29 +1,27 @@
 package com.am.server.api.admin.user.service.impl;
 
+import com.am.server.api.admin.role.entity.Role;
 import com.am.server.api.admin.upload.service.FileUploadService;
 import com.am.server.api.admin.user.dao.jpa.AdminUserDao;
 import com.am.server.api.admin.user.dao.jpa.UserRoleDao;
-import com.am.server.api.admin.user.pojo.AdminUser;
-import com.am.server.api.admin.user.pojo.QAdminUser;
+import com.am.server.api.admin.user.exception.PasswordErrorException;
+import com.am.server.api.admin.user.exception.UserNotExistException;
 import com.am.server.api.admin.user.pojo.QUserRole;
-import com.am.server.api.admin.user.pojo.UserRole;
-import com.am.server.api.admin.user.pojo.param.SaveAdminUserAO;
-import com.am.server.api.admin.user.pojo.param.ListQuery;
-import com.am.server.api.admin.user.pojo.param.LoginQuery;
-import com.am.server.api.admin.user.pojo.param.UpdateAdminUserAO;
+import com.am.server.api.admin.user.pojo.po.UserRolePO;
+import com.am.server.api.admin.user.pojo.param.*;
+import com.am.server.api.admin.user.pojo.po.AdminUserPO;
+import com.am.server.api.admin.user.pojo.po.QAdminUserPO;
 import com.am.server.api.admin.user.pojo.vo.AdminUserListVO;
+import com.am.server.api.admin.user.pojo.vo.LoginUserInfoVO;
+import com.am.server.api.admin.user.pojo.vo.UserInfoVO;
 import com.am.server.api.admin.user.service.AdminUserService;
 import com.am.server.api.admin.user.service.UserPermissionCacheService;
 import com.am.server.common.annotation.transaction.Commit;
 import com.am.server.common.annotation.transaction.ReadOnly;
-import com.am.server.common.base.entity.PageVO;
+import com.am.server.common.base.pojo.vo.PageVO;
 import com.am.server.common.constant.Constant;
-import com.am.server.common.util.DesUtils;
-import com.am.server.common.util.FileUtils;
-import com.am.server.common.util.IdUtils;
-import com.am.server.common.util.StringUtils;
+import com.am.server.common.util.*;
 import com.querydsl.core.Tuple;
-import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.querydsl.jpa.impl.JPAUpdateClause;
@@ -33,10 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -74,26 +69,44 @@ public class AdminUserServiceImpl implements AdminUserService {
     }
 
     @Override
-    public AdminUser login(LoginQuery query) {
-        return adminUserDao.findByUsername(query.getUsername()).orElse(null);
+    public LoginUserInfoVO login(LoginAO query) {
+        Optional<AdminUserPO> optional = adminUserDao.findByUsername(query.getUsername());
+        optional.orElseThrow(UserNotExistException::new);
+
+        return optional
+                .filter(user -> {
+                    //校验密码是否一样
+                    String inputPassword = new String(Base64.getDecoder().decode(query.getPassword().getBytes()));
+                    String userPassword = DesUtils.decrypt(user.getPassword(), user.getKey());
+                    return inputPassword.equals(userPassword);
+                })
+                .map(user -> new LoginUserInfoVO(JwtUtils.sign(user.getId().toString()), adminUserDao.findMenuList(user.getId())))
+                .orElseThrow(PasswordErrorException::new);
     }
 
     @ReadOnly
     @Override
-    public AdminUser info(Long id) {
-        Optional<AdminUser> userOptional = adminUserDao.findById(id);
-        userOptional.ifPresent(user -> user.setMenuList(adminUserDao.findMenuList(user.getId())));
-        return userOptional.orElse(null);
+    public UserInfoVO info(Long id) {
+        return adminUserDao.findById(id)
+                .map(user -> new UserInfoVO()
+                        .setMenus(adminUserDao.findMenuList(user.getId()))
+                        .setAvatar(user.getAvatar())
+                        .setEmail(user.getEmail())
+                        .setGender(user.getGender())
+                        .setName(user.getName())
+                        .setRoles(user.getRoleList().stream().map(Role::getName).collect(Collectors.toList()))
+                )
+                .orElse(null);
     }
 
     @ReadOnly
     @Override
-    public PageVO<AdminUserListVO> list(ListQuery listQuery) {
+    public PageVO<AdminUserListVO> list(ListAO listQuery) {
         PageVO<AdminUserListVO> page = new PageVO<AdminUserListVO>().setPageSize(listQuery.getPageSize()).setPage(listQuery.getPage());
 
         JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
-        QAdminUser qAdminUser = QAdminUser.adminUser;
-        QAdminUser creator = new QAdminUser("creator");
+        QAdminUserPO qAdminUser = QAdminUserPO.adminUserPO;
+        QAdminUserPO creator = new QAdminUserPO("creator");
 
         JPAQuery<Tuple> query = queryFactory.select(
                 qAdminUser.id,
@@ -111,17 +124,17 @@ public class AdminUserServiceImpl implements AdminUserService {
                 .limit(listQuery.getPageSize())
                 .orderBy(qAdminUser.id.desc());
 
-        Optional<ListQuery> userOptional = Optional.of(listQuery);
+        Optional<ListAO> userOptional = Optional.of(listQuery);
 
-        userOptional.map(ListQuery::getName)
+        userOptional.map(ListAO::getName)
                 .filter(name -> !name.isEmpty())
                 .ifPresent(name -> query.where(qAdminUser.name.like("%" + name + "%")));
 
-        userOptional.map(ListQuery::getEmail)
+        userOptional.map(ListAO::getEmail)
                 .filter(email -> !email.isEmpty())
                 .ifPresent(email -> query.where(qAdminUser.email.like("%" + email + "%")));
 
-        userOptional.map(ListQuery::getUsername)
+        userOptional.map(ListAO::getUsername)
                 .filter(username -> !username.isEmpty())
                 .ifPresent(username -> query.where(qAdminUser.username.like("%" + username + "%")));
 
@@ -147,13 +160,15 @@ public class AdminUserServiceImpl implements AdminUserService {
     public void save(SaveAdminUserAO adminUser) {
         String key = StringUtils.getRandomStr(RANDOM_STRING_LENGTH);
         Long id = IdUtils.getId();
-        AdminUser user = new AdminUser()
+        AdminUserPO user = new AdminUserPO()
                 .setId(id)
                 .setUsername(adminUser.getUsername())
+                .setName(adminUser.getName())
                 .setCreateTime(LocalDateTime.now())
                 .setEmail(adminUser.getEmail())
                 .setGender(adminUser.getGender())
                 .setAvatar(uploadAvatar(id, adminUser.getImg()))
+                .setCreator(adminUser.getCreator())
                 .setKey(key)
                 .setPassword(DesUtils.encrypt(Constant.INITIAL_PASSWORD, key));
 
@@ -163,7 +178,7 @@ public class AdminUserServiceImpl implements AdminUserService {
     /**
      * 上传头像图片
      *
-     * @param user   user
+     * @param id     id
      * @param avatar 头像文件
      * @author 阮雪峰
      * @date 2019/2/18 14:31
@@ -177,9 +192,9 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     @Commit
     @Override
-    public void delete(AdminUser user) {
-        adminUserDao.deleteById(user.getId());
-        userPermissionCacheService.remove(user.getId());
+    public void delete(Long id) {
+        adminUserDao.deleteById(id);
+        userPermissionCacheService.remove(id);
     }
 
     @ReadOnly
@@ -190,37 +205,39 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     @Commit
     @Override
-    public void resetPassword(AdminUser user) {
+    public void resetPassword(Long id) {
         String key = StringUtils.getRandomStr(RANDOM_STRING_LENGTH);
         String password = DesUtils.encrypt(Constant.INITIAL_PASSWORD, key);
 
-        adminUserDao.resetPassword(user.getId(), key, password);
+        QAdminUserPO qAdminUser = QAdminUserPO.adminUserPO;
+        new JPAUpdateClause(entityManager, qAdminUser)
+                .set(qAdminUser.password, password)
+                .set(qAdminUser.key, key)
+                .where(qAdminUser.id.eq(id))
+                .execute();
     }
 
     @Commit
     @Override
-    public void updateRole(AdminUser user) {
+    public void updateRole(Long id, List<Long> roleIdList) {
 
         //删除用户角色关联
-        userRoleDao.deleteByUser(user.getId());
-        Optional.of(user)
-                .map(AdminUser::getRoleIdList)
-                .filter(list -> list.size() > 0)
+        userRoleDao.deleteByUser(id);
+        Optional.ofNullable(roleIdList)
                 .ifPresent(list -> {
-
                     //重新关联
-                    List<UserRole> userRoles = new ArrayList<>(list.size());
-                    list.forEach(item -> userRoles.add(new UserRole(IdUtils.getId(), user.getId(), item)));
+                    List<UserRolePO> userRoles = new ArrayList<>(list.size());
+                    list.forEach(item -> userRoles.add(new UserRolePO(IdUtils.getId(), id, item)));
 
                     userRoleDao.saveAll(userRoles);
-                    userPermissionCacheService.remove(user.getId());
+                    userPermissionCacheService.remove(id);
                 });
     }
 
     @Commit
     @Override
     public void update(UpdateAdminUserAO user) {
-        QAdminUser qAdminUser = QAdminUser.adminUser;
+        QAdminUserPO qAdminUser = QAdminUserPO.adminUserPO;
         JPAUpdateClause jpaUpdateClause = new JPAUpdateClause(entityManager, qAdminUser);
         if (user.getImg() != null && !user.getImg().isEmpty()) {
             jpaUpdateClause.set(qAdminUser.avatar, uploadAvatar(user.getId(), user.getImg()));
@@ -235,18 +252,33 @@ public class AdminUserServiceImpl implements AdminUserService {
     }
 
     @Override
-    public AdminUser findById(Long id) {
+    public void update(UpdateUserInfoAO user) {
+        QAdminUserPO qAdminUser = QAdminUserPO.adminUserPO;
+        JPAUpdateClause jpaUpdateClause = new JPAUpdateClause(entityManager, qAdminUser);
+        if (user.getImg() != null && !user.getImg().isEmpty()) {
+            jpaUpdateClause.set(qAdminUser.avatar, uploadAvatar(user.getId(), user.getImg()));
+        }
+
+        jpaUpdateClause.set(qAdminUser.email, user.getEmail())
+                .set(qAdminUser.name, user.getName())
+                .set(qAdminUser.gender, user.getGender())
+                .where(qAdminUser.id.eq(user.getId()))
+                .execute();
+    }
+
+    @Override
+    public AdminUserPO findById(Long id) {
         return adminUserDao.findById(id).orElse(null);
     }
 
     @Override
-    public List<Long> findRoleIdList(AdminUser user) {
+    public List<Long> findRoleIdList(Long id) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
         QUserRole qUserRole = QUserRole.userRole;
 
         return queryFactory.select(qUserRole.role)
                 .from(qUserRole)
-                .where(qUserRole.user.eq(user.getId()))
+                .where(qUserRole.user.eq(id))
                 .fetch();
     }
 

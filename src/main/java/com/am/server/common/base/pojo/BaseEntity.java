@@ -1,4 +1,4 @@
-package com.am.server.common.base.entity;
+package com.am.server.common.base.pojo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.io.Serializable;

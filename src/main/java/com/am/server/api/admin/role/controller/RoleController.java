@@ -6,7 +6,7 @@ import com.am.server.api.admin.role.entity.Role;
 import com.am.server.api.admin.role.service.RoleService;
 import com.am.server.api.admin.user.interceptor.annotation.Permission;
 import com.am.server.common.base.controller.BaseController;
-import com.am.server.common.base.entity.PageVO;
+import com.am.server.common.base.pojo.vo.PageVO;
 import com.am.server.common.base.validator.Delete;
 import com.am.server.common.base.validator.Id;
 import com.am.server.common.base.validator.Save;

@@ -14,17 +14,17 @@ import javax.validation.constraints.NotBlank;
  */
 @ApiModel
 @Data
-public class LoginQuery {
+public class LoginAO {
     /**
      * 用户名
      */
-    @ApiModelProperty("用户名")
+    @ApiModelProperty(value = "用户名", required = true)
     @NotBlank(message = "login.username.blank", groups = {Login.class})
     private String username;
     /**
      * 密码
      */
-    @ApiModelProperty("密码")
+    @ApiModelProperty(value = "密码", required = true)
     @NotBlank(message = "login.password.blank", groups = {Login.class})
     private String password;
 }

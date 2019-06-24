@@ -1,7 +1,7 @@
 package com.am.server.api.admin.log.service;
 
 import com.am.server.api.admin.log.entity.Log;
-import com.am.server.common.base.entity.PageVO;
+import com.am.server.common.base.pojo.vo.PageVO;
 
 /**
  *

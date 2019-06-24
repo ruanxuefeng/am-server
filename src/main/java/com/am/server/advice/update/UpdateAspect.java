@@ -1,6 +1,6 @@
 package com.am.server.advice.update;
 
-import com.am.server.common.base.entity.BaseEntity;
+import com.am.server.common.base.pojo.BaseEntity;
 import com.am.server.common.constant.Constant;
 import com.am.server.common.util.IdUtils;
 import com.am.server.common.util.JwtUtils;

@@ -2,7 +2,7 @@ package com.am.server.api.admin.log.controller;
 
 import com.am.server.api.admin.log.entity.Log;
 import com.am.server.api.admin.log.service.LogService;
-import com.am.server.common.base.entity.PageVO;
+import com.am.server.common.base.pojo.vo.PageVO;
 import com.am.server.common.constant.Constant;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

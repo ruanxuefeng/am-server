@@ -1,11 +1,10 @@
 package com.am.server.advice.controller;
 
 import com.am.server.api.admin.upload.exception.UploadFileException;
-import com.am.server.api.admin.user.exception.NoPermissionAccessException;
-import com.am.server.api.admin.user.exception.NoTokenException;
-import com.am.server.api.admin.user.exception.TokenExpiredException;
+import com.am.server.api.admin.user.exception.*;
+import com.am.server.common.base.pojo.vo.MessageVO;
 import com.am.server.common.base.service.Message;
-import com.am.server.config.i18n.component.I18nMessageImpl;
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,11 +17,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.annotation.Resource;
 import java.net.SocketTimeoutException;
-import java.util.Map;
 import java.util.Objects;
 
 /**
  * 通用校验放回校验
+ *
  * @author 阮雪峰
  * @date 2018/9/4 15:49
  */
@@ -31,7 +30,7 @@ import java.util.Objects;
 public class ControllerValidateAdvice {
 
     @Resource(name = "message")
-    private Message<Map<String, String>> message;
+    private Message<MessageVO> message;
 
 
     /**
@@ -60,38 +59,46 @@ public class ControllerValidateAdvice {
 
     private final static String ERROR_TITLE = "error";
 
+    private static final String USERNAME_DOES_NOT_EXIST = "login.username.does_not_exist";
+
+    /**
+     * 密码不正确
+     */
+    private static final String PASSWORD_ERROR = "login.password.error";
+
     /**
      * form表单验证错误
+     *
      * @param e 错误信息
-     * @return java.util.Map<java.lang.String , java.lang.String>
+     * @return java.util.Map<java.lang.String, java.lang.String>
      * @author 阮雪峰
      * @date 2018/10/8 15:15
      */
     @ExceptionHandler(BindException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> formBindException(BindException e) {
-        log.error(ERROR_TITLE, e);
+    public MessageVO formBindException(BindException e) {
         BindingResult bindingResult = e.getBindingResult();
         return message.get(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
     }
 
     /**
      * raw格式json数据校验
+     *
      * @param e 错误信息
-     * @return java.util.Map<java.lang.String,java.lang.String>
+     * @return java.util.Map<java.lang.String, java.lang.String>
      * @author 阮雪峰
      * @date 2019/2/13 12:45
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> rawBindException(MethodArgumentNotValidException e) {
-        log.error(ERROR_TITLE, e);
+    public MessageVO rawBindException(MethodArgumentNotValidException e) {
         BindingResult bindingResult = e.getBindingResult();
         return message.get(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
     }
 
     /**
      * 请求没有携带token，提示登录，401
+     *
      * @param e 错误信息
      * @return org.springframework.http.ResponseEntity
      * @author 阮雪峰
@@ -99,46 +106,76 @@ public class ControllerValidateAdvice {
      */
     @ExceptionHandler(NoTokenException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public Map<String, String> noTokenException(NoTokenException e) {
-        log.error(ERROR_TITLE, e);
+    public MessageVO noTokenException(NoTokenException e) {
         return message.get(NO_TOKEN);
 
     }
 
     /**
-     * token过期或者不是正确的token，412
+     * 用户不存在
+     *
      * @param e 错误信息
      * @return org.springframework.http.ResponseEntity
      * @author 阮雪峰
      * @date 2018/10/8 15:16
      */
-    @ExceptionHandler(TokenExpiredException.class)
+    @ExceptionHandler(UserNotExistException.class)
+    @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
+    public MessageVO userNotExist(UserNotExistException e) {
+        return message.get(USERNAME_DOES_NOT_EXIST);
+
+    }
+
+    /**
+     * 密码不正确
+     *
+     * @param e 错误信息
+     * @return org.springframework.http.ResponseEntity
+     * @author 阮雪峰
+     * @date 2018/10/8 15:16
+     */
+    @ExceptionHandler(PasswordErrorException.class)
+    @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
+    public MessageVO passwordError(PasswordErrorException e) {
+        return message.get(PASSWORD_ERROR);
+
+    }
+
+    /**
+     * token过期或者不是正确的token，412
+     *
+     * @param e 错误信息
+     * @return org.springframework.http.ResponseEntity
+     * @author 阮雪峰
+     * @date 2018/10/8 15:16
+     */
+    @ExceptionHandler(ExpiredJwtException.class)
     @ResponseStatus(HttpStatus.PRECONDITION_FAILED)
-    public Map<String, String> tokenException(TokenExpiredException e) {
-        log.error(ERROR_TITLE, e);
+    public MessageVO tokenException(ExpiredJwtException e) {
         return message.get(TOKEN_EXPIRED);
 
     }
 
     /**
      * 没有权限访问，403
+     *
      * @param e 错误信息
-     * @return java.util.Map<java.lang.String , java.lang.String>
+     * @return java.util.Map<java.lang.String, java.lang.String>
      * @author 阮雪峰
      * @date 2018/10/8 15:25
      */
     @ExceptionHandler(NoPermissionAccessException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    public Map<String, String> noPermissionException(NoPermissionAccessException e) {
-        log.error(ERROR_TITLE, e);
+    public MessageVO noPermissionException(NoPermissionAccessException e) {
         return message.get(NO_PERMISSION_ACCESS);
 
     }
 
     /**
      * 上传文件失败，521
+     *
      * @param e 错误信息
-     * @return java.util.Map<java.lang.String , java.lang.String>
+     * @return java.util.Map<java.lang.String, java.lang.String>
      * @author 阮雪峰
      * @date 2018/10/8 15:25
      */
@@ -151,14 +188,15 @@ public class ControllerValidateAdvice {
 
     /**
      * 服务器异常，500
+     *
      * @param e 错误信息
-     * @return java.util.Map<java.lang.String , java.lang.String>
+     * @return java.util.Map<java.lang.String, java.lang.String>
      * @author 阮雪峰
      * @date 2018/10/8 15:25
      */
     @ExceptionHandler(SocketTimeoutException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public Map<String, String> noPermissionException(SocketTimeoutException e) {
+    public MessageVO noPermissionException(SocketTimeoutException e) {
         log.error(ERROR_TITLE, e);
         return message.get(SERVER_ERROR);
 

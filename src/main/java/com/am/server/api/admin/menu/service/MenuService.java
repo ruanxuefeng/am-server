@@ -1,7 +1,7 @@
 package com.am.server.api.admin.menu.service;
 
 import com.am.server.api.admin.menu.entity.Menu;
-import com.am.server.common.base.entity.PageVO;
+import com.am.server.common.base.pojo.vo.PageVO;
 
 import java.util.List;
 

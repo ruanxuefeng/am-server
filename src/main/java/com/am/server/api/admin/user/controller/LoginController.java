@@ -1,30 +1,24 @@
 package com.am.server.api.admin.user.controller;
 
-import com.am.server.api.admin.user.pojo.AdminUser;
-import com.am.server.api.admin.user.pojo.param.LoginQuery;
+import com.am.server.api.admin.user.pojo.param.LoginAO;
+import com.am.server.api.admin.user.pojo.param.UpdateUserInfoAO;
+import com.am.server.api.admin.user.pojo.vo.LoginUserInfoVO;
+import com.am.server.api.admin.user.pojo.vo.UserInfoVO;
 import com.am.server.api.admin.user.service.AdminUserService;
 import com.am.server.api.admin.user.service.UserPermissionCacheService;
 import com.am.server.common.base.controller.BaseController;
+import com.am.server.common.base.pojo.vo.MessageVO;
 import com.am.server.common.base.validator.Login;
 import com.am.server.common.constant.Constant;
-import com.am.server.common.util.DesUtils;
 import com.am.server.common.util.JwtUtils;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.*;
 
-
-import java.util.Base64;
-import java.util.Optional;
 
 /**
  * 登录及登录用户相关
@@ -36,9 +30,6 @@ import java.util.Optional;
 @RestController
 @RequestMapping(Constant.ADMIN_ROOT)
 public class LoginController extends BaseController {
-
-    private static final String EMAIL_DOES_NOT_EXIST = "login.email.does_not_exist";
-    private static final String PASSWORD_ERROR = "login.password.error";
 
     private final AdminUserService adminUserService;
 
@@ -59,24 +50,8 @@ public class LoginController extends BaseController {
      */
     @ApiOperation(value = "登录", notes = "登录接口")
     @PostMapping("/login")
-    public ResponseEntity login(@Validated(Login.class) @RequestBody @ApiParam(name="登录对象",value="传入json格式",required=true) LoginQuery query) {
-
-        Optional<AdminUser> loginUserOption = Optional.ofNullable(adminUserService.login(query));
-        if (loginUserOption.isPresent()) {
-            Optional<ResponseEntity> result = loginUserOption.filter(loginUser -> {
-                //校验密码是否一样
-                String inputPassword = new String(Base64.getDecoder().decode(query.getPassword().getBytes()));
-                String userPassword = DesUtils.decrypt(loginUser.getPassword(), loginUser.getKey());
-                return inputPassword.equals(userPassword);
-            }).map(loginUser -> {
-                //移除密码信息
-                loginUser.setToken(JwtUtils.sign(loginUser.getId().toString()));
-                return new ResponseEntity<>(loginUser, HttpStatus.OK);
-            });
-            return result.orElse(new ResponseEntity<>(message.get(PASSWORD_ERROR), HttpStatus.NOT_ACCEPTABLE));
-        } else {
-            return new ResponseEntity<>(message.get(EMAIL_DOES_NOT_EXIST), HttpStatus.NOT_ACCEPTABLE);
-        }
+    public ResponseEntity<LoginUserInfoVO> login(@Validated(Login.class) @RequestBody @ApiParam(name = "登录对象", value = "传入json格式", required = true) LoginAO query) {
+        return new ResponseEntity<>(adminUserService.login(query), HttpStatus.OK);
     }
 
     /**
@@ -89,7 +64,7 @@ public class LoginController extends BaseController {
      */
     @ApiOperation(value = "获取登录用户信息")
     @GetMapping("/user/info")
-    public ResponseEntity info(@RequestHeader(Constant.TOKEN) String token) {
+    public ResponseEntity<UserInfoVO> info(@RequestHeader(Constant.TOKEN) String token) {
         return new ResponseEntity<>(adminUserService.info(Long.valueOf(JwtUtils.getSubject(token))), HttpStatus.OK);
     }
 
@@ -103,9 +78,9 @@ public class LoginController extends BaseController {
      * @date 2018/8/3 16:47
      */
     @PostMapping("/user/update/info")
-    public ResponseEntity updateUserInfo(@RequestHeader(Constant.TOKEN) String token, AdminUser user, @RequestParam(value = "img", required = false) MultipartFile img) {
+    public ResponseEntity<MessageVO> updateUserInfo(@RequestHeader(Constant.TOKEN) String token, UpdateUserInfoAO user) {
         user.setId(Long.valueOf(JwtUtils.getSubject(token)));
-//        adminUserService.update(user, img);
+        adminUserService.update(user);
         return ResponseEntity.ok(message.get(UPDATE_SUCCESS));
     }
 

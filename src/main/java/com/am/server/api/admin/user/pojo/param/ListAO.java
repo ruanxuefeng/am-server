@@ -12,12 +12,12 @@ import lombok.Data;
  */
 @ApiModel
 @Data
-public class ListQuery {
+public class ListAO {
 
-    @ApiModelProperty("要查询页数")
+    @ApiModelProperty(value = "要查询页数", required = true, example = "1")
     private Integer page;
 
-    @ApiModelProperty("每页记录数")
+    @ApiModelProperty(value = "每页记录数", required = true, example = "20")
     private Integer pageSize;
 
     @ApiModelProperty("姓名")

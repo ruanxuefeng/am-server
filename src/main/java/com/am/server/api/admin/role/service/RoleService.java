@@ -1,7 +1,7 @@
 package com.am.server.api.admin.role.service;
 
 import com.am.server.api.admin.role.entity.Role;
-import com.am.server.common.base.entity.PageVO;
+import com.am.server.common.base.pojo.vo.PageVO;
 import com.am.server.common.base.service.BaseService;
 
 import java.util.List;

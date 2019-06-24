@@ -4,9 +4,9 @@ import com.am.server.api.admin.log.aspect.annotation.WriteLog;
 import com.am.server.api.admin.log.aspect.service.ProcessLogService;
 import com.am.server.api.admin.log.entity.Log;
 import com.am.server.api.admin.log.service.LogService;
-import com.am.server.api.admin.user.pojo.AdminUser;
 import com.am.server.api.admin.user.exception.TokenExpiredException;
 import com.am.server.api.admin.user.exception.UserNotExistException;
+import com.am.server.api.admin.user.pojo.po.AdminUserPO;
 import com.am.server.api.admin.user.service.AdminUserService;
 import com.am.server.api.admin.user.uitl.UserUtils;
 import com.am.server.common.constant.Constant;
@@ -59,7 +59,7 @@ public class DefaultProcessLogServiceImpl implements ProcessLogService {
                         throw new TokenExpiredException();
                     }
                     String name = Optional.ofNullable(adminUserService.findById(Long.valueOf(uid)))
-                            .map(AdminUser::getName)
+                            .map(AdminUserPO::getName)
                             .orElseThrow(UserNotExistException::new);
 
                     Log log = new Log();
