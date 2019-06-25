@@ -3,7 +3,7 @@ package com.am.server.api.admin.role.controller;
 import com.am.server.api.admin.log.aspect.annotation.WriteLog;
 import com.am.server.api.admin.role.pojo.ao.RoleListAO;
 import com.am.server.api.admin.role.pojo.ao.SaveRoleAO;
-import com.am.server.api.admin.role.pojo.ao.UpdateMenuAO;
+import com.am.server.api.admin.role.pojo.ao.UpdateRoleMenuAO;
 import com.am.server.api.admin.role.pojo.ao.UpdateRoleAO;
 import com.am.server.api.admin.role.pojo.vo.RoleListVo;
 import com.am.server.api.admin.role.pojo.vo.SelectRoleVO;
@@ -138,8 +138,8 @@ public class RoleController extends BaseController {
     @ApiImplicitParams({@ApiImplicitParam(paramType = "header", dataType = "String", name = Constant.TOKEN, value = "登录凭证", required = true)})
     @WriteLog("分配权限")
     @PostMapping("/update/menuList")
-    public ResponseEntity updateMenuList(@RequestBody UpdateMenuAO updateMenuAo) {
-        roleService.updateMenuList(updateMenuAo);
+    public ResponseEntity updateMenuList(@RequestBody UpdateRoleMenuAO updateRoleMenuAo) {
+        roleService.updateMenuList(updateRoleMenuAo);
         return ResponseEntity.ok(message.get(UPDATE_SUCCESS));
     }
 

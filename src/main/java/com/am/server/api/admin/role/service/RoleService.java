@@ -2,7 +2,7 @@ package com.am.server.api.admin.role.service;
 
 import com.am.server.api.admin.role.pojo.ao.RoleListAO;
 import com.am.server.api.admin.role.pojo.ao.SaveRoleAO;
-import com.am.server.api.admin.role.pojo.ao.UpdateMenuAO;
+import com.am.server.api.admin.role.pojo.ao.UpdateRoleMenuAO;
 import com.am.server.api.admin.role.pojo.ao.UpdateRoleAO;
 import com.am.server.api.admin.role.pojo.vo.RoleListVo;
 import com.am.server.api.admin.role.pojo.vo.SelectRoleVO;
@@ -60,11 +60,11 @@ public interface RoleService {
 
     /**
      * 修改权限
-     * @param updateMenuAo updateMenuAo
+     * @param updateRoleMenuAo updateRoleMenuAo
      * @author 阮雪峰
      * @date 2018/7/31 8:59
      */
-    void updateMenuList(UpdateMenuAO updateMenuAo);
+    void updateMenuList(UpdateRoleMenuAO updateRoleMenuAo);
 
     /**
      * 查询角色拥有的权限

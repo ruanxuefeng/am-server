@@ -1,6 +1,11 @@
 package com.am.server.api.admin.menu.service;
 
-import com.am.server.api.admin.menu.entity.Menu;
+import com.am.server.api.admin.menu.pojo.ao.MenuListAO;
+import com.am.server.api.admin.menu.pojo.ao.SaveMenuAO;
+import com.am.server.api.admin.menu.pojo.ao.UpdateMenuAO;
+import com.am.server.api.admin.menu.pojo.vo.MenuListVO;
+import com.am.server.api.admin.menu.pojo.vo.TreeMenuVO;
+import com.am.server.api.admin.role.pojo.vo.SelectRoleVO;
 import com.am.server.common.base.pojo.vo.PageVO;
 
 import java.util.List;
@@ -13,12 +18,12 @@ public interface MenuService {
     /**
      * 分页
      *
-     * @param page page
-     * @param menu menu
+     * @param menuListAo menuListAo
      * @author 阮雪峰
      * @date 2018/7/30 15:36
+     * @return PageVO<MenuListVO>
      */
-    void list(PageVO<Menu> page, Menu menu);
+    PageVO<MenuListVO> list(MenuListAO menuListAo);
 
     /**
      * 新增
@@ -27,17 +32,7 @@ public interface MenuService {
      * @author 阮雪峰
      * @date 2018/7/30 15:36
      */
-    void save(Menu menu);
-
-    /**
-     * 详情
-     *
-     * @param menu menu
-     * @return com.am.server.api.admin.menu.pojo.Menu
-     * @author 阮雪峰
-     * @date 2018/7/30 15:37
-     */
-    Menu detail(Menu menu);
+    void save(SaveMenuAO menu);
 
     /**
      * 修改
@@ -46,16 +41,16 @@ public interface MenuService {
      * @author 阮雪峰
      * @date 2018/7/30 15:37
      */
-    void update(Menu menu);
+    void update(UpdateMenuAO menu);
 
     /**
      * 删除
      *
-     * @param menu menu
+     * @param id id
      * @author 阮雪峰
      * @date 2018/7/30 15:37
      */
-    void delete(Menu menu);
+    void delete(Long id);
 
     /**
      * 查询父级
@@ -64,7 +59,7 @@ public interface MenuService {
      * @author 阮雪峰
      * @date 2018/7/30 16:08
      */
-    List<Menu> parentList();
+    List<SelectRoleVO> parentList();
 
     /**
      * 树形结构所有的菜单
@@ -73,5 +68,5 @@ public interface MenuService {
      * @author 阮雪峰
      * @date 2018/7/30 16:46
      */
-    List<Menu> allMenuList();
+    List<TreeMenuVO> allMenuList();
 }

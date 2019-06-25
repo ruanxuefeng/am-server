@@ -4,7 +4,7 @@ import com.am.server.api.admin.role.dao.jpa.RoleDao;
 import com.am.server.api.admin.role.dao.jpa.RoleMenuDao;
 import com.am.server.api.admin.role.pojo.ao.RoleListAO;
 import com.am.server.api.admin.role.pojo.ao.SaveRoleAO;
-import com.am.server.api.admin.role.pojo.ao.UpdateMenuAO;
+import com.am.server.api.admin.role.pojo.ao.UpdateRoleMenuAO;
 import com.am.server.api.admin.role.pojo.ao.UpdateRoleAO;
 import com.am.server.api.admin.role.pojo.po.QRoleMenuPO;
 import com.am.server.api.admin.role.pojo.po.QRolePO;
@@ -122,9 +122,7 @@ public class RoleServiceImpl implements RoleService {
         RolePO role = new RolePO()
                 .setId(roleAo.getId())
                 .setName(roleAo.getName())
-                .setDescribe(roleAo.getDescribe())
-                .setCreateTime(LocalDateTime.now())
-                .setCreator(commonService.getLoginUserId());
+                .setDescribe(roleAo.getDescribe());
         roleDao.save(role);
     }
 
@@ -148,13 +146,13 @@ public class RoleServiceImpl implements RoleService {
 
     @Commit
     @Override
-    public void updateMenuList(UpdateMenuAO updateMenuAo) {
-        roleMenuDao.deleteByRole(updateMenuAo.getId());
-        Optional.ofNullable(updateMenuAo.getMenuList())
+    public void updateMenuList(UpdateRoleMenuAO updateRoleMenuAo) {
+        roleMenuDao.deleteByRole(updateRoleMenuAo.getId());
+        Optional.ofNullable(updateRoleMenuAo.getMenuList())
                 .filter(list -> !list.isEmpty())
                 .ifPresent(list -> roleMenuDao.saveAll(
                         list.stream()
-                                .map(item -> new RoleMenuPO(IdUtils.getId(), updateMenuAo.getId(), item))
+                                .map(item -> new RoleMenuPO(IdUtils.getId(), updateRoleMenuAo.getId(), item))
                                 .collect(Collectors.toList())
                 ));
     }

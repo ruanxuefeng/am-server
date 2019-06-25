@@ -15,7 +15,7 @@ import java.util.List;
  */
 @ApiModel
 @Data
-public class UpdateMenuAO {
+public class UpdateRoleMenuAO {
     @ApiModelProperty(value = "id", example = "1234567890")
     @NotNull(message = "common.operate.primaryKey.null")
     private Long id;
