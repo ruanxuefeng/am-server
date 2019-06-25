@@ -21,7 +21,7 @@ object JwtUtils {
 
     /**
      * 创建token字符串
-     * @param uid 用户主键
+     * @ao uid 用户主键
      * @return java.lang.String
      * @author 阮雪峰
      * @date 2018/7/24 9:45
@@ -61,7 +61,7 @@ object JwtUtils {
 
     /**
      * 解析token获取用户信息
-     * @param token     需要解析的token
+     * @ao token     需要解析的token
      * @return String
      * @author 阮雪峰
      * @date 2018/7/25 9:21

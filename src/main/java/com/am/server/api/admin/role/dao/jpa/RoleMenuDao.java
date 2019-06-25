@@ -1,6 +1,6 @@
 package com.am.server.api.admin.role.dao.jpa;
 
-import com.am.server.api.admin.role.entity.RoleMenu;
+import com.am.server.api.admin.role.pojo.po.RoleMenuPO;
 import com.am.server.common.base.dao.BaseDao;
 import org.springframework.stereotype.Repository;
 
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
  * @date 2019/2/13 15:33
  */
 @Repository
-public interface RoleMenuDao extends BaseDao<RoleMenu> {
+public interface RoleMenuDao extends BaseDao<RoleMenuPO> {
     /**
      * 删除角色权限管理关系
      * @param role 角色id

@@ -1,16 +1,16 @@
 package com.am.server.api.admin.user.service.impl;
 
-import com.am.server.api.admin.role.entity.Role;
+import com.am.server.api.admin.role.pojo.po.RolePO;
 import com.am.server.api.admin.upload.service.FileUploadService;
 import com.am.server.api.admin.user.dao.jpa.AdminUserDao;
 import com.am.server.api.admin.user.dao.jpa.UserRoleDao;
 import com.am.server.api.admin.user.exception.PasswordErrorException;
 import com.am.server.api.admin.user.exception.UserNotExistException;
-import com.am.server.api.admin.user.pojo.QUserRole;
-import com.am.server.api.admin.user.pojo.po.UserRolePO;
-import com.am.server.api.admin.user.pojo.param.*;
+import com.am.server.api.admin.user.pojo.ao.*;
 import com.am.server.api.admin.user.pojo.po.AdminUserPO;
 import com.am.server.api.admin.user.pojo.po.QAdminUserPO;
+import com.am.server.api.admin.user.pojo.po.QUserRolePO;
+import com.am.server.api.admin.user.pojo.po.UserRolePO;
 import com.am.server.api.admin.user.pojo.vo.AdminUserListVO;
 import com.am.server.api.admin.user.pojo.vo.LoginUserInfoVO;
 import com.am.server.api.admin.user.pojo.vo.UserInfoVO;
@@ -19,6 +19,7 @@ import com.am.server.api.admin.user.service.UserPermissionCacheService;
 import com.am.server.common.annotation.transaction.Commit;
 import com.am.server.common.annotation.transaction.ReadOnly;
 import com.am.server.common.base.pojo.vo.PageVO;
+import com.am.server.common.base.service.CommonService;
 import com.am.server.common.constant.Constant;
 import com.am.server.common.util.*;
 import com.querydsl.core.Tuple;
@@ -58,14 +59,18 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     private final FileUploadService fileUploadService;
 
+    private final CommonService commonService;
+
     @PersistenceContext
     private EntityManager entityManager;
 
-    public AdminUserServiceImpl(UserPermissionCacheService userPermissionCacheService, AdminUserDao adminUserDao, UserRoleDao userRoleDao, FileUploadService fileUploadService) {
+    public AdminUserServiceImpl(UserPermissionCacheService userPermissionCacheService, AdminUserDao adminUserDao, UserRoleDao userRoleDao,
+                                FileUploadService fileUploadService, CommonService commonService) {
         this.userPermissionCacheService = userPermissionCacheService;
         this.adminUserDao = adminUserDao;
         this.userRoleDao = userRoleDao;
         this.fileUploadService = fileUploadService;
+        this.commonService = commonService;
     }
 
     @Override
@@ -94,14 +99,14 @@ public class AdminUserServiceImpl implements AdminUserService {
                         .setEmail(user.getEmail())
                         .setGender(user.getGender())
                         .setName(user.getName())
-                        .setRoles(user.getRoleList().stream().map(Role::getName).collect(Collectors.toList()))
+                        .setRoles(user.getRoleList().stream().map(RolePO::getName).collect(Collectors.toList()))
                 )
                 .orElse(null);
     }
 
     @ReadOnly
     @Override
-    public PageVO<AdminUserListVO> list(ListAO listQuery) {
+    public PageVO<AdminUserListVO> list(AdminUserListAO listQuery) {
         PageVO<AdminUserListVO> page = new PageVO<AdminUserListVO>().setPageSize(listQuery.getPageSize()).setPage(listQuery.getPage());
 
         JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
@@ -124,17 +129,17 @@ public class AdminUserServiceImpl implements AdminUserService {
                 .limit(listQuery.getPageSize())
                 .orderBy(qAdminUser.id.desc());
 
-        Optional<ListAO> userOptional = Optional.of(listQuery);
+        Optional<AdminUserListAO> userOptional = Optional.of(listQuery);
 
-        userOptional.map(ListAO::getName)
+        userOptional.map(AdminUserListAO::getName)
                 .filter(name -> !name.isEmpty())
                 .ifPresent(name -> query.where(qAdminUser.name.like("%" + name + "%")));
 
-        userOptional.map(ListAO::getEmail)
+        userOptional.map(AdminUserListAO::getEmail)
                 .filter(email -> !email.isEmpty())
                 .ifPresent(email -> query.where(qAdminUser.email.like("%" + email + "%")));
 
-        userOptional.map(ListAO::getUsername)
+        userOptional.map(AdminUserListAO::getUsername)
                 .filter(username -> !username.isEmpty())
                 .ifPresent(username -> query.where(qAdminUser.username.like("%" + username + "%")));
 
@@ -142,7 +147,7 @@ public class AdminUserServiceImpl implements AdminUserService {
                 .stream()
                 .map(tuple -> new AdminUserListVO()
                         .setAvatar(tuple.get(qAdminUser.avatar))
-                        .setCreatorName(tuple.get(7, String.class))
+                        .setCreatorName(tuple.get(creator.name.as(Constant.CREATOR_NAME)))
                         .setEmail(tuple.get(qAdminUser.email))
                         .setGender(tuple.get(qAdminUser.gender))
                         .setName(tuple.get(qAdminUser.name))
@@ -168,7 +173,7 @@ public class AdminUserServiceImpl implements AdminUserService {
                 .setEmail(adminUser.getEmail())
                 .setGender(adminUser.getGender())
                 .setAvatar(uploadAvatar(id, adminUser.getImg()))
-                .setCreator(adminUser.getCreator())
+                .setCreator(commonService.getLoginUserId())
                 .setKey(key)
                 .setPassword(DesUtils.encrypt(Constant.INITIAL_PASSWORD, key));
 
@@ -274,7 +279,7 @@ public class AdminUserServiceImpl implements AdminUserService {
     @Override
     public List<Long> findRoleIdList(Long id) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
-        QUserRole qUserRole = QUserRole.userRole;
+        QUserRolePO qUserRole = QUserRolePO.userRolePO;
 
         return queryFactory.select(qUserRole.role)
                 .from(qUserRole)

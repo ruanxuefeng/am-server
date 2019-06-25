@@ -1,4 +1,4 @@
-package com.am.server.api.admin.role.entity;
+package com.am.server.api.admin.role.pojo.po;
 
 import lombok.Data;
 
@@ -14,16 +14,16 @@ import javax.persistence.Table;
 @Data
 @Entity
 @Table(name = "role_menu")
-public class RoleMenu {
+public class RoleMenuPO {
     @Id
     private Long id;
     private Long role;
     private Long menu;
 
-    public RoleMenu() {
+    public RoleMenuPO() {
     }
 
-    public RoleMenu(Long id, Long role, Long menu) {
+    public RoleMenuPO(Long id, Long role, Long menu) {
         this.id = id;
         this.role = role;
         this.menu = menu;

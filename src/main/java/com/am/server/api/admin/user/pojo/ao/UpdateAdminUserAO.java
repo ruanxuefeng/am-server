@@ -1,8 +1,6 @@
-package com.am.server.api.admin.user.pojo.param;
+package com.am.server.api.admin.user.pojo.ao;
 
 import com.am.server.common.base.enumerate.Gender;
-import com.am.server.common.base.validator.Save;
-import com.am.server.common.base.validator.Update;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -11,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  * 保存、修改
@@ -20,26 +19,30 @@ import javax.validation.constraints.NotBlank;
  */
 @ApiModel
 @Data
-public class SaveAdminUserAO {
+public class UpdateAdminUserAO {
+    @ApiModelProperty(value = "主键", example = "1234567890", required = true)
+    @NotNull(message = "common.operate.primaryKey.null")
+    private Long id;
 
     @ApiModelProperty(value = "用户名", required = true)
-    @NotBlank(message = "login.username.blank", groups = {Save.class, Update.class})
-    @Length(max = 64, message = "user.username.long", groups = {Save.class, Update.class})
+    @NotBlank(message = "login.username.blank")
+    @Length(max = 64, message = "user.username.long")
     private String username;
 
     @ApiModelProperty("姓名")
     private String name;
 
     @ApiModelProperty("邮箱")
-    @NotBlank(message = "login.email.blank", groups = {Save.class, Update.class})
-    @Email(message = "login.email.error", groups = {Save.class, Update.class})
+    @NotBlank(message = "login.email.blank")
+    @Email(message = "login.email.error")
     private String email;
 
     @ApiModelProperty("性别")
     private Gender gender;
 
-    @ApiModelProperty("头像")
-    private MultipartFile img;
+    @ApiModelProperty("头像链接")
+    private String avatar;
 
-    private Long creator;
+    @ApiModelProperty("头像文件")
+    private MultipartFile img;
 }

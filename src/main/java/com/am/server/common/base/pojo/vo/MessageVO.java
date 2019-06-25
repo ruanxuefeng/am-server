@@ -14,7 +14,7 @@ import lombok.Data;
 @Data
 public class MessageVO {
 
-    @ApiModelProperty("消息内容")
+    @ApiModelProperty(value = "消息内容", example = "成功/失败")
     private String message;
 
 }

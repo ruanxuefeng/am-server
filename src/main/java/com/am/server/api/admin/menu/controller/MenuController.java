@@ -123,4 +123,16 @@ public class MenuController extends BaseController {
     public ResponseEntity parentList() {
         return ResponseEntity.ok(menuService.parentList());
     }
+
+    /**
+     * 树形结构所有的菜单
+     *
+     * @return org.springframework.http.ResponseEntity
+     * @author 阮雪峰
+     * @date 2018/7/30 16:45
+     */
+    @GetMapping("/all/list")
+    public ResponseEntity allMenuList() {
+        return ResponseEntity.ok(menuService.allMenuList());
+    }
 }

@@ -5,7 +5,7 @@ import java.util.regex.Pattern
 object MongoUtils {
     /**
      * 获取模糊查询正则
-     * @param keyWord keyWord
+     * @ao keyWord keyWord
      * @return java.util.regex.Pattern
      * @author 阮雪峰
      * @date 2018/4/13 10:59

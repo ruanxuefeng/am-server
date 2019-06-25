@@ -13,7 +13,7 @@ object StringUtils {
     private const val NUM = "1234567890"
     /**
      * 获取随机数
-     * @param length 长度
+     * @ao length 长度
      * @return java.lang.Long
      * @author 阮雪峰
      * @date 2018/9/5 9:29
@@ -24,7 +24,7 @@ object StringUtils {
 
     /**
      * 获取随机数
-     * @param length 长度
+     * @ao length 长度
      * @return java.lang.String
      * @author 阮雪峰
      * @date 2018/9/5 9:27
@@ -35,7 +35,7 @@ object StringUtils {
 
     /**
      * 获取随机字符串
-     * @param length 随机字符串长度
+     * @ao length 随机字符串长度
      * @return java.lang.String
      * @author 阮雪峰
      * @date 2018/9/5 9:26

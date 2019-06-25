@@ -2,7 +2,7 @@ package com.am.server.api.admin.user.controller;
 
 import com.am.server.api.admin.log.aspect.annotation.WriteLog;
 import com.am.server.api.admin.user.interceptor.annotation.Permission;
-import com.am.server.api.admin.user.pojo.param.*;
+import com.am.server.api.admin.user.pojo.ao.*;
 import com.am.server.api.admin.user.pojo.vo.AdminUserListVO;
 import com.am.server.api.admin.user.service.AdminUserService;
 import com.am.server.common.base.controller.BaseController;
@@ -10,10 +10,12 @@ import com.am.server.common.base.pojo.vo.Exist;
 import com.am.server.common.base.pojo.vo.MessageVO;
 import com.am.server.common.base.pojo.vo.PageVO;
 import com.am.server.common.base.validator.Id;
-import com.am.server.common.base.validator.Save;
 import com.am.server.common.constant.Constant;
 import com.am.server.common.util.JwtUtils;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -58,8 +60,8 @@ public class AdminUserController extends BaseController {
     @ApiOperation(value = "列表查询")
     @ApiImplicitParams({@ApiImplicitParam(paramType = "header", dataType = "String", name = Constant.TOKEN, value = "登录凭证", required = true)})
     @GetMapping("/list")
-    public ResponseEntity<PageVO<AdminUserListVO>> list(ListAO list) {
-        return new ResponseEntity<>(adminUserService.list(list), HttpStatus.OK);
+    public ResponseEntity<PageVO<AdminUserListVO>> list(AdminUserListAO list) {
+        return ResponseEntity.ok(adminUserService.list(list));
     }
 
     /**
@@ -74,7 +76,7 @@ public class AdminUserController extends BaseController {
     @ApiImplicitParams({@ApiImplicitParam(paramType = "header", dataType = "String", name = Constant.TOKEN, value = "登录凭证", required = true)})
     @WriteLog("新增")
     @PostMapping("/save")
-    public ResponseEntity<MessageVO> save(@RequestHeader(Constant.TOKEN) String token, @Validated(Save.class) SaveAdminUserAO user) {
+    public ResponseEntity<MessageVO> save(@Validated SaveAdminUserAO user) {
         //检验邮箱是否存在
         if (adminUserService.isEmailExist(user.getEmail())) {
             return new ResponseEntity<>(message.get(EMAIL_EXIST), HttpStatus.BAD_REQUEST);
@@ -88,7 +90,6 @@ public class AdminUserController extends BaseController {
             return new ResponseEntity<>(message.get(AVATAR_BLANK), HttpStatus.BAD_REQUEST);
         }
 
-        user.setCreator(Long.valueOf(JwtUtils.getSubject(token)));
         adminUserService.save(user);
 
         return new ResponseEntity<>(message.get(SAVE_SUCCESS), HttpStatus.OK);
@@ -106,7 +107,7 @@ public class AdminUserController extends BaseController {
     @ApiImplicitParams({@ApiImplicitParam(paramType = "header", dataType = "String", name = Constant.TOKEN, value = "登录凭证", required = true)})
     @WriteLog("修改")
     @PostMapping("/update")
-    public ResponseEntity<MessageVO> update(@Validated(Save.class) UpdateAdminUserAO user) {
+    public ResponseEntity<MessageVO> update(@Validated UpdateAdminUserAO user) {
         if (adminUserService.isEmailExistWithId(user.getEmail(), user.getId())) {
             return new ResponseEntity<>(message.get(EMAIL_EXIST), HttpStatus.BAD_REQUEST);
         }

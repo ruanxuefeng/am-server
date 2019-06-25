@@ -1,7 +1,7 @@
 package com.am.server.api.admin.user.controller;
 
-import com.am.server.api.admin.user.pojo.param.LoginAO;
-import com.am.server.api.admin.user.pojo.param.UpdateUserInfoAO;
+import com.am.server.api.admin.user.pojo.ao.LoginAO;
+import com.am.server.api.admin.user.pojo.ao.UpdateUserInfoAO;
 import com.am.server.api.admin.user.pojo.vo.LoginUserInfoVO;
 import com.am.server.api.admin.user.pojo.vo.UserInfoVO;
 import com.am.server.api.admin.user.service.AdminUserService;

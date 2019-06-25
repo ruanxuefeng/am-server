@@ -1,6 +1,6 @@
 package com.am.server.api.admin.user.uitl;
 
-import com.am.server.api.admin.user.exception.NoTokenException;
+import com.am.server.common.base.exception.NoTokenException;
 
 import java.util.Optional;
 

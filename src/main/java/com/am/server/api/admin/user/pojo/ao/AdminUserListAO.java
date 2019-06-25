@@ -1,4 +1,4 @@
-package com.am.server.api.admin.user.pojo.param;
+package com.am.server.api.admin.user.pojo.ao;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -12,7 +12,7 @@ import lombok.Data;
  */
 @ApiModel
 @Data
-public class ListAO {
+public class AdminUserListAO {
 
     @ApiModelProperty(value = "要查询页数", required = true, example = "1")
     private Integer page;

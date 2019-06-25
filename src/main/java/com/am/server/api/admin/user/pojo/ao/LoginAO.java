@@ -1,4 +1,4 @@
-package com.am.server.api.admin.user.pojo.param;
+package com.am.server.api.admin.user.pojo.ao;
 
 import com.am.server.common.base.validator.Login;
 import io.swagger.annotations.ApiModel;

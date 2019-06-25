@@ -138,7 +138,7 @@ public class MenuServiceImpl implements MenuService {
 
     @ReadOnly
     @Override
-    public List<Menu> menuList() {
+    public List<Menu> allMenuList() {
         return menuDao.findAllByLevelOrderByIdDesc(1);
 
     }

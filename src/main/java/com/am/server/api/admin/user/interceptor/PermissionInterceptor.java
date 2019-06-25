@@ -4,7 +4,7 @@ import com.am.server.api.admin.user.exception.IllegalRequestException;
 import com.am.server.api.admin.user.service.UserPermissionCacheService;
 import com.am.server.api.admin.user.interceptor.annotation.Permission;
 import com.am.server.api.admin.user.exception.NoPermissionAccessException;
-import com.am.server.api.admin.user.exception.TokenExpiredException;
+import com.am.server.common.base.exception.TokenExpiredException;
 import com.am.server.api.admin.user.uitl.UserUtils;
 import com.am.server.common.constant.Constant;
 import com.am.server.common.util.JwtUtils;

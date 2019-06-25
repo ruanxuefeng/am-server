@@ -1,4 +1,4 @@
-package com.am.server.api.admin.user.exception;
+package com.am.server.common.base.exception;
 
 /**
  *  没有token异常

@@ -1,31 +1,36 @@
 package com.am.server.api.admin.role.controller;
 
 import com.am.server.api.admin.log.aspect.annotation.WriteLog;
-import com.am.server.api.admin.menu.service.MenuService;
-import com.am.server.api.admin.role.entity.Role;
+import com.am.server.api.admin.role.pojo.ao.RoleListAO;
+import com.am.server.api.admin.role.pojo.ao.SaveRoleAO;
+import com.am.server.api.admin.role.pojo.ao.UpdateMenuAO;
+import com.am.server.api.admin.role.pojo.ao.UpdateRoleAO;
+import com.am.server.api.admin.role.pojo.vo.RoleListVo;
+import com.am.server.api.admin.role.pojo.vo.SelectRoleVO;
 import com.am.server.api.admin.role.service.RoleService;
 import com.am.server.api.admin.user.interceptor.annotation.Permission;
 import com.am.server.common.base.controller.BaseController;
+import com.am.server.common.base.pojo.vo.MessageVO;
 import com.am.server.common.base.pojo.vo.PageVO;
-import com.am.server.common.base.validator.Delete;
-import com.am.server.common.base.validator.Id;
-import com.am.server.common.base.validator.Save;
-import com.am.server.common.base.validator.Update;
 import com.am.server.common.constant.Constant;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  *  角色管理
  * @author 阮雪峰
  * @date 2018/7/27 10:31
  */
+@Api(tags = "角色管理")
 @Permission("system-role")
 @WriteLog("角色管理")
 @RestController
@@ -34,25 +39,23 @@ public class RoleController extends BaseController {
 
     private final RoleService roleService;
 
-    private final MenuService menuService;
 
-    public RoleController(RoleService roleService, MenuService menuService) {
+    public RoleController(RoleService roleService) {
         this.roleService = roleService;
-        this.menuService = menuService;
     }
 
     /**
      * 列表
-     * @param page 分页
-     * @param role 角色信息
+     * @param roleListAo roleListAo
      * @return org.springframework.http.ResponseEntity
      * @author 阮雪峰
      * @date 2018/7/27 10:33
      */
+    @ApiOperation(value = "列表查询")
+    @ApiImplicitParams({@ApiImplicitParam(paramType = "header", dataType = "String", name = Constant.TOKEN, value = "登录凭证", required = true)})
     @GetMapping("/list")
-    public ResponseEntity list(PageVO<Role> page, Role role) {
-        roleService.list(page, role);
-        return new ResponseEntity<>(page, HttpStatus.OK);
+    public ResponseEntity<PageVO<RoleListVo>> list(RoleListAO roleListAo) {
+        return ResponseEntity.ok(roleService.list(roleListAo));
     }
 
     /**
@@ -62,9 +65,11 @@ public class RoleController extends BaseController {
      * @author 阮雪峰
      * @date 2018/7/27 10:38
      */
+    @ApiOperation(value = "新增")
+    @ApiImplicitParams({@ApiImplicitParam(paramType = "header", dataType = "String", name = Constant.TOKEN, value = "登录凭证", required = true)})
     @WriteLog("新增")
     @PostMapping("/save")
-    public ResponseEntity save(@Validated(Save.class) @RequestBody Role role) {
+    public ResponseEntity<MessageVO> save(@Validated @RequestBody SaveRoleAO role) {
         roleService.save(role);
         return new ResponseEntity<>(message.get(SAVE_SUCCESS), HttpStatus.OK);
     }
@@ -76,10 +81,12 @@ public class RoleController extends BaseController {
      * @author 阮雪峰
      * @date 2018/7/27 10:41
      */
+    @ApiOperation(value = "修改")
+    @ApiImplicitParams({@ApiImplicitParam(paramType = "header", dataType = "String", name = Constant.TOKEN, value = "登录凭证", required = true)})
     @WriteLog("修改")
     @PostMapping("/update")
-    public ResponseEntity update(@Validated({Id.class, Update.class}) @RequestBody Role role) {
-        roleService.update(role);
+    public ResponseEntity<MessageVO> update(@Validated @RequestBody UpdateRoleAO roleAo) {
+        roleService.update(roleAo);
         return new ResponseEntity<>(message.get(UPDATE_SUCCESS), HttpStatus.OK);
     }
 
@@ -90,22 +97,20 @@ public class RoleController extends BaseController {
      * @author 阮雪峰
      * @date 2018/7/27 10:43
      */
+    @ApiOperation(value = "删除")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "query", dataType = "Long", name = "id", value = "用户id", example = "123456789", required = true),
+            @ApiImplicitParam(paramType = "header", dataType = "String", name = Constant.TOKEN, value = "登录凭证", required = true)
+    })
     @WriteLog("删除")
-    @PostMapping("/delete")
-    public ResponseEntity delete(@Validated(Delete.class) @RequestBody Role role) {
-        roleService.delete(role);
-        return new ResponseEntity<>(message.get(DELETE_SUCCESS), HttpStatus.OK);
-    }
-
-    /**
-     * 树形结构所有的菜单
-     * @return org.springframework.http.ResponseEntity
-     * @author 阮雪峰
-     * @date 2018/7/30 16:45
-     */
-    @GetMapping("/menu/list")
-    public ResponseEntity menuList() {
-        return ResponseEntity.ok(menuService.menuList());
+    @DeleteMapping("/delete")
+    public ResponseEntity<MessageVO> delete(Long id) {
+        return Optional.ofNullable(id)
+                .map(i -> {
+                    roleService.delete(id);
+                    return ResponseEntity.ok(message.get(DELETE_SUCCESS));
+                })
+                .orElse(new ResponseEntity<>(message.get(COMMON_DELETE_PRIMARY_KEY_NULL), HttpStatus.OK));
     }
 
     /**
@@ -115,9 +120,11 @@ public class RoleController extends BaseController {
      * @author 阮雪峰
      * @date 2019/2/14 8:46
      */
+    @ApiOperation(value = "角色拥有的权限的id")
+    @ApiImplicitParams({@ApiImplicitParam(paramType = "header", dataType = "String", name = Constant.TOKEN, value = "登录凭证", required = true)})
     @GetMapping("/menus")
-    public ResponseEntity menus(@Validated({Id.class}) Role role) {
-        return ResponseEntity.ok(roleService.getMenuList(role));
+    public ResponseEntity<List<Long>> menus(Long id) {
+        return ResponseEntity.ok(roleService.getMenuList(id));
     }
 
     /**
@@ -127,10 +134,12 @@ public class RoleController extends BaseController {
      * @author 阮雪峰
      * @date 2018/7/31 8:58
      */
+    @ApiOperation(value = "分配权限")
+    @ApiImplicitParams({@ApiImplicitParam(paramType = "header", dataType = "String", name = Constant.TOKEN, value = "登录凭证", required = true)})
     @WriteLog("分配权限")
     @PostMapping("/update/menuList")
-    public ResponseEntity updateMenuList(@Validated(Id.class) @RequestBody Role role) {
-        roleService.updateMenuList(role);
+    public ResponseEntity updateMenuList(@RequestBody UpdateMenuAO updateMenuAo) {
+        roleService.updateMenuList(updateMenuAo);
         return ResponseEntity.ok(message.get(UPDATE_SUCCESS));
     }
 
@@ -140,8 +149,10 @@ public class RoleController extends BaseController {
      * @author 阮雪峰
      * @date 2019/2/18 15:04
      */
+    @ApiOperation(value = "查询所有")
+    @ApiImplicitParams({@ApiImplicitParam(paramType = "header", dataType = "String", name = Constant.TOKEN, value = "登录凭证", required = true)})
     @GetMapping("/all")
-    public ResponseEntity all() {
+    public ResponseEntity<List<SelectRoleVO>> all() {
         return ResponseEntity.ok(roleService.findAll());
     }
 }

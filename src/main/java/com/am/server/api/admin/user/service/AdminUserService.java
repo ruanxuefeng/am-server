@@ -1,12 +1,11 @@
 package com.am.server.api.admin.user.service;
 
-import com.am.server.api.admin.user.pojo.param.*;
+import com.am.server.api.admin.user.pojo.ao.*;
 import com.am.server.api.admin.user.pojo.po.AdminUserPO;
 import com.am.server.api.admin.user.pojo.vo.AdminUserListVO;
 import com.am.server.api.admin.user.pojo.vo.LoginUserInfoVO;
 import com.am.server.api.admin.user.pojo.vo.UserInfoVO;
 import com.am.server.common.base.pojo.vo.PageVO;
-import com.am.server.common.base.service.BaseService;
 
 import java.util.List;
 
@@ -14,7 +13,7 @@ import java.util.List;
  * @author 阮雪峰
  * @date 2018/7/24 16:46
  */
-public interface AdminUserService extends BaseService {
+public interface AdminUserService {
     /**
      * 登录
      *
@@ -43,7 +42,7 @@ public interface AdminUserService extends BaseService {
      * @author 阮雪峰
      * @date 2018/7/25 15:51
      */
-    PageVO<AdminUserListVO> list(ListAO list);
+    PageVO<AdminUserListVO> list(AdminUserListAO list);
 
     /**
      * 新增

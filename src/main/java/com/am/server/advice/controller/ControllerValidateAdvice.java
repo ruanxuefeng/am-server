@@ -2,6 +2,7 @@ package com.am.server.advice.controller;
 
 import com.am.server.api.admin.upload.exception.UploadFileException;
 import com.am.server.api.admin.user.exception.*;
+import com.am.server.common.base.exception.NoTokenException;
 import com.am.server.common.base.pojo.vo.MessageVO;
 import com.am.server.common.base.service.Message;
 import io.jsonwebtoken.ExpiredJwtException;

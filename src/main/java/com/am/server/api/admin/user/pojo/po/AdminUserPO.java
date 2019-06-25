@@ -1,6 +1,6 @@
 package com.am.server.api.admin.user.pojo.po;
 
-import com.am.server.api.admin.role.entity.Role;
+import com.am.server.api.admin.role.pojo.po.RolePO;
 import com.am.server.common.base.enumerate.Gender;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -58,5 +58,5 @@ public class AdminUserPO {
     @JoinTable(name = "user_role",
             joinColumns = {@JoinColumn(name = "user", insertable = false, updatable = false)},
             inverseJoinColumns = {@JoinColumn(name = "role", insertable = false, updatable = false)})
-    private List<Role> roleList;
+    private List<RolePO> roleList;
 }

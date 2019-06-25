@@ -6,13 +6,13 @@ import com.am.server.common.base.pojo.vo.PageVO;
 import java.util.List;
 
 /**
- *
  * @author 阮雪峰
  * @date 2018/7/30 14:59
  */
 public interface MenuService {
     /**
      * 分页
+     *
      * @param page page
      * @param menu menu
      * @author 阮雪峰
@@ -22,6 +22,7 @@ public interface MenuService {
 
     /**
      * 新增
+     *
      * @param menu menu
      * @author 阮雪峰
      * @date 2018/7/30 15:36
@@ -30,6 +31,7 @@ public interface MenuService {
 
     /**
      * 详情
+     *
      * @param menu menu
      * @return com.am.server.api.admin.menu.pojo.Menu
      * @author 阮雪峰
@@ -39,6 +41,7 @@ public interface MenuService {
 
     /**
      * 修改
+     *
      * @param menu menu
      * @author 阮雪峰
      * @date 2018/7/30 15:37
@@ -47,6 +50,7 @@ public interface MenuService {
 
     /**
      * 删除
+     *
      * @param menu menu
      * @author 阮雪峰
      * @date 2018/7/30 15:37
@@ -55,6 +59,7 @@ public interface MenuService {
 
     /**
      * 查询父级
+     *
      * @return java.util.List<com.am.server.api.admin.menu.pojo.Menu>
      * @author 阮雪峰
      * @date 2018/7/30 16:08
@@ -63,9 +68,10 @@ public interface MenuService {
 
     /**
      * 树形结构所有的菜单
+     *
      * @return java.util.List<com.am.server.api.admin.menu.pojo.Menu>
      * @author 阮雪峰
      * @date 2018/7/30 16:46
      */
-    List<Menu> menuList();
+    List<Menu> allMenuList();
 }
