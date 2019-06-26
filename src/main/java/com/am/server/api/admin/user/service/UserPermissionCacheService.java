@@ -50,5 +50,10 @@ public interface UserPermissionCacheService {
      */
     void remove(Long uid);
 
+    /**
+     * 清空权限缓存
+     * @author 阮雪峰
+     * @date 2019年6月26日14:32:58
+     */
     void removeAll();
 }

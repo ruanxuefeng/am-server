@@ -17,7 +17,7 @@
     |       |-api       -- 所有的请求
     |           |-admin     -- 后台管理相关接口
     |               |-*     -- 相关功能
-    |                   |-*     -- 主要包括相关功能的controller、service、dao、entity、config等
+    |                   |-*     -- 主要包括相关功能的controller、service、dao、pojo、config等
     |           |-app       -- app相关接口
     |       |-common        -- 项目的公共模块
     |           |-annotation.transaction        -- 事务相关注解（Commit：写事务，ReadOnly：只读事务）
@@ -35,5 +35,6 @@
 ### 项目特点
     - 基本遵循阿里开发手册
     - 功能少，基本框架，想怎么改就怎么改
+    - 注释全
 
-配备前端框架：[am-admin](https://gitee.com/ruanxuefeng/am-admin)，在[vue-element-admin](https://github.com/PanJiaChen/vue-element-admin)基础上开发
+配备前端框架：[vue-typescript-element-admin](https://gitee.com/ruanxuefeng/vue-typescript-element-admin)，在[vue-element-admin](https://github.com/PanJiaChen/vue-element-admin)基础上开发

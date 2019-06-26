@@ -68,7 +68,7 @@ public interface RoleService {
 
     /**
      * 查询角色拥有的权限
-     * @param role role
+     * @param id id
      * @return List<Long>
      * @author 阮雪峰
      * @date 2019/2/13 16:08

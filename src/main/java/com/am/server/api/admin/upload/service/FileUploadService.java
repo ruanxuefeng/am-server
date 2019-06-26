@@ -2,8 +2,6 @@ package com.am.server.api.admin.upload.service;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-
 /**
  *  文件上传
  * @author 阮雪峰
@@ -21,5 +19,11 @@ public interface FileUploadService {
      */
     String upload(MultipartFile file, String key);
 
+    /**
+     * 移除文件
+     * @param key 路径
+     * @author 阮雪峰
+     * @date 2019年6月26日14:33:10
+     */
     void remove(String key);
 }
