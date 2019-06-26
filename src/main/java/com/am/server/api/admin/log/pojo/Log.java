@@ -1,4 +1,4 @@
-package com.am.server.api.admin.log.entity;
+package com.am.server.api.admin.log.pojo;
 
 import com.am.server.common.base.pojo.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;

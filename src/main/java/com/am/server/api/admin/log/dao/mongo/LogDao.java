@@ -1,6 +1,6 @@
 package com.am.server.api.admin.log.dao.mongo;
 
-import com.am.server.api.admin.log.entity.Log;
+import com.am.server.api.admin.log.pojo.po.LogPO;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,5 +10,5 @@ import org.springframework.stereotype.Repository;
  * @date 2018/8/1 14:37
  */
 @Repository("adminLogDao")
-public interface LogDao extends MongoRepository<Log, Long> {
+public interface LogDao extends MongoRepository<LogPO, Long> {
 }

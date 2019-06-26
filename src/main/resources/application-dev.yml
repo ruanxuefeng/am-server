@@ -14,7 +14,7 @@ spring:
   data:
     mongodb:
       host: localhost
-      database: am-dev
+      database: am-server
       option:
         heartbeat-socket-timeout: 1000
         socket-timeout: 3000

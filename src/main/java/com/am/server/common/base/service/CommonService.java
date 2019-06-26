@@ -11,4 +11,10 @@ public interface CommonService {
      * @return Long
      */
     Long getLoginUserId();
+
+    /**
+     * 获取请求ip
+     * @return String
+     */
+    String getRequestIp();
 }

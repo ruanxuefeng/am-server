@@ -3,6 +3,7 @@ package com.am.server.common.base.service.impl;
 import com.am.server.common.base.exception.NoTokenException;
 import com.am.server.common.base.service.CommonService;
 import com.am.server.common.constant.Constant;
+import com.am.server.common.util.IpUtils;
 import com.am.server.common.util.JwtUtils;
 import org.springframework.stereotype.Service;
 
@@ -27,5 +28,10 @@ public class CommonServiceImpl implements CommonService {
         return Optional.ofNullable(request.getHeader(Constant.TOKEN))
                 .map(token -> Long.valueOf(JwtUtils.getSubject(token)))
                 .orElseThrow(NoTokenException::new);
+    }
+
+    @Override
+    public String getRequestIp() {
+        return IpUtils.getIpAddress(request);
     }
 }
