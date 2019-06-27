@@ -1,20 +1,16 @@
 package com.am.server.api.admin.user.interceptor;
 
 import com.am.server.api.admin.user.exception.IllegalRequestException;
-import com.am.server.api.admin.user.service.UserPermissionCacheService;
-import com.am.server.api.admin.user.interceptor.annotation.Permission;
 import com.am.server.api.admin.user.exception.NoPermissionAccessException;
-import com.am.server.common.base.exception.TokenExpiredException;
-import com.am.server.api.admin.user.uitl.UserUtils;
-import com.am.server.common.constant.Constant;
-import com.am.server.common.util.JwtUtils;
+import com.am.server.api.admin.user.interceptor.annotation.Permission;
+import com.am.server.api.admin.user.service.UserPermissionCacheService;
+import com.am.server.common.base.service.CommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.util.Optional;
 
 /**
@@ -24,6 +20,9 @@ import java.util.Optional;
  * @date 2018/8/2 12:43
  */
 public class PermissionInterceptor implements HandlerInterceptor {
+
+    @Autowired
+    private CommonService commonService;
 
     @Autowired
     private UserPermissionCacheService userPermissionCacheService;
@@ -49,19 +48,9 @@ public class PermissionInterceptor implements HandlerInterceptor {
             //判断在方法或者类上有没有加权限，如果都有以方法上为准
             Permission permission = Optional.ofNullable(methodPermission).orElse(classPermission);
             Optional.ofNullable(permission).ifPresent(p -> {
-                String token = request.getHeader(Constant.TOKEN);
-                //没有token说明未登录
-                UserUtils.assertLogin(token);
-
                 //没有获取到uid说明token过期或者不是token
-                String uid;
-                try {
-                    uid = JwtUtils.getSubject(token);
-                } catch (Exception e) {
-                    throw new TokenExpiredException();
-                }
                 //判断是否拥有类访问权限
-                if (permission.check() && !userPermissionCacheService.hasPermission(Long.valueOf(uid), permission.value())) {
+                if (permission.check() && !userPermissionCacheService.hasPermission(commonService.getLoginUserId(), permission.value())) {
                     throw new NoPermissionAccessException();
                 }
             });

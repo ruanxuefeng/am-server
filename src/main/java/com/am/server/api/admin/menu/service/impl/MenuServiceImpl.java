@@ -1,6 +1,5 @@
 package com.am.server.api.admin.menu.service.impl;
 
-import com.am.server.advice.update.annotation.Save;
 import com.am.server.api.admin.menu.dao.jpa.MenuDao;
 import com.am.server.api.admin.menu.pojo.ao.MenuListAO;
 import com.am.server.api.admin.menu.pojo.ao.SaveMenuAO;
@@ -106,7 +105,6 @@ public class MenuServiceImpl implements MenuService {
         return page;
     }
 
-    @Save
     @Commit
     @Override
     public void save(SaveMenuAO menu) {

@@ -1,6 +1,6 @@
 package com.am.server.api.admin.bulletin.admin.listener;
 
-import com.am.server.api.admin.bulletin.admin.entity.BulletinExpiredDelayedImpl;
+import com.am.server.api.admin.bulletin.admin.pojo.BulletinExpiredDelayedImpl;
 import com.am.server.api.admin.bulletin.admin.service.BulletinService;
 import com.am.server.api.admin.bulletin.admin.thread.ExpireBulletinThread;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
@@ -49,7 +49,6 @@ public class ServerStartedListenerForStartExpireBulletinThread implements Applic
     public void onApplicationEvent(ContextRefreshedEvent event) {
         if (event.getApplicationContext().getParent() == null) {
             POOL.execute(new ExpireBulletinThread(bulletinService, delayQueue));
-            log.info("------ 使公告过期线程开始工作 ------");
         }
     }
 }

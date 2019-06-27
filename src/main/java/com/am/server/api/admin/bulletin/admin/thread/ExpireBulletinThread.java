@@ -1,7 +1,7 @@
 package com.am.server.api.admin.bulletin.admin.thread;
 
-import com.am.server.api.admin.bulletin.admin.entity.Bulletin;
-import com.am.server.api.admin.bulletin.admin.entity.BulletinExpiredDelayedImpl;
+import com.am.server.api.admin.bulletin.admin.pojo.Bulletin;
+import com.am.server.api.admin.bulletin.admin.pojo.BulletinExpiredDelayedImpl;
 import com.am.server.api.admin.bulletin.admin.service.BulletinService;
 import lombok.extern.slf4j.Slf4j;
 

@@ -1,4 +1,4 @@
-package com.am.server.api.admin.bulletin.admin.entity;
+package com.am.server.api.admin.bulletin.admin.pojo;
 
 import lombok.Data;
 

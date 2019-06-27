@@ -1,6 +1,5 @@
 package com.am.server.api.admin.log.pojo;
 
-import com.am.server.common.base.pojo.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -24,7 +23,7 @@ import java.time.LocalDateTime;
 @Document
 @EqualsAndHashCode()
 @Data
-public class Log implements BaseEntity {
+public class Log {
 
     @Id
     private Long id;

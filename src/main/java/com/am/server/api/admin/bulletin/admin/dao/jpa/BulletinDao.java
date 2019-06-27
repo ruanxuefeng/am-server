@@ -1,7 +1,7 @@
 package com.am.server.api.admin.bulletin.admin.dao.jpa;
 
-import com.am.server.api.admin.bulletin.admin.entity.Bulletin;
-import com.am.server.api.admin.bulletin.admin.entity.Status;
+import com.am.server.api.admin.bulletin.admin.pojo.Status;
+import com.am.server.api.admin.bulletin.admin.pojo.po.BulletinPO;
 import com.am.server.common.base.dao.BaseDao;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -16,7 +16,7 @@ import java.util.List;
  * @date 2019/1/17 15:18
  */
 @Repository("adminBulletinDao")
-public interface BulletinDao extends BaseDao<Bulletin> {
+public interface BulletinDao extends BaseDao<BulletinPO> {
     /**
      * 修改状态
      * @param status status
@@ -35,7 +35,7 @@ public interface BulletinDao extends BaseDao<Bulletin> {
      * @author 阮雪峰
      * @date 2019/1/17 15:28
      */
-    List<Bulletin> findByStatusOrderByIdDesc(Status status);
+    List<BulletinPO> findByStatusOrderByIdDesc(Status status);
 
     /**
      * 发布公告
@@ -49,15 +49,4 @@ public interface BulletinDao extends BaseDao<Bulletin> {
     @Query("update Bulletin set status=:status, date=:date where id = :id")
     void publish(Status status, LocalDate date, Long id);
 
-    /**
-     * 更新主要信息
-     * @param content content
-     * @param days days
-     * @param id id
-     * @author 阮雪峰
-     * @date 2019/1/21 15:39
-     */
-    @Modifying
-    @Query("update Bulletin set content=:content, days=:days where id=:id")
-    void update(String content, int days, Long id);
 }

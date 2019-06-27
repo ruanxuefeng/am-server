@@ -1,18 +1,25 @@
 package com.am.server.api.admin.bulletin.admin.service.impl;
 
-import com.am.server.advice.update.annotation.Save;
 import com.am.server.api.admin.bulletin.admin.dao.jpa.BulletinDao;
-import com.am.server.api.admin.bulletin.admin.entity.Bulletin;
-import com.am.server.api.admin.bulletin.admin.entity.BulletinExpiredDelayedImpl;
-import com.am.server.api.admin.bulletin.admin.entity.QBulletin;
-import com.am.server.api.admin.bulletin.admin.entity.Status;
+import com.am.server.api.admin.bulletin.admin.pojo.Bulletin;
+import com.am.server.api.admin.bulletin.admin.pojo.BulletinExpiredDelayedImpl;
+import com.am.server.api.admin.bulletin.admin.pojo.QBulletin;
+import com.am.server.api.admin.bulletin.admin.pojo.Status;
+import com.am.server.api.admin.bulletin.admin.pojo.ao.BulletinListAO;
+import com.am.server.api.admin.bulletin.admin.pojo.ao.SaveBulletinAO;
+import com.am.server.api.admin.bulletin.admin.pojo.ao.UpdateBulletinAO;
+import com.am.server.api.admin.bulletin.admin.pojo.po.BulletinPO;
+import com.am.server.api.admin.bulletin.admin.pojo.vo.BulletinContentVO;
+import com.am.server.api.admin.bulletin.admin.pojo.vo.BulletinListVO;
 import com.am.server.api.admin.bulletin.admin.service.BulletinService;
 import com.am.server.api.admin.user.pojo.po.QAdminUserPO;
 import com.am.server.common.annotation.transaction.Commit;
 import com.am.server.common.annotation.transaction.ReadOnly;
 import com.am.server.common.base.pojo.vo.PageVO;
+import com.am.server.common.base.service.CommonService;
 import com.am.server.common.constant.Constant;
-import com.querydsl.core.types.Projections;
+import com.am.server.common.util.IdUtils;
+import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +33,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.DelayQueue;
+import java.util.stream.Collectors;
 
 /**
  * @author 阮雪峰
@@ -36,6 +44,7 @@ public class BulletinServiceImpl implements BulletinService {
 
     private final BulletinDao bulletinDao;
 
+    private final CommonService commonService;
 
     private final DelayQueue<BulletinExpiredDelayedImpl> delayQueue;
 
@@ -45,30 +54,29 @@ public class BulletinServiceImpl implements BulletinService {
     private final SimpMessagingTemplate simpMessagingTemplate;
 
     @Autowired
-    public BulletinServiceImpl(BulletinDao bulletinDao, DelayQueue<BulletinExpiredDelayedImpl> delayQueue, SimpMessagingTemplate simpMessagingTemplate) {
+    public BulletinServiceImpl(BulletinDao bulletinDao, CommonService commonService, DelayQueue<BulletinExpiredDelayedImpl> delayQueue, SimpMessagingTemplate simpMessagingTemplate) {
         this.bulletinDao = bulletinDao;
+        this.commonService = commonService;
         this.delayQueue = delayQueue;
         this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
     @ReadOnly
     @Override
-    public void list(PageVO<Bulletin> page, Bulletin bulletin) {
+    public PageVO<BulletinListVO> list(BulletinListAO bulletinAo) {
+        PageVO<BulletinListVO> page = new PageVO<BulletinListVO>().setPage(bulletinAo.getPage()).setPageSize(bulletinAo.getPageSize());
         JPAQueryFactory jpaQueryFactory = new JPAQueryFactory(entityManager);
         QBulletin qBulletin = QBulletin.bulletin;
         QAdminUserPO qAdminUser = QAdminUserPO.adminUserPO;
 
-        JPAQuery<Bulletin> query = jpaQueryFactory.select(
-                Projections.bean(
-                        Bulletin.class,
-                        qBulletin.id,
-                        qBulletin.content,
-                        qBulletin.createTime,
-                        qBulletin.status,
-                        qBulletin.days,
-                        qBulletin.date,
-                        qAdminUser.name.as(Constant.CREATOR_NAME)
-                )
+        JPAQuery<Tuple> query = jpaQueryFactory.select(
+                qBulletin.id,
+                qBulletin.content,
+                qBulletin.createTime,
+                qBulletin.status,
+                qBulletin.days,
+                qBulletin.date,
+                qAdminUser.name.as(Constant.CREATOR_NAME)
         )
                 .from(qBulletin)
                 .leftJoin(qAdminUser).on(qBulletin.creator.eq(qAdminUser.id))
@@ -76,52 +84,71 @@ public class BulletinServiceImpl implements BulletinService {
                 .limit(page.getPageSize())
                 .orderBy(qBulletin.id.desc());
 
-        Optional.of(bulletin)
-                .map(Bulletin::getContent)
+        Optional.of(bulletinAo)
+                .map(BulletinListAO::getContent)
                 .ifPresent(content -> query.where(qBulletin.content.like("%" + content + "%")));
 
+        List<BulletinListVO> list = query.fetch()
+                .stream().map(
+                        tuple -> new BulletinListVO()
+                                .setId(tuple.get(qBulletin.id))
+                                .setContent(tuple.get(qBulletin.content))
+                                .setCreateTime(tuple.get(qBulletin.createTime))
+                                .setStatus(tuple.get(qBulletin.status))
+                                .setDays(tuple.get(qBulletin.days))
+                                .setDate(tuple.get(qBulletin.date))
+                                .setCreatorName(tuple.get(qAdminUser.name.as(Constant.CREATOR_NAME)))
+                ).collect(Collectors.toList());
         page.setTotal((int) query.fetchCount());
-        page.setRows(query.fetch());
-    }
+        page.setRows(list);
 
-    @Commit
-    @Save
-    @Override
-    public void save(Bulletin bulletin) {
-        bulletin.setStatus(Status.UNPUBLISHED);
-        bulletinDao.save(bulletin);
+        return page;
     }
 
     @Commit
     @Override
-    public void update(Bulletin bulletin) {
-        bulletinDao.save(bulletin);
+    public void save(SaveBulletinAO saveBulletinAo) {
+        bulletinDao.save(new BulletinPO()
+                .setId(IdUtils.getId())
+                .setStatus(Status.UNPUBLISHED)
+                .setCreateTime(LocalDateTime.now())
+                .setCreator(commonService.getLoginUserId())
+                .setContent(saveBulletinAo.getContent())
+                .setDays(saveBulletinAo.getDays()));
     }
 
     @Commit
     @Override
-    public void publish(Bulletin bulletin) {
+    public void update(UpdateBulletinAO updateBulletinAo) {
+        bulletinDao.save(new BulletinPO()
+                .setId(updateBulletinAo.getId())
+                .setContent(updateBulletinAo.getContent())
+                .setDays(updateBulletinAo.getDays()));
+    }
 
-        bulletinDao.findById(bulletin.getId())
-                .ifPresent(item -> {
+    @Commit
+    @Override
+    public void publish(Long id) {
+        bulletinDao.findById(id)
+                .ifPresent(bulletin -> {
                     LocalDate nowDate = LocalDate.now();
-                    bulletinDao.publish(Status.PUBLISHED, nowDate, item.getId());
-                    delayQueue.put(new BulletinExpiredDelayedImpl(item.getId(), nowDate.atStartOfDay().plusDays(item.getDays())));
-                    simpMessagingTemplate.convertAndSend("/topic/notice", item);
+                    bulletinDao.publish(Status.PUBLISHED, nowDate, id);
+                    delayQueue.put(new BulletinExpiredDelayedImpl(id, nowDate.atStartOfDay().plusDays(bulletin.getDays())));
+                    simpMessagingTemplate.convertAndSend("/topic/notice", new BulletinContentVO(bulletin.getContent()));
                 });
     }
 
     @ReadOnly
     @Override
-    public List<Bulletin> findPublishedAndUnexpiredList() {
+    public List<BulletinPO> findPublishedAndUnexpiredList() {
         return bulletinDao.findByStatusOrderByIdDesc(Status.PUBLISHED);
     }
 
     @Commit
     @Override
-    public void delete(Bulletin bulletin) {
-        bulletinDao.delete(bulletin);
-        delayQueue.remove(new BulletinExpiredDelayedImpl(bulletin.getId(), LocalDateTime.now()));
+    public void delete(Long id) {
+        bulletinDao.deleteById(id);
+        delayQueue.remove(new BulletinExpiredDelayedImpl(id, LocalDateTime.now()));
     }
 
     @Commit

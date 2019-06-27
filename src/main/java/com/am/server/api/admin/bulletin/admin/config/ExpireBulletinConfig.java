@@ -1,6 +1,6 @@
 package com.am.server.api.admin.bulletin.admin.config;
 
-import com.am.server.api.admin.bulletin.admin.entity.BulletinExpiredDelayedImpl;
+import com.am.server.api.admin.bulletin.admin.pojo.BulletinExpiredDelayedImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

@@ -1,7 +1,7 @@
 package com.am.server.api.admin.bulletin.admin.listener;
 
-import com.am.server.api.admin.bulletin.admin.entity.Bulletin;
-import com.am.server.api.admin.bulletin.admin.entity.BulletinExpiredDelayedImpl;
+import com.am.server.api.admin.bulletin.admin.pojo.BulletinExpiredDelayedImpl;
+import com.am.server.api.admin.bulletin.admin.pojo.po.BulletinPO;
 import com.am.server.api.admin.bulletin.admin.service.BulletinService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
@@ -15,6 +15,7 @@ import java.util.concurrent.DelayQueue;
 
 /**
  * 服务启动完成后查找在服务停止期间应该过期的公告
+ *
  * @author 阮雪峰
  * @date 2018/11/1 12:24
  */
@@ -30,19 +31,16 @@ public class ServerStartedListenerForExpireBulletin implements ApplicationListen
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        log.info("------ 开始查找等待取消的公告 ------");
         if (event.getApplicationContext().getParent() == null) {
-            List<Bulletin> list = bulletinService.findPublishedAndUnexpiredList();
+            List<BulletinPO> list = bulletinService.findPublishedAndUnexpiredList();
             list.forEach(bulletin -> {
-                log.info("------ id为" + bulletin.getId() + "公告准备放入对列 ------");
                 try {
                     BulletinExpiredDelayedImpl delayed = new BulletinExpiredDelayedImpl(bulletin.getId(), bulletin.getDate().plusDays(bulletin.getDays()).atTime(LocalTime.now()));
                     if (!delayQueue.contains(delayed)) {
                         delayQueue.put(delayed);
-                        log.info("------ id为" + bulletin.getId() + "公告已放入对列 ------");
                     }
                 } catch (Exception e) {
-                    log.error("------ id为" + bulletin.getId() + "公告已放入对列失败 ------", e);
+                    log.error("------ id为[{}]公告已放入对列失败 ------", bulletin.getId(), e);
                 }
             });
         }

@@ -1,6 +1,5 @@
 package com.am.server.api.admin.log.service.impl;
 
-import com.am.server.advice.update.annotation.Save;
 import com.am.server.api.admin.log.dao.mongo.LogDao;
 import com.am.server.api.admin.log.pojo.Log;
 import com.am.server.api.admin.log.pojo.ao.LogListAO;
@@ -38,7 +37,6 @@ public class LogServiceImpl implements LogService {
         this.mongoTemplate = mongoTemplate;
     }
 
-    @Save
     @Override
     public void save(SaveLogAO saveLogAo) {
         logDao.save(
