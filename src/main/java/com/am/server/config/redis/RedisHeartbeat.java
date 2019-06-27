@@ -29,6 +29,5 @@ public class RedisHeartbeat {
     @Scheduled(cron = "0 0/3 * * * *")
     public void heartbeat() {
         redisTemplate.opsForValue().get("heartbeat");
-        log.info("Redis Heartbeat!");
     }
 }

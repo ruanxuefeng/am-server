@@ -4,6 +4,7 @@
     - SpringBoot + Spring-data-jpa + queryDSL + Druid + MariaDB + MongoDB（存放操作日志） + Redis（缓存用户权限）
     - JDK1.8+
     - 实现功能：用户管理、角色管理、菜单管理、日志管理、公告管理（websocket实现，对登录用户推送，没有实现点对点和选择性推送）
+    - 使用swagger创建接口文档，http://ip:port/doc.html
     
 ### 组织结构
 
