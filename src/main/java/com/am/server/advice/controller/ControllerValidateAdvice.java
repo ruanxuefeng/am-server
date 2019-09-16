@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import java.net.SocketTimeoutException;
 import java.util.Objects;
 
@@ -166,9 +167,10 @@ public class ControllerValidateAdvice {
      * @date 2018/10/8 15:25
      */
     @ExceptionHandler(NoPermissionAccessException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    public MessageVO noPermissionException(NoPermissionAccessException e) {
-        return message.get(NO_PERMISSION_ACCESS);
+    public ResponseEntity<MessageVO> noPermissionException(HttpServletResponse response, NoPermissionAccessException e) {
+        response.addHeader("Access-Control-Allow-Origin", "http://localhost:8080");
+        response.addHeader("Access-Control-Allow-Credentials", "true");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(message.get(NO_PERMISSION_ACCESS));
 
     }
 

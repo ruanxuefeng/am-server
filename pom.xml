@@ -101,6 +101,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jdbc</artifactId>
         </dependency>
+
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid-spring-boot-starter</artifactId>
@@ -153,17 +154,6 @@
             <artifactId>commons-lang3</artifactId>
             <version>${apache.common.version}</version>
         </dependency>
-
-        <!-- log相关 start -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-        </dependency>
-        <dependency>  <!-- 加上这个才能辨认到log4j2.yml文件 -->
-            <groupId>com.fasterxml.jackson.dataformat</groupId>
-            <artifactId>jackson-dataformat-yaml</artifactId>
-        </dependency>
-        <!-- log相关 end -->
 
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
@@ -280,6 +270,7 @@
                     <compilerArgument>-parameters</compilerArgument>
                     <source>1.8</source>
                     <target>1.8</target>
+                    <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
 

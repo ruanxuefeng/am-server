@@ -43,7 +43,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins("*")
                 .allowedMethods("*")
-                .allowedHeaders("content-type", "Lang", Constant.TOKEN, "Access-Control-Allow-Origin", "Content-Type,X-Requested-With", "accept", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers")
+                .allowedHeaders("*")
                 .allowCredentials(true)
                 .maxAge(3600);
 

@@ -47,14 +47,17 @@ public class PermissionInterceptor implements HandlerInterceptor {
 
             //判断在方法或者类上有没有加权限，如果都有以方法上为准
             Permission permission = Optional.ofNullable(methodPermission).orElse(classPermission);
-            Optional.ofNullable(permission).ifPresent(p -> {
-                //没有获取到uid说明token过期或者不是token
-                //判断是否拥有类访问权限
+
+            return Optional.ofNullable(permission).map(p->{
                 if (permission.check() && !userPermissionCacheService.hasPermission(commonService.getLoginUserId(), permission.value())) {
+
+                    //没有获取到uid说明token过期或者不是token
+                    //判断是否拥有类访问权限
                     throw new NoPermissionAccessException();
+                }else {
+                    return true;
                 }
-            });
-            return true;
+            }).orElse(true);
         } else {
             throw new IllegalRequestException();
         }

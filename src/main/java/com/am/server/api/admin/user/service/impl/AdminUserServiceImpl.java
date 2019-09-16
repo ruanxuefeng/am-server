@@ -85,7 +85,7 @@ public class AdminUserServiceImpl implements AdminUserService {
                     String userPassword = DesUtils.decrypt(user.getPassword(), user.getKey());
                     return inputPassword.equals(userPassword);
                 })
-                .map(user -> new LoginUserInfoVO(JwtUtils.sign(user.getId().toString()), adminUserDao.findMenuList(user.getId())))
+                .map(user -> new LoginUserInfoVO(JwtUtils.sign(user.getId().toString()), null))
                 .orElseThrow(PasswordErrorException::new);
     }
 
