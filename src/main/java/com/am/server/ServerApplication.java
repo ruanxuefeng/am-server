@@ -9,16 +9,15 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  *
  * @author 阮雪峰
  * @date 2018/6/25 16:04
  */
-@EnableJpaRepositories(basePackages = {"com.am.server.api.*.*.dao.jpa","com.am.server.api.*.*.*.dao.jpa"})
-@EnableMongoRepositories(basePackages = "com.am.server.api.*.*.dao.mongo")
-@EnableRedisRepositories(basePackages = "com.am.server.api.*.*.dao.redis")
+@EnableJpaRepositories(basePackages = {"com.am.server.api.*.dao.rdb"})
+@EnableMongoRepositories(basePackages = "com.am.server.api.*.dao.nosql")
+@EnableRedisRepositories(basePackages = "com.am.server.api.*.dao.cache")
 @SpringBootApplication
 @EnableTransactionManagement
 @EnableMongoPlus

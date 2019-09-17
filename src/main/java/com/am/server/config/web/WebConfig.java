@@ -1,6 +1,6 @@
 package com.am.server.config.web;
 
-import com.am.server.api.admin.user.interceptor.PermissionInterceptor;
+import com.am.server.api.user.interceptor.PermissionInterceptor;
 import com.am.server.common.base.service.Message;
 import com.am.server.common.constant.Constant;
 import com.am.server.config.i18n.component.I18nMessageImpl;
@@ -8,7 +8,6 @@ import com.am.server.config.i18n.interceptor.CustomLocaleChangeInterceptor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;

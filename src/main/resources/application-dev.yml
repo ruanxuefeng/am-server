@@ -8,9 +8,13 @@ spring:
       #生成public-key和加密后的密码
       password: GhY3T30MVxj5Lg995Wu034HMtpKBNFnkpage++cM4WpH+rDZRyinQ+Mv5Jc/sHC22VuP8qibgFX0fTVRFDc5mA==
       connection-properties: config.decrypt=true;config.decrypt.key=${public-key}
+      filters: stat,wall,slf4j
       filter:
         config:
           enabled: true
+        slf4j:
+          enabled: true
+          statement-executable-sql-log-enable: true
   data:
     mongodb:
       host: localhost
@@ -42,9 +46,8 @@ server:
 public-key: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAIGZ7YV84EEM1bLwpMvlrLU0gFsbSMIIesR0+imr/dlzcCC4mIIdziHb+zUuVLd7Pewg28/yE+455rEQQVG1rEUCAwEAAQ==
 logging:
   level:
-    org:
-      hibernate:
-        SQL: DEBUG
+    druid:
+      sql: debug
 local:
   file:
     file-path: D://file/

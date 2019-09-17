@@ -1,11 +1,10 @@
 package com.am.server.config.redis;
 
 
+import com.am.server.api.user.pojo.po.UserPermissionDO;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +17,6 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
-import java.util.List;
 
 /**
  * @author 阮雪峰
@@ -47,13 +45,13 @@ public class RedisConfig {
     }
 
     @Bean("userPermissionCacheRedisTemplate")
-    public RedisTemplate<String, List<String>> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
+    public RedisTemplate<String, UserPermissionDO> userPermissionCacheRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
 
-        RedisTemplate<String, List<String>> template = new RedisTemplate<>();
+        RedisTemplate<String, UserPermissionDO> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory);
 
         //使用Jackson2JsonRedisSerializer来序列化和反序列化redis的value值
-        Jackson2JsonRedisSerializer serializer = new Jackson2JsonRedisSerializer<>(List.class);
+        Jackson2JsonRedisSerializer serializer = new Jackson2JsonRedisSerializer<>(UserPermissionDO.class);
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);

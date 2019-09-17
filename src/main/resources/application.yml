@@ -39,6 +39,8 @@ spring:
     hibernate:
       naming:
         physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+    properties:
+      hibernate.enable_lazy_load_no_trans: true
   data:
     redis:
       repositories:

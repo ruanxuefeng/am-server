@@ -1,7 +1,9 @@
 package com.am.server.advice.controller;
 
-import com.am.server.api.admin.upload.exception.UploadFileException;
-import com.am.server.api.admin.user.exception.*;
+import com.am.server.api.upload.exception.UploadFileException;
+import com.am.server.api.user.exception.NoPermissionAccessException;
+import com.am.server.api.user.exception.PasswordErrorException;
+import com.am.server.api.user.exception.UserNotExistException;
 import com.am.server.common.base.exception.NoTokenException;
 import com.am.server.common.base.pojo.vo.MessageVO;
 import com.am.server.common.base.service.Message;
