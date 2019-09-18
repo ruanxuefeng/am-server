@@ -31,7 +31,7 @@ public class BulletinListVO {
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "创建时间")
-    private LocalDateTime createTime;
+    private LocalDateTime createdTime;
     /**
      * 内容
      */

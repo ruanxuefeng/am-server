@@ -107,7 +107,7 @@ public class RoleServiceImpl implements RoleService {
     public List<SelectRoleVO> findAll() {
         return roleDAO.findAll(Sort.by(Sort.Order.desc("id")))
                 .stream()
-                .map(rolePo -> new SelectRoleVO().setId(rolePo.getId()).setName(rolePo.getName()))
+                .map(role -> new SelectRoleVO().setId(role.getId()).setName(role.getName()))
                 .collect(Collectors.toList());
     }
 

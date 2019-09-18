@@ -47,7 +47,7 @@ public class AdminUserDO {
     @Enumerated(EnumType.ORDINAL)
     private Gender gender;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     @OrderBy("id desc")
     @JoinTable(name = "user_role",
             joinColumns = {@JoinColumn(name = "user", insertable = false, updatable = false)},

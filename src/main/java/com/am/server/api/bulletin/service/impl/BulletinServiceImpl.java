@@ -73,11 +73,11 @@ public class BulletinServiceImpl implements BulletinService {
                                 .stream().map(bulletin ->
                                 new BulletinListVO().setId(bulletin.getId())
                                         .setContent(bulletin.getContent())
-                                .setCreateTime(bulletin.getCreatedTime())
-                                .setCreatorBy(Optional.ofNullable(bulletin.getCreatedBy()).map(AdminUserDO::getUsername).orElse(""))
-                                .setDate(bulletin.getDate())
-                                .setDays(bulletin.getDays())
-                                .setStatus(bulletin.getStatus())
+                                        .setCreatedTime(bulletin.getCreatedTime())
+                                        .setCreatorBy(Optional.ofNullable(bulletin.getCreatedBy()).map(AdminUserDO::getUsername).orElse(""))
+                                        .setDate(bulletin.getDate())
+                                        .setDays(bulletin.getDays())
+                                        .setStatus(bulletin.getStatus())
                         ).collect(Collectors.toList())
                 );
     }
@@ -109,7 +109,9 @@ public class BulletinServiceImpl implements BulletinService {
         bulletinDAO.findById(id)
                 .ifPresent(bulletin -> {
                     LocalDate nowDate = LocalDate.now();
-                    bulletinDAO.save(bulletin.setStatus(Status.PUBLISHED).setDate(nowDate));
+                    bulletin.setStatus(Status.PUBLISHED)
+                            .setDate(nowDate);
+                    bulletinDAO.save(bulletin);
                     delayQueue.put(new BulletinExpiredDelayedImpl(id, nowDate.atStartOfDay().plusDays(bulletin.getDays())));
                     simpMessagingTemplate.convertAndSend("/topic/notice", new BulletinContentVO(bulletin.getContent()));
                 });

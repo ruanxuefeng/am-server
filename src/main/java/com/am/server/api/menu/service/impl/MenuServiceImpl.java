@@ -85,7 +85,7 @@ public class MenuServiceImpl implements MenuService {
                 .setMark(menu.getMark())
                 .setCreatedBy(new AdminUserDO().setId(commonService.getLoginUserId()))
                 .setCreatedTime(LocalDateTime.now())
-                .setParent(new MenuDO().setId(menu.getPid()))
+                .setParent(Optional.ofNullable(menu.getPid()).map(pid->new MenuDO().setId(pid)).orElse(null))
                 .setLevel(menu.getPid() == null ? 1 : 2);
 
         menuDAO.save(menuDO);
@@ -94,14 +94,15 @@ public class MenuServiceImpl implements MenuService {
     @Commit
     @Override
     public void update(UpdateMenuAO menu) {
-        MenuDO menuDO = new MenuDO()
-                .setId(menu.getId())
-                .setName(menu.getName())
-                .setMark(menu.getMark())
-                .setParent(new MenuDO().setId(menu.getPid()))
-                .setLevel(menu.getPid() == null ? 1 : 2);
+        menuDAO.findById(menu.getId())
+                .ifPresent(menuDO -> {
+                    menuDO.setName(menu.getName())
+                            .setMark(menu.getMark())
+                            .setParent(Optional.ofNullable(menu.getPid()).map(pid->new MenuDO().setId(pid)).orElse(null))
+                            .setLevel(menu.getPid() == null ? 1 : 2);
+                    menuDAO.save(menuDO);
+                });
 
-        menuDAO.save(menuDO);
     }
 
     @Commit

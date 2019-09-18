@@ -1,7 +1,8 @@
 package com.am.server.api.menu.pojo.po;
 
 import com.am.server.api.user.pojo.po.AdminUserDO;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
@@ -16,7 +17,8 @@ import java.util.List;
 @Entity
 @Table(name = "menu")
 @Accessors(chain = true)
-@Data
+@Getter
+@Setter
 public class MenuDO {
     @Id
     private Long id;

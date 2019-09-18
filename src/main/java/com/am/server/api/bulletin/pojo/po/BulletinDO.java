@@ -31,20 +31,20 @@ public class BulletinDO {
     /**
      * 发布时间
      */
-    @Column(updatable = false)
+    @Column
     private LocalDate date;
 
     /**
      * 状态
      */
     @Enumerated(EnumType.ORDINAL)
-    @Column(updatable = false)
+    @Column
     private Status status;
 
     /**
      * 过期天数
      */
-    private int days;
+    private Integer days;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     @JoinColumn(name = "created_by", updatable = false)
