@@ -1,8 +1,8 @@
-package com.am.server.api.user.interceptor;
+package com.am.server.api.permission.interceptor;
 
 import com.am.server.api.user.exception.IllegalRequestException;
 import com.am.server.api.user.exception.NoPermissionAccessException;
-import com.am.server.api.user.interceptor.annotation.Permission;
+import com.am.server.api.permission.interceptor.annotation.Permission;
 import com.am.server.api.user.service.UserPermissionCacheService;
 import com.am.server.common.base.service.CommonService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,10 +1,13 @@
 package com.am.server.config.redis;
 
 
+import com.am.server.api.permission.pojo.po.PermissionTreeDO;
 import com.am.server.api.user.pojo.po.UserPermissionDO;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -46,16 +49,34 @@ public class RedisConfig {
 
     @Bean("userPermissionCacheRedisTemplate")
     public RedisTemplate<String, UserPermissionDO> userPermissionCacheRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
-
         RedisTemplate<String, UserPermissionDO> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory);
 
         //使用Jackson2JsonRedisSerializer来序列化和反序列化redis的value值
         Jackson2JsonRedisSerializer serializer = new Jackson2JsonRedisSerializer<>(UserPermissionDO.class);
 
+        return configTemplate(template, serializer);
+    }
+
+
+    @Bean("permissionCacheRedisTemplate")
+    public RedisTemplate<String, PermissionTreeDO> permissionCacheRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
+
+        RedisTemplate<String, PermissionTreeDO> template = new RedisTemplate<>();
+        template.setConnectionFactory(redisConnectionFactory);
+
+        //使用Jackson2JsonRedisSerializer来序列化和反序列化redis的value值
+        Jackson2JsonRedisSerializer serializer = new Jackson2JsonRedisSerializer<>(PermissionTreeDO.class);
+
+        return configTemplate(template, serializer);
+    }
+
+    private <I, T> RedisTemplate<I, T> configTemplate(RedisTemplate<I, T> template, Jackson2JsonRedisSerializer serializer) {
         ObjectMapper mapper = new ObjectMapper();
         mapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
         mapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        mapper.registerModule(new JavaTimeModule());
         serializer.setObjectMapper(mapper);
 
         template.setValueSerializer(serializer);

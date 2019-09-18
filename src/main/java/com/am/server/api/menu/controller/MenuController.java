@@ -8,7 +8,6 @@ import com.am.server.api.menu.pojo.vo.MenuListVO;
 import com.am.server.api.menu.pojo.vo.TreeMenuVO;
 import com.am.server.api.menu.service.MenuService;
 import com.am.server.api.role.pojo.vo.SelectRoleVO;
-import com.am.server.api.user.interceptor.annotation.Permission;
 import com.am.server.common.base.controller.BaseController;
 import com.am.server.common.base.pojo.vo.MessageVO;
 import com.am.server.common.base.pojo.vo.PageVO;
@@ -32,7 +31,7 @@ import java.util.List;
  * @date 2018/7/30 14:57
  */
 @Api(tags = "菜单管理")
-@Permission("system-menu")
+//@Permission("system-menu")
 @WriteLog("菜单管理")
 @RestController
 @RequestMapping(Constant.ADMIN_ROOT + "/menu")

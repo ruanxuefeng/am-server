@@ -1,14 +1,15 @@
 package com.am.server.api.role.controller;
 
 import com.am.server.api.log.aspect.annotation.WriteLog;
+import com.am.server.api.permission.interceptor.annotation.Menu;
+import com.am.server.api.permission.interceptor.annotation.Permission;
 import com.am.server.api.role.pojo.ao.RoleListAO;
 import com.am.server.api.role.pojo.ao.SaveRoleAO;
-import com.am.server.api.role.pojo.ao.UpdateRoleMenuAO;
 import com.am.server.api.role.pojo.ao.UpdateRoleAO;
+import com.am.server.api.role.pojo.ao.UpdateRoleMenuAO;
 import com.am.server.api.role.pojo.vo.RoleListVo;
 import com.am.server.api.role.pojo.vo.SelectRoleVO;
 import com.am.server.api.role.service.RoleService;
-import com.am.server.api.user.interceptor.annotation.Permission;
 import com.am.server.common.base.controller.BaseController;
 import com.am.server.common.base.pojo.vo.MessageVO;
 import com.am.server.common.base.pojo.vo.PageVO;
@@ -26,12 +27,13 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- *  角色管理
+ * 角色管理
+ *
  * @author 阮雪峰
  * @date 2018/7/27 10:31
  */
 @Api(tags = "角色管理")
-@Permission("system-role")
+@Permission(value = "system-role", name = "角色管理", menus = {@Menu(value = "system", name = "系统管理")})
 @WriteLog("角色管理")
 @RestController
 @RequestMapping(Constant.ADMIN_ROOT + "/role")
@@ -46,6 +48,7 @@ public class RoleController extends BaseController {
 
     /**
      * 列表
+     *
      * @param roleListAo roleListAo
      * @return org.springframework.http.ResponseEntity
      * @author 阮雪峰
@@ -60,6 +63,7 @@ public class RoleController extends BaseController {
 
     /**
      * 新增
+     *
      * @param role 角色信息
      * @return org.springframework.http.ResponseEntity
      * @author 阮雪峰
@@ -76,6 +80,7 @@ public class RoleController extends BaseController {
 
     /**
      * 修改
+     *
      * @param role 角色信息
      * @return org.springframework.http.ResponseEntity
      * @author 阮雪峰
@@ -92,6 +97,7 @@ public class RoleController extends BaseController {
 
     /**
      * 删除
+     *
      * @param role 角色信息
      * @return org.springframework.http.ResponseEntity
      * @author 阮雪峰
@@ -115,6 +121,7 @@ public class RoleController extends BaseController {
 
     /**
      * 角色拥有的权限
+     *
      * @param role role
      * @return org.springframework.http.ResponseEntity
      * @author 阮雪峰
@@ -129,6 +136,7 @@ public class RoleController extends BaseController {
 
     /**
      * 修改权限
+     *
      * @param role 角色信息
      * @return org.springframework.http.ResponseEntity
      * @author 阮雪峰
@@ -145,6 +153,7 @@ public class RoleController extends BaseController {
 
     /**
      * 查询所有
+     *
      * @return org.springframework.http.ResponseEntity
      * @author 阮雪峰
      * @date 2019/2/18 15:04

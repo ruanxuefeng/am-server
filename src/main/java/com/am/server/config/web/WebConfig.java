@@ -1,6 +1,6 @@
 package com.am.server.config.web;
 
-import com.am.server.api.user.interceptor.PermissionInterceptor;
+import com.am.server.api.permission.interceptor.PermissionInterceptor;
 import com.am.server.common.base.service.Message;
 import com.am.server.common.constant.Constant;
 import com.am.server.config.i18n.component.I18nMessageImpl;

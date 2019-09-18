@@ -3,6 +3,7 @@ package com.am.server.api.log.controller;
 import com.am.server.api.log.pojo.ao.LogListAO;
 import com.am.server.api.log.pojo.vo.LogListVO;
 import com.am.server.api.log.service.LogService;
+import com.am.server.api.permission.interceptor.annotation.Permission;
 import com.am.server.common.base.pojo.vo.PageVO;
 import com.am.server.common.constant.Constant;
 import io.swagger.annotations.Api;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @date 2018/8/1 13:15
  */
 @Api(tags = "日志")
+@Permission(value = "log", name = "日志")
 @RestController
 @RequestMapping(Constant.ADMIN_ROOT + "/log")
 public class LogController {

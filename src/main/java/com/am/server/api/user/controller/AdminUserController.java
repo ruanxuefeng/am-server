@@ -1,7 +1,8 @@
 package com.am.server.api.user.controller;
 
 import com.am.server.api.log.aspect.annotation.WriteLog;
-import com.am.server.api.user.interceptor.annotation.Permission;
+import com.am.server.api.permission.interceptor.annotation.Menu;
+import com.am.server.api.permission.interceptor.annotation.Permission;
 import com.am.server.api.user.pojo.ao.*;
 import com.am.server.api.user.pojo.vo.AdminUserListVO;
 import com.am.server.api.user.service.AdminUserService;
@@ -30,7 +31,7 @@ import java.util.Optional;
  * @date 2018/7/25 13:26
  */
 @Api(tags = "用户管理")
-@Permission("system-user")
+@Permission(value = "system-user", name = "用户管理", menus = {@Menu(value = "system", name = "系统管理")})
 @WriteLog("用户管理")
 @Validated
 @RestController
