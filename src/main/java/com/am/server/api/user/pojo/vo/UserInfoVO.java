@@ -19,6 +19,9 @@ import java.util.Set;
 @Data
 public class UserInfoVO {
 
+    @ApiModelProperty(value = "主键")
+    private Long id;
+
     @ApiModelProperty(value = "姓名")
     private String name;
 

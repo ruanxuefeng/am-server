@@ -18,6 +18,7 @@ import com.am.server.common.base.pojo.vo.PageVO;
 import com.am.server.common.base.service.CommonService;
 import com.am.server.common.util.IdUtils;
 import org.springframework.data.domain.*;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -35,15 +36,17 @@ public class RoleServiceImpl implements RoleService {
 
     private final RoleDAO roleDAO;
 
-
     private final UserPermissionCacheService userPermissionCacheService;
 
     private final CommonService commonService;
 
-    public RoleServiceImpl(RoleDAO roleDAO, UserPermissionCacheService userPermissionCacheService, CommonService commonService) {
+    private final SimpMessagingTemplate simpMessagingTemplate;
+
+    public RoleServiceImpl(RoleDAO roleDAO, UserPermissionCacheService userPermissionCacheService, CommonService commonService, SimpMessagingTemplate simpMessagingTemplate) {
         this.roleDAO = roleDAO;
         this.userPermissionCacheService = userPermissionCacheService;
         this.commonService = commonService;
+        this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
     @ReadOnly
@@ -122,6 +125,12 @@ public class RoleServiceImpl implements RoleService {
                             .ifPresent(menuList -> menuList.forEach(menu -> newMenuList.add(new MenuDO().setId(menu))));
                     role.setMenus(newMenuList);
                     roleDAO.save(role);
+                    List<Long> userIds = new ArrayList<>();
+                    for (AdminUserDO user : role.getUsers()) {
+                        userIds.add(user.getId());
+                        simpMessagingTemplate.convertAndSend("/topic/permission/" + user.getId(), true);
+                    }
+                    userPermissionCacheService.removeAll(userIds.toArray(new Long[0]));
                 });
     }
 

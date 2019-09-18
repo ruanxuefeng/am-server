@@ -1,5 +1,6 @@
 package com.am.server.api.menu.pojo.po;
 
+import com.am.server.api.role.pojo.po.RoleDO;
 import com.am.server.api.user.pojo.po.AdminUserDO;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,8 +36,15 @@ public class MenuDO {
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @OrderBy("id desc")
-    @JoinColumn(name = "pid", insertable = false, updatable = false)
+    @JoinColumn(name = "pid")
     private List<MenuDO> children;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+    @OrderBy("id desc")
+    @JoinTable(name = "role_menu",
+            joinColumns = {@JoinColumn(name = "menu")},
+            inverseJoinColumns = {@JoinColumn(name = "role")})
+    private List<RoleDO> roles;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     @JoinColumn(name = "created_by", updatable = false)

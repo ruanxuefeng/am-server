@@ -61,4 +61,9 @@ public class RedisUserPermissionCacheServiceImpl implements UserPermissionCacheS
     public void removeAll() {
         userPermissionCacheDAO.removeAll();
     }
+
+    @Override
+    public void removeAll(Long... ids) {
+        userPermissionCacheDAO.removeAll(ids);
+    }
 }

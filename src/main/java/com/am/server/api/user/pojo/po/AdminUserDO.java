@@ -50,8 +50,8 @@ public class AdminUserDO {
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     @OrderBy("id desc")
     @JoinTable(name = "user_role",
-            joinColumns = {@JoinColumn(name = "user", insertable = false, updatable = false)},
-            inverseJoinColumns = {@JoinColumn(name = "role", insertable = false, updatable = false)})
+            joinColumns = {@JoinColumn(name = "user")},
+            inverseJoinColumns = {@JoinColumn(name = "role")})
     private List<RoleDO> roles;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)

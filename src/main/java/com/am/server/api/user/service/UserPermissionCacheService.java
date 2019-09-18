@@ -56,4 +56,10 @@ public interface UserPermissionCacheService {
      * @date 2019年6月26日14:32:58
      */
     void removeAll();
+
+    /**
+     * 清除用户权限缓存
+     * @param ids 需要清除用户的主键
+     */
+    void removeAll(Long ...ids);
 }

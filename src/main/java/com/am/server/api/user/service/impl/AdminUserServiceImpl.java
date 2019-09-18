@@ -22,6 +22,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -58,11 +59,14 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     private final CommonService commonService;
 
-    public AdminUserServiceImpl(UserPermissionCacheService userPermissionCacheService, AdminUserDAO adminUserDAO, FileUploadService fileUploadService, CommonService commonService) {
+    private final SimpMessagingTemplate simpMessagingTemplate;
+
+    public AdminUserServiceImpl(UserPermissionCacheService userPermissionCacheService, AdminUserDAO adminUserDAO, FileUploadService fileUploadService, CommonService commonService, SimpMessagingTemplate simpMessagingTemplate) {
         this.userPermissionCacheService = userPermissionCacheService;
         this.adminUserDAO = adminUserDAO;
         this.fileUploadService = fileUploadService;
         this.commonService = commonService;
+        this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
     @Override
@@ -88,6 +92,7 @@ public class AdminUserServiceImpl implements AdminUserService {
                 .map(user -> {
                     List<String> roles = user.getRoles().stream().map(RoleDO::getName).collect(Collectors.toList());
                     return new UserInfoVO()
+                            .setId(user.getId())
                             .setMenus(userPermissionCacheService.get(id))
                             .setAvatar(user.getAvatar())
                             .setEmail(user.getEmail())
@@ -196,6 +201,7 @@ public class AdminUserServiceImpl implements AdminUserService {
                     List<RoleDO> roles = roleIdList.stream().map(roleId -> new RoleDO().setId(roleId)).collect(Collectors.toList());
                     adminUserDAO.save(adminUser.setRoles(roles));
                     userPermissionCacheService.remove(id);
+                    simpMessagingTemplate.convertAndSend("/topic/permission/" + id, true);
                 });
     }
 

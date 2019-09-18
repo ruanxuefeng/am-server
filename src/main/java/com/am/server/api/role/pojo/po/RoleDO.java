@@ -29,9 +29,16 @@ public class RoleDO {
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     @OrderBy("id desc")
     @JoinTable(name = "role_menu",
-            joinColumns = {@JoinColumn(name = "role", insertable = false, updatable = false)},
-            inverseJoinColumns = {@JoinColumn(name = "menu", insertable = false, updatable = false)})
+            joinColumns = {@JoinColumn(name = "role")},
+            inverseJoinColumns = {@JoinColumn(name = "menu")})
     private List<MenuDO> menus;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+    @OrderBy("id desc")
+    @JoinTable(name = "user_role",
+            joinColumns = {@JoinColumn(name = "role")},
+            inverseJoinColumns = {@JoinColumn(name = "user")})
+    private List<AdminUserDO> users;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     @JoinColumn(name = "created_by", updatable = false)

@@ -35,7 +35,13 @@ public interface UserPermissionCacheDAO {
     void remove(Long uid);
 
     /**
-     * 情空所有用户权限缓存
+     * 清空所有用户权限缓存
      */
     void removeAll();
+
+    /**
+     * 清空所有用户权限缓存
+     * @param ids ids
+     */
+    void removeAll(Long... ids);
 }

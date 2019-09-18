@@ -113,7 +113,7 @@ public class BulletinServiceImpl implements BulletinService {
                             .setDate(nowDate);
                     bulletinDAO.save(bulletin);
                     delayQueue.put(new BulletinExpiredDelayedImpl(id, nowDate.atStartOfDay().plusDays(bulletin.getDays())));
-                    simpMessagingTemplate.convertAndSend("/topic/notice", new BulletinContentVO(bulletin.getContent()));
+                    simpMessagingTemplate.convertAndSend("/topic/bulletin", new BulletinContentVO(bulletin.getContent()));
                 });
     }
 

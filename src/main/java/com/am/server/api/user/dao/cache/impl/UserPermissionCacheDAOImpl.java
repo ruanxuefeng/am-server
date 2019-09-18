@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
 import java.time.Duration;
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -49,5 +50,14 @@ public class UserPermissionCacheDAOImpl implements UserPermissionCacheDAO {
         if (!CollectionUtils.isEmpty(keys)) {
             userPermissionCacheRedisTemplate.delete(keys);
         }
+    }
+
+    @Override
+    public void removeAll(Long... ids) {
+        Set<String> keys = new HashSet<>();
+        for (Long id : ids) {
+            keys.add(KEY + id);
+        }
+        userPermissionCacheRedisTemplate.delete(keys);
     }
 }

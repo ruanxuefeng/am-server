@@ -109,7 +109,6 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public void delete(Long id) {
         menuDAO.deleteById(id);
-        menuDAO.deleteRelateRoles(id);
         userPermissionCacheService.removeAll();
     }
 
