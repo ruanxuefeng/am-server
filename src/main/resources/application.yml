@@ -55,3 +55,9 @@ logging:
         data:
           mongodb:
             core: debug
+permission:
+  base-package: com.am.server.api
+  enable-super-user: true
+  username: 88489527
+  password: ODg0ODk1Mjc=
+  login-api: /api/admin/login

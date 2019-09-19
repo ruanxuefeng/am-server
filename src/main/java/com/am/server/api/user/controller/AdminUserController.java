@@ -1,8 +1,8 @@
 package com.am.server.api.user.controller;
 
 import com.am.server.api.log.aspect.annotation.WriteLog;
-import com.am.server.api.permission.interceptor.annotation.Menu;
-import com.am.server.api.permission.interceptor.annotation.Permission;
+import com.am.server.api.permission.annotation.Menu;
+import com.am.server.api.permission.annotation.Permission;
 import com.am.server.api.user.pojo.ao.*;
 import com.am.server.api.user.pojo.vo.AdminUserListVO;
 import com.am.server.api.user.service.AdminUserService;
@@ -31,9 +31,8 @@ import java.util.Optional;
  * @date 2018/7/25 13:26
  */
 @Api(tags = "用户管理")
-@Permission(value = "system-user", name = "用户管理", menus = {@Menu(value = "system", name = "系统管理")})
+@Permission(value = "system-user", name = "用户管理", sort = 1, menus = {@Menu(value = "system", name = "系统管理", sort = 1)})
 @WriteLog("用户管理")
-@Validated
 @RestController
 @RequestMapping(Constant.ADMIN_ROOT + "/user")
 public class AdminUserController extends BaseController {
@@ -58,7 +57,8 @@ public class AdminUserController extends BaseController {
      * @author 阮雪峰
      * @date 2018/7/25 15:56
      */
-    @ApiOperation(value = "列表查询")
+    @Permission(value = "system-user-list", name = "列表")
+    @ApiOperation(value = "列表")
     @ApiImplicitParams({@ApiImplicitParam(paramType = "header", dataType = "String", name = Constant.TOKEN, value = "登录凭证", required = true)})
     @GetMapping("/list")
     public ResponseEntity<PageVO<AdminUserListVO>> list(AdminUserListAO list) {
@@ -73,6 +73,7 @@ public class AdminUserController extends BaseController {
      * @author 阮雪峰
      * @date 2018/7/25 15:56
      */
+    @Permission(value = "system-user-add", name = "新增")
     @ApiOperation(value = "新增")
     @ApiImplicitParams({@ApiImplicitParam(paramType = "header", dataType = "String", name = Constant.TOKEN, value = "登录凭证", required = true)})
     @WriteLog("新增")
@@ -104,6 +105,7 @@ public class AdminUserController extends BaseController {
      * @author 阮雪峰
      * @date 2018/7/25 15:56
      */
+    @Permission(value = "system-user-update", name = "修改")
     @ApiOperation(value = "修改")
     @ApiImplicitParams({@ApiImplicitParam(paramType = "header", dataType = "String", name = Constant.TOKEN, value = "登录凭证", required = true)})
     @WriteLog("修改")
@@ -181,6 +183,7 @@ public class AdminUserController extends BaseController {
      * @author 阮雪峰
      * @date 2018/7/27 15:42
      */
+    @Permission(check = false)
     @ApiOperation(value = "修改角色")
     @ApiImplicitParams({@ApiImplicitParam(paramType = "header", dataType = "String", name = Constant.TOKEN, value = "登录凭证", required = true)})
     @WriteLog("修改角色")
@@ -237,6 +240,7 @@ public class AdminUserController extends BaseController {
      * @date 2019/4/10 9:24
      * @author 阮雪峰
      */
+    @Permission(check = false)
     @ApiOperation(value = "查询用户拥有角色的id")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "query", dataType = "Long", name = "id", value = "用户id", example = "123456789", required = true),

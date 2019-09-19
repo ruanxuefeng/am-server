@@ -1,7 +1,6 @@
 package com.am.server.api.role.pojo.po;
 
 
-import com.am.server.api.menu.pojo.po.MenuDO;
 import com.am.server.api.user.pojo.po.AdminUserDO;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -26,12 +25,10 @@ public class RoleDO {
 
     private String memo;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
-    @OrderBy("id desc")
-    @JoinTable(name = "role_menu",
-            joinColumns = {@JoinColumn(name = "role")},
-            inverseJoinColumns = {@JoinColumn(name = "menu")})
-    private List<MenuDO> menus;
+    @ElementCollection
+    @CollectionTable(name = "role_permission", joinColumns = @JoinColumn(name = "role"))
+    @Column(name = "permission")
+    private List<String> permissions;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     @OrderBy("id desc")

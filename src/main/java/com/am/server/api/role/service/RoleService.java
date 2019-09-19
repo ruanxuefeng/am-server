@@ -1,9 +1,6 @@
 package com.am.server.api.role.service;
 
-import com.am.server.api.role.pojo.ao.RoleListAO;
-import com.am.server.api.role.pojo.ao.SaveRoleAO;
-import com.am.server.api.role.pojo.ao.UpdateRoleMenuAO;
-import com.am.server.api.role.pojo.ao.UpdateRoleAO;
+import com.am.server.api.role.pojo.ao.*;
 import com.am.server.api.role.pojo.vo.RoleListVo;
 import com.am.server.api.role.pojo.vo.SelectRoleVO;
 import com.am.server.common.base.pojo.vo.PageVO;
@@ -58,20 +55,17 @@ public interface RoleService {
      */
     List<SelectRoleVO> findAll();
 
-    /**
-     * 修改权限
-     * @param updateRoleMenuAo updateRoleMenuAo
-     * @author 阮雪峰
-     * @date 2018/7/31 8:59
-     */
-    void updateMenuList(UpdateRoleMenuAO updateRoleMenuAo);
 
     /**
-     * 查询角色拥有的权限
-     * @param id id
-     * @return List<Long>
-     * @author 阮雪峰
-     * @date 2019/2/13 16:08
+     * 更新权限
+     * @param updateRolePermissionAO updateRolePermissionAO
      */
-    List<Long> getMenuList(Long id);
+    void updatePermissions(UpdateRolePermissionAO updateRolePermissionAO);
+
+    /**
+     * 角色拥有的权限
+     * @param id 主键
+     * @return List<String>
+     */
+    List<String> findPermissions(Long id);
 }

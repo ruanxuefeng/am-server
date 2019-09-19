@@ -17,7 +17,7 @@ import java.util.Set;
  */
 @Repository
 public class UserPermissionCacheDAOImpl implements UserPermissionCacheDAO {
-    private static final String KEY = "user: permission ";
+    private static final String KEY = "user: permission: ";
     /**
      * 权限缓存过期时间为2小时
      */

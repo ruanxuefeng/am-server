@@ -1,12 +1,11 @@
 package com.am.server.api.role.controller;
 
 import com.am.server.api.log.aspect.annotation.WriteLog;
-import com.am.server.api.permission.interceptor.annotation.Menu;
-import com.am.server.api.permission.interceptor.annotation.Permission;
-import com.am.server.api.role.pojo.ao.RoleListAO;
-import com.am.server.api.role.pojo.ao.SaveRoleAO;
-import com.am.server.api.role.pojo.ao.UpdateRoleAO;
-import com.am.server.api.role.pojo.ao.UpdateRoleMenuAO;
+import com.am.server.api.permission.annotation.Menu;
+import com.am.server.api.permission.annotation.Permission;
+import com.am.server.api.permission.service.PermissionService;
+import com.am.server.api.role.pojo.ao.*;
+import com.am.server.api.role.pojo.vo.PermissionTreeVO;
 import com.am.server.api.role.pojo.vo.RoleListVo;
 import com.am.server.api.role.pojo.vo.SelectRoleVO;
 import com.am.server.api.role.service.RoleService;
@@ -33,7 +32,7 @@ import java.util.Optional;
  * @date 2018/7/27 10:31
  */
 @Api(tags = "角色管理")
-@Permission(value = "system-role", name = "角色管理", menus = {@Menu(value = "system", name = "系统管理")})
+@Permission(value = "system-role", name = "角色管理", sort = 2, menus = {@Menu(value = "system", name = "系统管理", sort = 1)})
 @WriteLog("角色管理")
 @RestController
 @RequestMapping(Constant.ADMIN_ROOT + "/role")
@@ -41,9 +40,12 @@ public class RoleController extends BaseController {
 
     private final RoleService roleService;
 
+    private final PermissionService permissionService;
 
-    public RoleController(RoleService roleService) {
+
+    public RoleController(RoleService roleService, PermissionService permissionService) {
         this.roleService = roleService;
+        this.permissionService = permissionService;
     }
 
     /**
@@ -54,7 +56,7 @@ public class RoleController extends BaseController {
      * @author 阮雪峰
      * @date 2018/7/27 10:33
      */
-    @ApiOperation(value = "列表查询")
+    @ApiOperation(value = "列表")
     @ApiImplicitParams({@ApiImplicitParam(paramType = "header", dataType = "String", name = Constant.TOKEN, value = "登录凭证", required = true)})
     @GetMapping("/list")
     public ResponseEntity<PageVO<RoleListVo>> list(RoleListAO roleListAo) {
@@ -81,7 +83,7 @@ public class RoleController extends BaseController {
     /**
      * 修改
      *
-     * @param role 角色信息
+     * @param roleAo 角色信息
      * @return org.springframework.http.ResponseEntity
      * @author 阮雪峰
      * @date 2018/7/27 10:41
@@ -98,7 +100,7 @@ public class RoleController extends BaseController {
     /**
      * 删除
      *
-     * @param role 角色信息
+     * @param id 角色信息
      * @return org.springframework.http.ResponseEntity
      * @author 阮雪峰
      * @date 2018/7/27 10:43
@@ -120,37 +122,46 @@ public class RoleController extends BaseController {
     }
 
     /**
+     * 获取权限树
+     * @return ResponseEntity<List<PermissionTreeVO>>
+     */
+    @ApiOperation(value = "获取权限树")
+    @ApiImplicitParams({@ApiImplicitParam(paramType = "header", dataType = "String", name = Constant.TOKEN, value = "登录凭证", required = true)})
+    @GetMapping("/permission/tree")
+    public ResponseEntity<List<PermissionTreeVO>> permissionTree() {
+        return ResponseEntity.ok(permissionService.findAll());
+    }
+
+    /**
      * 角色拥有的权限
      *
-     * @param role role
+     * @param id role
      * @return org.springframework.http.ResponseEntity
      * @author 阮雪峰
      * @date 2019/2/14 8:46
      */
-    @ApiOperation(value = "角色拥有的权限的id")
+    @ApiOperation(value = "获取角色拥有的权限")
     @ApiImplicitParams({@ApiImplicitParam(paramType = "header", dataType = "String", name = Constant.TOKEN, value = "登录凭证", required = true)})
-    @GetMapping("/menus")
-    public ResponseEntity<List<Long>> menus(Long id) {
-        return ResponseEntity.ok(roleService.getMenuList(id));
+    @GetMapping("/permissions")
+    public ResponseEntity permissions(Long id) {
+        return ResponseEntity.ok(roleService.findPermissions(id));
     }
 
     /**
      * 修改权限
      *
-     * @param role 角色信息
+     * @param updateRolePermissionAO 角色信息
      * @return org.springframework.http.ResponseEntity
      * @author 阮雪峰
      * @date 2018/7/31 8:58
      */
-    @ApiOperation(value = "分配权限")
+    @ApiOperation(value = "修改角色权限")
     @ApiImplicitParams({@ApiImplicitParam(paramType = "header", dataType = "String", name = Constant.TOKEN, value = "登录凭证", required = true)})
-    @WriteLog("分配权限")
-    @PostMapping("/update/menuList")
-    public ResponseEntity updateMenuList(@RequestBody UpdateRoleMenuAO updateRoleMenuAo) {
-        roleService.updateMenuList(updateRoleMenuAo);
+    @PostMapping("/update/permissions")
+    public ResponseEntity<MessageVO> updatePermissions(@RequestBody UpdateRolePermissionAO updateRolePermissionAO) {
+        roleService.updatePermissions(updateRolePermissionAO);
         return ResponseEntity.ok(message.get(UPDATE_SUCCESS));
     }
-
     /**
      * 查询所有
      *

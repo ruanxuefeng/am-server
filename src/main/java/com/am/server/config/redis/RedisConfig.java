@@ -20,6 +20,7 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
+import java.util.TreeSet;
 
 /**
  * @author 阮雪峰
@@ -60,13 +61,13 @@ public class RedisConfig {
 
 
     @Bean("permissionCacheRedisTemplate")
-    public RedisTemplate<String, PermissionTreeDO> permissionCacheRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
+    public RedisTemplate<String, TreeSet<PermissionTreeDO>> permissionCacheRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
 
-        RedisTemplate<String, PermissionTreeDO> template = new RedisTemplate<>();
+        RedisTemplate<String, TreeSet<PermissionTreeDO>> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory);
 
         //使用Jackson2JsonRedisSerializer来序列化和反序列化redis的value值
-        Jackson2JsonRedisSerializer serializer = new Jackson2JsonRedisSerializer<>(PermissionTreeDO.class);
+        Jackson2JsonRedisSerializer serializer = new Jackson2JsonRedisSerializer<>(TreeSet.class);
 
         return configTemplate(template, serializer);
     }

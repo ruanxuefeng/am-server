@@ -1,4 +1,9 @@
-package com.am.server.api.permission.interceptor.annotation;
+package com.am.server.api.permission.annotation;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * 具体权限的集合
@@ -13,6 +18,8 @@ package com.am.server.api.permission.interceptor.annotation;
  *     新增（permission）
  *     修改（permission）
  */
+@Target({ElementType.TYPE, ElementType.METHOD, ElementType.FIELD})
+@Retention(RetentionPolicy.RUNTIME)
 public @interface Menu {
     /**
      * 唯一标识
@@ -27,4 +34,6 @@ public @interface Menu {
      * @return name
      */
     String name();
+
+    int sort() default 0;
 }

@@ -1,11 +1,10 @@
 package com.am.server.api.role.service.impl;
 
-import com.am.server.api.menu.pojo.po.MenuDO;
 import com.am.server.api.role.dao.rdb.RoleDAO;
 import com.am.server.api.role.pojo.ao.RoleListAO;
 import com.am.server.api.role.pojo.ao.SaveRoleAO;
 import com.am.server.api.role.pojo.ao.UpdateRoleAO;
-import com.am.server.api.role.pojo.ao.UpdateRoleMenuAO;
+import com.am.server.api.role.pojo.ao.UpdateRolePermissionAO;
 import com.am.server.api.role.pojo.po.RoleDO;
 import com.am.server.api.role.pojo.vo.RoleListVo;
 import com.am.server.api.role.pojo.vo.SelectRoleVO;
@@ -31,7 +30,7 @@ import java.util.stream.Collectors;
  * @author 阮雪峰
  * @date 2018/7/27 10:47
  */
-@Service("roleService")
+@Service
 public class RoleServiceImpl implements RoleService {
 
     private final RoleDAO roleDAO;
@@ -114,33 +113,24 @@ public class RoleServiceImpl implements RoleService {
                 .collect(Collectors.toList());
     }
 
-    @Commit
     @Override
-    public void updateMenuList(UpdateRoleMenuAO updateRoleMenuAo) {
-        roleDAO.findById(updateRoleMenuAo.getId())
+    public void updatePermissions(UpdateRolePermissionAO updateRolePermissionAO) {
+        roleDAO.findById(updateRolePermissionAO.getId())
                 .ifPresent(role -> {
-                    ArrayList<MenuDO> newMenuList = new ArrayList<>(8);
-                    Optional.ofNullable(updateRoleMenuAo.getMenuList())
-                            .filter(menuList -> !menuList.isEmpty())
-                            .ifPresent(menuList -> menuList.forEach(menu -> newMenuList.add(new MenuDO().setId(menu))));
-                    role.setMenus(newMenuList);
-                    roleDAO.save(role);
                     List<Long> userIds = new ArrayList<>();
                     for (AdminUserDO user : role.getUsers()) {
                         userIds.add(user.getId());
                         simpMessagingTemplate.convertAndSend("/topic/permission/" + user.getId(), true);
                     }
                     userPermissionCacheService.removeAll(userIds.toArray(new Long[0]));
+                    roleDAO.save(role.setPermissions(updateRolePermissionAO.getPermissions()));
                 });
     }
 
     @Override
-    public List<Long> getMenuList(Long id) {
-        List<MenuDO> menuList = roleDAO.findById(id)
-                .map(RoleDO::getMenus)
+    public List<String> findPermissions(Long id) {
+        return roleDAO.findById(id)
+                .map(RoleDO::getPermissions)
                 .orElse(new ArrayList<>());
-        return menuList.stream()
-                .map(MenuDO::getId)
-                .collect(Collectors.toList());
     }
 }

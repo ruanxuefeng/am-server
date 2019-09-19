@@ -38,5 +38,5 @@ public class UserInfoVO {
     private List<String> roles;
 
     @ApiModelProperty(value = "拥有的权限")
-    private Set<String> menus;
+    private Set<String> permissions;
 }

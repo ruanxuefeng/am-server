@@ -1,6 +1,6 @@
 package com.am.server.api.permission.util;
 
-import com.am.server.api.permission.interceptor.annotation.Permission;
+import com.am.server.api.permission.annotation.Permission;
 import org.reflections.Reflections;
 
 import java.util.Set;

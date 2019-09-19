@@ -3,7 +3,7 @@ package com.am.server.api.permission.pojo.po;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.util.List;
+import java.util.TreeSet;
 
 /**
  * 权限树
@@ -13,9 +13,21 @@ import java.util.List;
  */
 @Accessors(chain = true)
 @Data
-public class PermissionTreeDO {
+public class PermissionTreeDO implements Comparable<PermissionTreeDO> {
     private String name;
     private String mark;
 
-    private List<PermissionTreeDO> children;
+    private Integer sort;
+    private TreeSet<PermissionTreeDO> children;
+
+    @Override
+    public int compareTo(PermissionTreeDO o) {
+        if (o == null || mark.equals(o.mark)) {
+            return 0;
+        } else if (sort.equals(o.sort)) {
+            return mark.compareTo(o.mark);
+        } else {
+            return sort.compareTo(o.sort);
+        }
+    }
 }

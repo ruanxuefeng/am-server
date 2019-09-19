@@ -81,7 +81,7 @@ public class AdminUserServiceImpl implements AdminUserService {
                     String userPassword = DesUtils.decrypt(user.getPassword(), user.getSalt());
                     return inputPassword.equals(userPassword);
                 })
-                .map(user -> new LoginUserInfoVO(JwtUtils.sign(user.getId().toString()), null))
+                .map(user -> new LoginUserInfoVO(JwtUtils.sign(user.getId().toString())))
                 .orElseThrow(PasswordErrorException::new);
     }
 
@@ -93,7 +93,7 @@ public class AdminUserServiceImpl implements AdminUserService {
                     List<String> roles = user.getRoles().stream().map(RoleDO::getName).collect(Collectors.toList());
                     return new UserInfoVO()
                             .setId(user.getId())
-                            .setMenus(userPermissionCacheService.get(id))
+                            .setPermissions(userPermissionCacheService.get(id))
                             .setAvatar(user.getAvatar())
                             .setEmail(user.getEmail())
                             .setGender(user.getGender())

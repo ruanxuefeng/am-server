@@ -6,7 +6,7 @@ import com.am.server.api.bulletin.pojo.ao.UpdateBulletinAO;
 import com.am.server.api.bulletin.pojo.vo.BulletinListVO;
 import com.am.server.api.bulletin.service.BulletinService;
 import com.am.server.api.log.aspect.annotation.WriteLog;
-import com.am.server.api.permission.interceptor.annotation.Permission;
+import com.am.server.api.permission.annotation.Permission;
 import com.am.server.common.base.controller.BaseController;
 import com.am.server.common.base.pojo.vo.MessageVO;
 import com.am.server.common.base.pojo.vo.PageVO;
@@ -30,7 +30,7 @@ import java.util.Optional;
  */
 @Api(tags = "公告管理")
 @WriteLog("公告管理")
-@Permission(value = "bulletin", name = "公告管理")
+@Permission(value = "bulletin", name = "公告管理", sort = 30)
 @RestController
 @RequestMapping(Constant.ADMIN_ROOT + "/bulletin")
 public class BulletinController extends BaseController {
