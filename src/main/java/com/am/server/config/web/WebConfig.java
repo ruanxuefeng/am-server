@@ -18,7 +18,7 @@ import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 import java.math.BigInteger;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Locale;
 
@@ -66,7 +66,7 @@ public class WebConfig implements WebMvcConfigurer {
         objectMapper.registerModule(simpleModule);
         jackson2HttpMessageConverter.setObjectMapper(objectMapper);
         converters.add(jackson2HttpMessageConverter);
-        converters.add(new StringHttpMessageConverter(Charset.forName("UTF-8")));
+        converters.add(new StringHttpMessageConverter(StandardCharsets.UTF_8));
     }
 
     /**
