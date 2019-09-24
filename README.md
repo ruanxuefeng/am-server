@@ -3,8 +3,9 @@
     - SpringBoot + Mybatis + Druid + MySQL + MongoDB（详见master分支）
     - SpringBoot + Spring-data-jpa + queryDSL + Druid + MariaDB + MongoDB（存放操作日志） + Redis（缓存用户权限）
     - JDK1.8+
-    - 实现功能：用户管理、角色管理、菜单管理、日志管理、公告管理（websocket实现，对登录用户推送，没有实现点对点和选择性推送）
-    - 使用swagger创建接口文档，http://ip:port/doc.html
+
+###文档
+
     
 ### 组织结构
 
@@ -33,6 +34,15 @@
     |   |-banner.txt            -- 自定义启动banner
     |   |-logback-spring.xml    -- 日志配置
 ```
+###实现功能
+    - 用户管理
+    - 角色管理
+    - 日志管理
+    - 公告管理（websocket实现）
+    
+###接口文档
+    - 使用swagger生成接口文档，启动服务，访问http://ip:port/doc.html
+    
 ### 项目特点
     - 基本遵循阿里开发手册
     - 功能少，基本框架，想怎么改就怎么改
