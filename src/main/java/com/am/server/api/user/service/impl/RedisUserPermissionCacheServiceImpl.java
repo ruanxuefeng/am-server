@@ -47,6 +47,9 @@ public class RedisUserPermissionCacheServiceImpl implements UserPermissionCacheS
                     roleList.stream()
                             .map(RoleDO::getPermissions)
                             .forEach(permissions::addAll);
+                    if (permissions.size() == 0) {
+                        return null;
+                    }
                     userPermissionCacheDAO.save(uid, permissions);
                     return permissions;
                 });
