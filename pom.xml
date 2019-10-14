@@ -178,11 +178,20 @@
             <artifactId>spring-data-commons</artifactId>
         </dependency>
 
+        <!--反射相关工具，主要扫描注解类及注解方法-->
         <dependency>
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
             <version>0.9.11</version>
         </dependency>
+
+        <!-- 提供常用的编码和解码方法，如DES、SHA1、MD5、Base64、URL和Soundx等。 -->
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.13</version>
+        </dependency>
+
 
     </dependencies>
 

@@ -18,6 +18,8 @@ import com.am.server.common.base.pojo.vo.PageVO;
 import com.am.server.common.base.service.CommonService;
 import com.am.server.common.constant.Constant;
 import com.am.server.common.util.*;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
@@ -26,14 +28,25 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
  * @author 阮雪峰
  * @date 2018/7/24 17:23
  */
+@Slf4j
 @Service("adminUserService")
 public class AdminUserServiceImpl implements AdminUserService {
 
@@ -77,9 +90,14 @@ public class AdminUserServiceImpl implements AdminUserService {
         return optional
                 .filter(user -> {
                     //校验密码是否一样
-                    String inputPassword = new String(Base64.getDecoder().decode(query.getPassword().getBytes()));
-                    String userPassword = DesUtils.decrypt(user.getPassword(), user.getSalt());
-                    return inputPassword.equals(userPassword);
+                    String inputPassword = new String(Base64.decodeBase64(query.getPassword()));
+                    try {
+                        String userPassword = DesUtils.decrypt(user.getPassword(), user.getSalt());
+                        return inputPassword.equals(userPassword);
+                    } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException | InvalidKeySpecException | BadPaddingException | IllegalBlockSizeException | InvalidAlgorithmParameterException e) {
+                        e.printStackTrace();
+                    }
+                    return false;
                 })
                 .map(user -> new LoginUserInfoVO(JwtUtils.sign(user.getId().toString())))
                 .orElseThrow(PasswordErrorException::new);
@@ -137,19 +155,24 @@ public class AdminUserServiceImpl implements AdminUserService {
     public void save(SaveAdminUserAO adminUser) {
         String salt = StringUtils.getRandomStr(RANDOM_STRING_LENGTH);
         Long id = IdUtils.getId();
-        AdminUserDO user = new AdminUserDO()
-                .setId(id)
-                .setUsername(adminUser.getUsername())
-                .setName(adminUser.getName())
-                .setCreatedTime(LocalDateTime.now())
-                .setEmail(adminUser.getEmail())
-                .setGender(adminUser.getGender())
-                .setAvatar(uploadAvatar(id, adminUser.getImg()))
-                .setCreatedBy(new AdminUserDO().setId(commonService.getLoginUserId()))
-                .setSalt(salt)
-                .setPassword(DesUtils.encrypt(Constant.INITIAL_PASSWORD, salt));
+        try {
+            AdminUserDO user = new AdminUserDO()
+                    .setId(id)
+                    .setUsername(adminUser.getUsername())
+                    .setName(adminUser.getName())
+                    .setCreatedTime(LocalDateTime.now())
+                    .setEmail(adminUser.getEmail())
+                    .setGender(adminUser.getGender())
+                    .setAvatar(uploadAvatar(id, adminUser.getImg()))
+                    .setCreatedBy(new AdminUserDO().setId(commonService.getLoginUserId()))
+                    .setSalt(salt)
+                    .setPassword(DesUtils.encrypt(Constant.INITIAL_PASSWORD, salt));
+            adminUserDAO.save(user);
+        } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException | InvalidKeySpecException | BadPaddingException | IllegalBlockSizeException | InvalidAlgorithmParameterException e) {
+            log.error("解密失败，密文：{}，秘钥：{}", Constant.INITIAL_PASSWORD, salt);
+            log.error("", e);
+        }
 
-        adminUserDAO.save(user);
     }
 
     /**
@@ -184,13 +207,17 @@ public class AdminUserServiceImpl implements AdminUserService {
     @Override
     public void resetPassword(Long id) {
         String salt = StringUtils.getRandomStr(RANDOM_STRING_LENGTH);
-        String password = DesUtils.encrypt(PASSWORD, salt);
+        try {
+            String password = DesUtils.encrypt(PASSWORD, salt);
 
-        adminUserDAO.findById(id)
-                .ifPresent(adminUser -> adminUserDAO.save(
-                        adminUser.setPassword(password)
-                                .setSalt(salt)
-                ));
+            adminUserDAO.findById(id)
+                    .ifPresent(adminUser -> adminUserDAO.save(
+                            adminUser.setPassword(password)
+                                    .setSalt(salt)
+                    ));
+        } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException | InvalidKeySpecException | BadPaddingException | IllegalBlockSizeException | InvalidAlgorithmParameterException e) {
+            log.error("加密异常，Text：{}，秘钥：{}", PASSWORD, salt);
+        }
     }
 
     @Commit

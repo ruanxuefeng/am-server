@@ -61,14 +61,10 @@ public class IdUtils {
                 sequence = 0;
             }
             if (timestamp < lastTimestamp) {
-                try {
-                    throw new Exception(
-                            String.format(
-                                    "Clock moved backwards.  Refusing to generate id for %d milliseconds",
-                                    lastTimestamp - timestamp));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                throw new TimestampException(
+                        String.format(
+                                "Clock moved backwards.  Refusing to generate id for %d milliseconds",
+                                lastTimestamp - timestamp));
             }
 
             lastTimestamp = timestamp;
@@ -87,5 +83,11 @@ public class IdUtils {
         private long timeGen() {
             return System.currentTimeMillis();
         }
+    }
+}
+
+class TimestampException extends RuntimeException {
+    TimestampException(String message) {
+        super(message);
     }
 }

@@ -32,7 +32,7 @@ public class ServerStartedListenerForStartExpireBulletinThread implements Applic
             1,
             0L,
             TimeUnit.MILLISECONDS,
-            new LinkedBlockingQueue<>(1024),
+            new LinkedBlockingQueue<>(1),
             EXPIRE_BULLETIN_THREAD_FACTORY,
             new ThreadPoolExecutor.AbortPolicy()
     );
