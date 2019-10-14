@@ -2,6 +2,7 @@ package com.am.server.api.log.aspect;
 
 import com.am.server.api.log.aspect.annotation.WriteLog;
 import com.am.server.api.log.aspect.service.ProcessLogService;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
@@ -16,6 +17,7 @@ import java.lang.reflect.Method;
  * @author 阮雪峰
  * @date 2018/8/1 13:52
  */
+@Slf4j
 @Aspect
 @Component
 public class LogAspect {
@@ -43,7 +45,7 @@ public class LogAspect {
             processLogService.process(target, targetAnnotation, method, methodAnnotation);
 
         } catch (NoSuchMethodException e) {
-            e.printStackTrace();
+            log.error("方法为找打，类：{}， 方法：{}", target.getName(), signature.getName());
         }
 
     }

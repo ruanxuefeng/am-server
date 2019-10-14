@@ -95,7 +95,8 @@ public class AdminUserServiceImpl implements AdminUserService {
                         String userPassword = DesUtils.decrypt(user.getPassword(), user.getSalt());
                         return inputPassword.equals(userPassword);
                     } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException | InvalidKeySpecException | BadPaddingException | IllegalBlockSizeException | InvalidAlgorithmParameterException e) {
-                        e.printStackTrace();
+                        log.error("解密失败，密文：{}，秘钥：{}", user.getPassword(), user.getSalt());
+                        log.error("", e);
                     }
                     return false;
                 })

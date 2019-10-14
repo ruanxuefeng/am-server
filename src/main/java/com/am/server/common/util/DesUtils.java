@@ -57,16 +57,4 @@ public class DesUtils {
         return new String(bytes, StandardCharsets.UTF_8);
     }
 
-    public static void main(String[] args) {
-        String text = "admin";
-        String key = StringUtils.getRandomNumberStr(512);
-        try {
-            String encrypt = encrypt(text, key);
-            System.out.println(encrypt);
-            System.out.println(decrypt(encrypt, key));
-        } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException | InvalidKeySpecException | BadPaddingException | IllegalBlockSizeException | InvalidAlgorithmParameterException e) {
-            e.printStackTrace();
-        }
-
-    }
 }

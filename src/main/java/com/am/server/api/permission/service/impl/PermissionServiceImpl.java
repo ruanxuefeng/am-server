@@ -77,7 +77,7 @@ public class PermissionServiceImpl implements PermissionService {
                 PermissionTreeDO tree = operate(permission.value(), permission.name(), permission.sort(), map, set, parent);
                 //找此类上加权限的方法
                 Set<Method> classMethodSet = methods.stream()
-                        .filter(method -> method.getDeclaringClass().getName().equals(permissionClass.getName()))
+                        .filter(method -> method.getDeclaringClass().equals(permissionClass))
                         .collect(Collectors.toSet());
 
                 //遍历方法
