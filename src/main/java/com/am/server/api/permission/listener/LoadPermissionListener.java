@@ -6,6 +6,10 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
+/**
+ * @author 阮雪峰
+ * @date 2019-10-14 13:22:34
+ */
 @Slf4j
 @Component
 public class LoadPermissionListener implements ApplicationListener<ContextRefreshedEvent> {

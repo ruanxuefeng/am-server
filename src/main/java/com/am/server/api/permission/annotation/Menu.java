@@ -17,6 +17,8 @@ import java.lang.annotation.Target;
  *     列表（permission）
  *     新增（permission）
  *     修改（permission）
+ * @author 阮雪峰
+ * @date 2019年10月14日13:22:49
  */
 @Target({ElementType.TYPE, ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)

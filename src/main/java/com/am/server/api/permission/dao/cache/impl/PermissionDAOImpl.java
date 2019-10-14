@@ -7,6 +7,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.TreeSet;
 
+/**
+ * @author 阮雪峰
+ * @date 2019年10月14日13:23:01
+ */
 @Repository
 public class PermissionDAOImpl implements PermissionDAO {
 

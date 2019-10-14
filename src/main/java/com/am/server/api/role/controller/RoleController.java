@@ -158,8 +158,8 @@ public class RoleController extends BaseController {
     @ApiOperation(value = "修改角色权限")
     @ApiImplicitParams({@ApiImplicitParam(paramType = "header", dataType = "String", name = Constant.TOKEN, value = "登录凭证", required = true)})
     @PostMapping("/update/permissions")
-    public ResponseEntity<MessageVO> updatePermissions(@RequestBody UpdateRolePermissionAO updateRolePermissionAO) {
-        roleService.updatePermissions(updateRolePermissionAO);
+    public ResponseEntity<MessageVO> updatePermissions(@RequestBody UpdateRolePermissionAO updateRolePermissionAo) {
+        roleService.updatePermissions(updateRolePermissionAo);
         return ResponseEntity.ok(message.get(UPDATE_SUCCESS));
     }
     /**

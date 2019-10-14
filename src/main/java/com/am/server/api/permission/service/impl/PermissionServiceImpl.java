@@ -16,6 +16,10 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * @author 阮雪峰
+ * @date 2019年10月14日13:23:18
+ */
 @Service
 public class PermissionServiceImpl implements PermissionService {
 

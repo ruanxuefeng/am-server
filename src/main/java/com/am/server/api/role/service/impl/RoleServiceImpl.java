@@ -114,8 +114,8 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public void updatePermissions(UpdateRolePermissionAO updateRolePermissionAO) {
-        roleDAO.findById(updateRolePermissionAO.getId())
+    public void updatePermissions(UpdateRolePermissionAO updateRolePermissionAo) {
+        roleDAO.findById(updateRolePermissionAo.getId())
                 .ifPresent(role -> {
                     List<Long> userIds = new ArrayList<>();
                     for (AdminUserDO user : role.getUsers()) {
@@ -123,7 +123,7 @@ public class RoleServiceImpl implements RoleService {
                         simpMessagingTemplate.convertAndSend("/topic/permission/" + user.getId(), true);
                     }
                     userPermissionCacheService.removeAll(userIds.toArray(new Long[0]));
-                    roleDAO.save(role.setPermissions(updateRolePermissionAO.getPermissions()));
+                    roleDAO.save(role.setPermissions(updateRolePermissionAo.getPermissions()));
                 });
     }
 

@@ -58,9 +58,9 @@ public interface RoleService {
 
     /**
      * 更新权限
-     * @param updateRolePermissionAO updateRolePermissionAO
+     * @param updateRolePermissionAo updateRolePermissionAo
      */
-    void updatePermissions(UpdateRolePermissionAO updateRolePermissionAO);
+    void updatePermissions(UpdateRolePermissionAO updateRolePermissionAo);
 
     /**
      * 角色拥有的权限
