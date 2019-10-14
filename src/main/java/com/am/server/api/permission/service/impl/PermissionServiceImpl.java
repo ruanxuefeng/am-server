@@ -52,7 +52,8 @@ public class PermissionServiceImpl implements PermissionService {
                 children.add(mapToVO(child));
             }
         }
-        return permissionTreeVO.setChildren(children);
+        Optional.ofNullable(children).ifPresent(permissionTreeVO::setChildren);
+        return permissionTreeVO;
     }
 
     private TreeSet<PermissionTreeDO> getPermissionTree() {

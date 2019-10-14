@@ -2,18 +2,16 @@ package com.am.server.common.base.controller;
 
 import com.am.server.common.base.pojo.vo.MessageVO;
 import com.am.server.common.base.service.Message;
-import com.am.server.config.i18n.component.I18nMessageImpl;
 
 import javax.annotation.Resource;
-import java.util.Map;
-
 
 /**
- *  提供基本常量
+ * 提供基本常量
+ *
  * @author 阮雪峰
  * @date 2018/8/3 16:46
  */
-public class BaseController  {
+public class BaseController {
     /**
      * 操作成功!
      */

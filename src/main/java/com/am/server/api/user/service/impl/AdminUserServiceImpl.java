@@ -100,7 +100,7 @@ public class AdminUserServiceImpl implements AdminUserService {
                             .setName(user.getName())
                             .setRoles(roles);
                 })
-                .orElse(null);
+                .orElseThrow(UserNotExistException::new);
     }
 
     @ReadOnly
@@ -237,7 +237,7 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     @Override
     public AdminUserDO findById(Long id) {
-        return adminUserDAO.findById(id).orElse(null);
+        return adminUserDAO.findById(id).orElseThrow(UserNotExistException::new);
     }
 
     @Override
