@@ -54,7 +54,7 @@ public class LogServiceImpl implements LogService {
         PageVO<LogListVO> page = new PageVO<LogListVO>().setPage(logListAo.getPage()).setPageSize(logListAo.getPageSize());
 
         Query query = new Query()
-                .with(new Sort(Sort.Direction.DESC, "id"))
+                .with(Sort.by(Sort.Direction.DESC,"id"))
                 .skip(page.getCol())
                 .limit(page.getPageSize());
 
