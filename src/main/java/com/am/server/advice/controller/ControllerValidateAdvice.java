@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
 import java.net.SocketTimeoutException;
 import java.util.Objects;
 
@@ -103,14 +102,13 @@ public class ControllerValidateAdvice {
     /**
      * 请求没有携带token，提示登录，401
      *
-     * @param e 错误信息
      * @return org.springframework.http.ResponseEntity
      * @author 阮雪峰
      * @date 2018/10/8 15:16
      */
     @ExceptionHandler(NoTokenException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public MessageVO noTokenException(NoTokenException e) {
+    public MessageVO noTokenException() {
         return message.get(NO_TOKEN);
 
     }
@@ -118,14 +116,13 @@ public class ControllerValidateAdvice {
     /**
      * 用户不存在
      *
-     * @param e 错误信息
      * @return org.springframework.http.ResponseEntity
      * @author 阮雪峰
      * @date 2018/10/8 15:16
      */
     @ExceptionHandler(UserNotExistException.class)
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
-    public MessageVO userNotExist(UserNotExistException e) {
+    public MessageVO userNotExist() {
         return message.get(USERNAME_DOES_NOT_EXIST);
 
     }
@@ -133,14 +130,13 @@ public class ControllerValidateAdvice {
     /**
      * 密码不正确
      *
-     * @param e 错误信息
      * @return org.springframework.http.ResponseEntity
      * @author 阮雪峰
      * @date 2018/10/8 15:16
      */
     @ExceptionHandler(PasswordErrorException.class)
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
-    public MessageVO passwordError(PasswordErrorException e) {
+    public MessageVO passwordError() {
         return message.get(PASSWORD_ERROR);
 
     }
@@ -148,14 +144,13 @@ public class ControllerValidateAdvice {
     /**
      * token过期或者不是正确的token，412
      *
-     * @param e 错误信息
      * @return org.springframework.http.ResponseEntity
      * @author 阮雪峰
      * @date 2018/10/8 15:16
      */
     @ExceptionHandler(ExpiredJwtException.class)
     @ResponseStatus(HttpStatus.PRECONDITION_FAILED)
-    public MessageVO tokenException(ExpiredJwtException e) {
+    public MessageVO tokenException() {
         return message.get(TOKEN_EXPIRED);
 
     }
@@ -163,15 +158,13 @@ public class ControllerValidateAdvice {
     /**
      * 没有权限访问，403
      *
-     * @param e 错误信息
      * @return java.util.Map<java.lang.String, java.lang.String>
      * @author 阮雪峰
      * @date 2018/10/8 15:25
      */
     @ExceptionHandler(NoPermissionAccessException.class)
-    public ResponseEntity<MessageVO> noPermissionException(HttpServletResponse response, NoPermissionAccessException e) {
-        response.addHeader("Access-Control-Allow-Origin", "http://localhost:8080");
-        response.addHeader("Access-Control-Allow-Credentials", "true");
+    public ResponseEntity<MessageVO> noPermissionException() {
+
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(message.get(NO_PERMISSION_ACCESS));
 
     }
@@ -185,7 +178,7 @@ public class ControllerValidateAdvice {
      * @date 2018/10/8 15:25
      */
     @ExceptionHandler(UploadFileException.class)
-    public ResponseEntity noPermissionException(UploadFileException e) {
+    public ResponseEntity<MessageVO> noPermissionException(UploadFileException e) {
         log.error(ERROR_TITLE, e);
         return ResponseEntity.status(521).body(message.get(FILE_UPLOAD_FAIL));
 

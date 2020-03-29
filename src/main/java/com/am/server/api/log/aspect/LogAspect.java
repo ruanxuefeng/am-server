@@ -45,7 +45,7 @@ public class LogAspect {
             processLogService.process(target, targetAnnotation, method, methodAnnotation);
 
         } catch (NoSuchMethodException e) {
-            log.error("方法为找打，类：{}， 方法：{}", target.getName(), signature.getName());
+            log.error("方法未找到，类：{}， 方法：{}", target.getName(), signature.getName());
         }
 
     }

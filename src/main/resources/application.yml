@@ -27,6 +27,9 @@ spring:
       filter:
         commons-log:
           statement-executable-sql-log-enable: true
+  devtools:
+    livereload:
+      enabled: false
   resources:
     static-locations: classpath:/static/
   aop:

@@ -1095,12 +1095,22 @@
     "dbs": [
       {
         "name": "dev",
-        "defaultDB": false,
+        "defaultDB": true,
         "properties": {
           "driver_class_name": "com.mysql.jdbc.Driver",
           "url": "jdbc:mysql://localhost:3306/am-server?characterEncoding=UTF-8&useSSL=false&useUnicode=true&serverTimezone=UTC",
           "password": "r19931229.",
           "username": "root"
+        }
+      },
+      {
+        "name": "",
+        "defaultDB": false,
+        "properties": {
+          "driver_class_name": "com.mysql.jdbc.Driver",
+          "url": "jdbc:mysql://IP地址:端口号/数据库名?characterEncoding=UTF-8&useSSL=false&useUnicode=true&serverTimezone=UTC",
+          "password": "",
+          "username": ""
         }
       }
     ]
