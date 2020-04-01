@@ -14,7 +14,11 @@ spring:
           enabled: true
         slf4j:
           enabled: true
-          statement-executable-sql-log-enable: true
+          statement-create-after-log-enabled: false
+          statement-log-enabled: true
+          statement-executable-sql-log-enable: false
+          statement-log-error-enabled: true
+          result-set-log-enabled: false
   data:
     mongodb:
       host: localhost
