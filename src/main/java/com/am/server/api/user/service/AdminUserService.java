@@ -8,6 +8,7 @@ import com.am.server.api.user.pojo.vo.UserInfoVO;
 import com.am.server.common.base.pojo.vo.PageVO;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author 阮雪峰
@@ -106,16 +107,6 @@ public interface AdminUserService {
      * @date 2018/8/3 16:55
      */
     void update(UpdateUserInfoAO user);
-
-    /**
-     * findById
-     *
-     * @param id id
-     * @return com.am.server.api.admin.user.pojo.AdminUserPO
-     * @author 阮雪峰
-     * @date 2019/2/14 16:04
-     */
-    AdminUserDO findById(Long id);
 
     /**
      * 查询角色id list

@@ -49,8 +49,8 @@ public class PageVO<T> implements Serializable {
      * @return int
      */
     @ApiModelProperty(value = "当前页", example = "200")
-    public int getTotalPage() {
-        return (total % pageSize == 0 ? (total / pageSize) : (total / pageSize + 1));
+    public Integer getTotalPage() {
+        return Math.toIntExact((total % pageSize == 0 ? (total / pageSize) : (total / pageSize + 1)));
     }
 
     /**

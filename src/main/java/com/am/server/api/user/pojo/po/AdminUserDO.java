@@ -2,8 +2,10 @@ package com.am.server.api.user.pojo.po;
 
 import com.am.server.api.role.pojo.po.RoleDO;
 import com.am.server.common.base.enumerate.Gender;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import javax.persistence.*;
@@ -20,7 +22,9 @@ import java.util.List;
 @Entity
 @EqualsAndHashCode(exclude = {"id"})
 @Accessors(chain = true)
-@Data
+@ToString(of = {"id", "username", "email"})
+@Setter
+@Getter
 public class AdminUserDO {
     @javax.persistence.Id
     @Column

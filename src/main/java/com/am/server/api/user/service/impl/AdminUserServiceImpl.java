@@ -263,10 +263,6 @@ public class AdminUserServiceImpl implements AdminUserService {
                 });
     }
 
-    @Override
-    public AdminUserDO findById(Long id) {
-        return adminUserDAO.findById(id).orElseThrow(UserNotExistException::new);
-    }
 
     @Override
     public List<Long> findRoleIdList(Long id) {

@@ -54,9 +54,7 @@ public class LogServiceImpl implements LogService {
         PageVO<LogListVO> page = new PageVO<LogListVO>().setPage(logListAo.getPage()).setPageSize(logListAo.getPageSize());
 
         Query query = new Query()
-                .with(Sort.by(Sort.Direction.DESC,"id"))
-                .skip(page.getCol())
-                .limit(page.getPageSize());
+                .with(Sort.by(Sort.Direction.DESC, "id"));
 
         Optional<LogListAO> optional = Optional.of(logListAo);
 
@@ -85,6 +83,9 @@ public class LogServiceImpl implements LogService {
                 .filter(operate -> !operate.isEmpty())
                 .ifPresent(operate -> query.addCriteria(new Criteria("operate").regex(MongoUtils.getRegx(logListAo.getOperate()))));
 
+        page.setTotal((int) mongoTemplate.count(query, Log.class));
+
+        query.skip(page.getCol()).limit(page.getPageSize());
         page.setRows(
                 mongoTemplate.find(query, LogPO.class)
                         .stream()
@@ -97,7 +98,6 @@ public class LogServiceImpl implements LogService {
                                         .setCreateTime(log.getCreateTime())
                         ).collect(Collectors.toList())
         );
-        page.setTotal((int) mongoTemplate.count(query, Log.class));
 
         return page;
     }
