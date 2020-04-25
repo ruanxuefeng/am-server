@@ -5,9 +5,9 @@ import com.am.server.api.permission.annotation.Menu;
 import com.am.server.api.permission.annotation.Permission;
 import com.am.server.api.permission.service.PermissionService;
 import com.am.server.api.role.pojo.ao.*;
-import com.am.server.api.role.pojo.vo.PermissionTreeVO;
+import com.am.server.api.role.pojo.vo.PermissionTreeVo;
 import com.am.server.api.role.pojo.vo.RoleListVo;
-import com.am.server.api.role.pojo.vo.SelectRoleVO;
+import com.am.server.api.role.pojo.vo.SelectRoleVo;
 import com.am.server.api.role.service.RoleService;
 import com.am.server.common.base.controller.BaseController;
 import com.am.server.common.base.pojo.vo.MessageVO;
@@ -59,7 +59,7 @@ public class RoleController extends BaseController {
     @ApiOperation(value = "列表")
     @ApiImplicitParams({@ApiImplicitParam(paramType = "header", dataType = "String", name = Constant.TOKEN, value = "登录凭证", required = true)})
     @GetMapping("/list")
-    public ResponseEntity<PageVO<RoleListVo>> list(RoleListAO roleListAo) {
+    public ResponseEntity<PageVO<RoleListVo>> list(RoleListAo roleListAo) {
         return ResponseEntity.ok(roleService.list(roleListAo));
     }
 
@@ -75,7 +75,7 @@ public class RoleController extends BaseController {
     @ApiImplicitParams({@ApiImplicitParam(paramType = "header", dataType = "String", name = Constant.TOKEN, value = "登录凭证", required = true)})
     @WriteLog("新增")
     @PostMapping("/save")
-    public ResponseEntity<MessageVO> save(@Validated @RequestBody SaveRoleAO role) {
+    public ResponseEntity<MessageVO> save(@Validated @RequestBody SaveRoleAo role) {
         roleService.save(role);
         return new ResponseEntity<>(message.get(SAVE_SUCCESS), HttpStatus.OK);
     }
@@ -92,7 +92,7 @@ public class RoleController extends BaseController {
     @ApiImplicitParams({@ApiImplicitParam(paramType = "header", dataType = "String", name = Constant.TOKEN, value = "登录凭证", required = true)})
     @WriteLog("修改")
     @PostMapping("/update")
-    public ResponseEntity<MessageVO> update(@Validated @RequestBody UpdateRoleAO roleAo) {
+    public ResponseEntity<MessageVO> update(@Validated @RequestBody UpdateRoleAo roleAo) {
         roleService.update(roleAo);
         return new ResponseEntity<>(message.get(UPDATE_SUCCESS), HttpStatus.OK);
     }
@@ -128,7 +128,7 @@ public class RoleController extends BaseController {
     @ApiOperation(value = "获取权限树")
     @ApiImplicitParams({@ApiImplicitParam(paramType = "header", dataType = "String", name = Constant.TOKEN, value = "登录凭证", required = true)})
     @GetMapping("/permission/tree")
-    public ResponseEntity<List<PermissionTreeVO>> permissionTree() {
+    public ResponseEntity<List<PermissionTreeVo>> permissionTree() {
         return ResponseEntity.ok(permissionService.findAll());
     }
 
@@ -143,14 +143,14 @@ public class RoleController extends BaseController {
     @ApiOperation(value = "获取角色拥有的权限")
     @ApiImplicitParams({@ApiImplicitParam(paramType = "header", dataType = "String", name = Constant.TOKEN, value = "登录凭证", required = true)})
     @GetMapping("/permissions")
-    public ResponseEntity permissions(Long id) {
+    public ResponseEntity<List<String>> permissions(Long id) {
         return ResponseEntity.ok(roleService.findPermissions(id));
     }
 
     /**
      * 修改权限
      *
-     * @param updateRolePermissionAO 角色信息
+     * @param updateRolePermissionAo 角色信息
      * @return org.springframework.http.ResponseEntity
      * @author 阮雪峰
      * @date 2018/7/31 8:58
@@ -158,7 +158,7 @@ public class RoleController extends BaseController {
     @ApiOperation(value = "修改角色权限")
     @ApiImplicitParams({@ApiImplicitParam(paramType = "header", dataType = "String", name = Constant.TOKEN, value = "登录凭证", required = true)})
     @PostMapping("/update/permissions")
-    public ResponseEntity<MessageVO> updatePermissions(@RequestBody UpdateRolePermissionAO updateRolePermissionAo) {
+    public ResponseEntity<MessageVO> updatePermissions(@RequestBody UpdateRolePermissionAo updateRolePermissionAo) {
         roleService.updatePermissions(updateRolePermissionAo);
         return ResponseEntity.ok(message.get(UPDATE_SUCCESS));
     }
@@ -172,7 +172,7 @@ public class RoleController extends BaseController {
     @ApiOperation(value = "查询所有")
     @ApiImplicitParams({@ApiImplicitParam(paramType = "header", dataType = "String", name = Constant.TOKEN, value = "登录凭证", required = true)})
     @GetMapping("/all")
-    public ResponseEntity<List<SelectRoleVO>> all() {
+    public ResponseEntity<List<SelectRoleVo>> all() {
         return ResponseEntity.ok(roleService.findAll());
     }
 }

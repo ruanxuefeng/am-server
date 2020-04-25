@@ -1,10 +1,10 @@
 package com.am.server.api.bulletin.service;
 
-import com.am.server.api.bulletin.pojo.ao.BulletinListAO;
-import com.am.server.api.bulletin.pojo.ao.SaveBulletinAO;
-import com.am.server.api.bulletin.pojo.ao.UpdateBulletinAO;
-import com.am.server.api.bulletin.pojo.po.BulletinDO;
-import com.am.server.api.bulletin.pojo.vo.BulletinListVO;
+import com.am.server.api.bulletin.pojo.ao.BulletinListAo;
+import com.am.server.api.bulletin.pojo.ao.SaveBulletinAo;
+import com.am.server.api.bulletin.pojo.ao.UpdateBulletinAo;
+import com.am.server.api.bulletin.pojo.po.BulletinDo;
+import com.am.server.api.bulletin.pojo.vo.BulletinListVo;
 import com.am.server.common.base.pojo.vo.PageVO;
 
 import java.util.List;
@@ -22,7 +22,7 @@ public interface BulletinService {
      * @author 阮雪峰
      * @date 2018/11/13 14:00
      */
-    PageVO<BulletinListVO> list(BulletinListAO bulletinAo);
+    PageVO<BulletinListVo> list(BulletinListAo bulletinAo);
 
     /**
      * save
@@ -30,7 +30,7 @@ public interface BulletinService {
      * @author 阮雪峰
      * @date 2018/11/13 14:00
      */
-    void save(SaveBulletinAO saveBulletinAo);
+    void save(SaveBulletinAo saveBulletinAo);
 
     /**
      * update
@@ -38,7 +38,7 @@ public interface BulletinService {
      * @author 阮雪峰
      * @date 2018/11/13 14:00
      */
-    void update(UpdateBulletinAO updateBulletinAo);
+    void update(UpdateBulletinAo updateBulletinAo);
 
     /**
      * publish
@@ -52,7 +52,7 @@ public interface BulletinService {
      * 查询发布并且未过期的公告
      * @return List<Bulletin>
      */
-    List<BulletinDO> findPublishedAndUnexpiredList();
+    List<BulletinDo> findPublishedAndUnexpiredList();
 
     /**
      * delete

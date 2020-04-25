@@ -2,12 +2,11 @@ package com.am.server.api.log.aspect.service.impl;
 
 import com.am.server.api.log.aspect.annotation.WriteLog;
 import com.am.server.api.log.aspect.service.ProcessLogService;
-import com.am.server.api.log.pojo.ao.SaveLogAO;
+import com.am.server.api.log.pojo.ao.SaveLogAo;
 import com.am.server.api.log.service.LogService;
-import com.am.server.api.user.dao.rdb.AdminUserDAO;
+import com.am.server.api.user.dao.rdb.AdminUserDao;
 import com.am.server.api.user.exception.UserNotExistException;
-import com.am.server.api.user.pojo.po.AdminUserDO;
-import com.am.server.api.user.service.AdminUserService;
+import com.am.server.api.user.pojo.po.AdminUserDo;
 import com.am.server.common.base.service.CommonService;
 import org.springframework.stereotype.Service;
 
@@ -23,13 +22,13 @@ import java.util.Optional;
 @Service
 public class DefaultProcessLogServiceImpl implements ProcessLogService {
 
-    private final AdminUserDAO adminUserDAO;
+    private final AdminUserDao adminUserDAO;
 
     private final LogService logService;
 
     private final CommonService commonService;
 
-    public DefaultProcessLogServiceImpl(AdminUserDAO adminUserDAO, LogService logService, CommonService commonService) {
+    public DefaultProcessLogServiceImpl(AdminUserDao adminUserDAO, LogService logService, CommonService commonService) {
         this.adminUserDAO = adminUserDAO;
         this.logService = logService;
         this.commonService = commonService;
@@ -38,10 +37,10 @@ public class DefaultProcessLogServiceImpl implements ProcessLogService {
     @Override
     public void process(Class<?> targetClass, WriteLog targetClassWriteLog, Method targetMethod, WriteLog targetMethodWriteLog) {
         String name = adminUserDAO.findById(commonService.getLoginUserId())
-                .map(AdminUserDO::getUsername)
+                .map(AdminUserDo::getUsername)
                 .orElseThrow(UserNotExistException::new);
 
-        SaveLogAO log = new SaveLogAO()
+        SaveLogAo log = new SaveLogAo()
                 .setMenu(Optional.ofNullable(targetClassWriteLog).map(WriteLog::value).orElse(""))
                 .setOperate(Optional.ofNullable(targetMethodWriteLog).map(WriteLog::value).orElse(""))
                 .setName(name)

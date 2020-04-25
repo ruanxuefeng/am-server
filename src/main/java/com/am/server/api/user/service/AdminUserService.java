@@ -1,14 +1,14 @@
 package com.am.server.api.user.service;
 
+import com.am.server.api.bulletin.pojo.po.BulletinDo;
 import com.am.server.api.user.pojo.ao.*;
-import com.am.server.api.user.pojo.po.AdminUserDO;
-import com.am.server.api.user.pojo.vo.AdminUserListVO;
-import com.am.server.api.user.pojo.vo.LoginUserInfoVO;
-import com.am.server.api.user.pojo.vo.UserInfoVO;
+import com.am.server.api.user.pojo.po.AdminUserDo;
+import com.am.server.api.user.pojo.vo.AdminUserListVo;
+import com.am.server.api.user.pojo.vo.LoginUserInfoVo;
+import com.am.server.api.user.pojo.vo.UserInfoVo;
 import com.am.server.common.base.pojo.vo.PageVO;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author 阮雪峰
@@ -23,7 +23,7 @@ public interface AdminUserService {
      * @author 阮雪峰
      * @date 2018/8/23 8:36
      */
-    LoginUserInfoVO login(LoginAO query);
+    LoginUserInfoVo login(LoginAo query);
 
     /**
      * 获取用户信息
@@ -33,7 +33,7 @@ public interface AdminUserService {
      * @author 阮雪峰
      * @date 2018/8/23 8:36
      */
-    UserInfoVO info(Long id);
+    UserInfoVo info(Long id);
 
     /**
      * 分页
@@ -43,7 +43,7 @@ public interface AdminUserService {
      * @author 阮雪峰
      * @date 2018/7/25 15:51
      */
-    PageVO<AdminUserListVO> list(AdminUserListAO list);
+    PageVO<AdminUserListVo> list(AdminUserListAo list);
 
     /**
      * 新增
@@ -52,7 +52,7 @@ public interface AdminUserService {
      * @author 阮雪峰
      * @date 2018/7/25 15:51
      */
-    void save(SaveAdminUserAO user);
+    void save(SaveAdminUserAo user);
 
     /**
      * 删除
@@ -74,7 +74,7 @@ public interface AdminUserService {
     Boolean isEmailExist(String email);
 
     /**
-     * 重置密码
+     * 管理员重置用户密码
      *
      * @param id 用户主键
      * @author 阮雪峰
@@ -91,22 +91,22 @@ public interface AdminUserService {
     void updateRole(Long id, List<Long> roleIdList);
 
     /**
-     * 更新用户信息
+     * 管理员更新用户基本信息
      *
      * @param user 用户信息
      * @author 阮雪峰
      * @date 2018/8/3 16:55
      */
-    void update(UpdateAdminUserAO user);
+    void update(UpdateAdminUserAo user);
 
     /**
-     * 更新登录用户信息
+     * 用户修改自己的基本信息
      *
      * @param user 用户信息
      * @author 阮雪峰
      * @date 2018/8/3 16:55
      */
-    void update(UpdateUserInfoAO user);
+    void update(UpdateUserInfoAo user);
 
     /**
      * 查询角色id list

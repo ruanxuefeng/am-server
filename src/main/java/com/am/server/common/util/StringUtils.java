@@ -7,7 +7,7 @@ import org.apache.commons.lang3.RandomStringUtils;
  * @author 阮雪峰
  * @date 2018/8/1 13:57
  */
-public class StringUtils {
+public class StringUtils extends org.springframework.util.StringUtils {
     private final static String CHARS = "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890";
     private final static String NUM = "1234567890";
 

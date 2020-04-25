@@ -1,7 +1,7 @@
 package com.am.server.api.bulletin.listener;
 
 import com.am.server.api.bulletin.pojo.BulletinExpiredDelayedImpl;
-import com.am.server.api.bulletin.pojo.po.BulletinDO;
+import com.am.server.api.bulletin.pojo.po.BulletinDo;
 import com.am.server.api.bulletin.service.BulletinService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
@@ -34,7 +34,7 @@ public class ServerStartedListenerForExpireBulletin implements ApplicationListen
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         if (event.getApplicationContext().getParent() == null) {
-            List<BulletinDO> list = bulletinService.findPublishedAndUnexpiredList();
+            List<BulletinDo> list = bulletinService.findPublishedAndUnexpiredList();
             list.forEach(bulletin -> {
                 try {
                     BulletinExpiredDelayedImpl delayed = new BulletinExpiredDelayedImpl(bulletin.getId(), bulletin.getDate().plusDays(bulletin.getDays()).atTime(LocalTime.now()));

@@ -1,15 +1,17 @@
 package com.am.server.api.user.service.impl;
 
-import com.am.server.api.role.pojo.po.RoleDO;
-import com.am.server.api.upload.service.FileUploadService;
-import com.am.server.api.user.dao.rdb.AdminUserDAO;
+import com.am.server.api.role.pojo.po.RoleDo;
+import com.am.server.api.upload.enumerate.FileType;
+import com.am.server.api.upload.service.SysFileService;
+import com.am.server.api.user.dao.rdb.AdminUserDao;
+import com.am.server.api.user.exception.NoPermissionAccessException;
 import com.am.server.api.user.exception.PasswordErrorException;
 import com.am.server.api.user.exception.UserNotExistException;
 import com.am.server.api.user.pojo.ao.*;
-import com.am.server.api.user.pojo.po.AdminUserDO;
-import com.am.server.api.user.pojo.vo.AdminUserListVO;
-import com.am.server.api.user.pojo.vo.LoginUserInfoVO;
-import com.am.server.api.user.pojo.vo.UserInfoVO;
+import com.am.server.api.user.pojo.po.AdminUserDo;
+import com.am.server.api.user.pojo.vo.AdminUserListVo;
+import com.am.server.api.user.pojo.vo.LoginUserInfoVo;
+import com.am.server.api.user.pojo.vo.UserInfoVo;
 import com.am.server.api.user.service.AdminUserService;
 import com.am.server.api.user.service.UserPermissionCacheService;
 import com.am.server.common.annotation.transaction.Commit;
@@ -17,7 +19,9 @@ import com.am.server.common.annotation.transaction.ReadOnly;
 import com.am.server.common.base.pojo.vo.PageVO;
 import com.am.server.common.base.service.CommonService;
 import com.am.server.common.constant.Constant;
-import com.am.server.common.util.*;
+import com.am.server.common.util.DesUtils;
+import com.am.server.common.util.JwtUtils;
+import com.am.server.common.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.data.domain.Example;
@@ -26,7 +30,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -35,11 +38,10 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -59,32 +61,28 @@ public class AdminUserServiceImpl implements AdminUserService {
      * 密码加密key的长度，
      */
     private static final int RANDOM_STRING_LENGTH = 512;
-    /**
-     * 存储头像的相对路径
-     */
-    private static final String AVATAR_FOLDER = "/avatar/";
 
-    private final AdminUserDAO adminUserDAO;
+    private final AdminUserDao adminuserDao;
 
     private final UserPermissionCacheService userPermissionCacheService;
 
-    private final FileUploadService fileUploadService;
+    private final SysFileService sysFileService;
 
     private final CommonService commonService;
 
     private final SimpMessagingTemplate simpMessagingTemplate;
 
-    public AdminUserServiceImpl(UserPermissionCacheService userPermissionCacheService, AdminUserDAO adminUserDAO, FileUploadService fileUploadService, CommonService commonService, SimpMessagingTemplate simpMessagingTemplate) {
+    public AdminUserServiceImpl(UserPermissionCacheService userPermissionCacheService, AdminUserDao adminuserDao, SysFileService sysFileService, CommonService commonService, SimpMessagingTemplate simpMessagingTemplate) {
         this.userPermissionCacheService = userPermissionCacheService;
-        this.adminUserDAO = adminUserDAO;
-        this.fileUploadService = fileUploadService;
+        this.adminuserDao = adminuserDao;
+        this.sysFileService = sysFileService;
         this.commonService = commonService;
         this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
     @Override
-    public LoginUserInfoVO login(LoginAO query) {
-        Optional<AdminUserDO> optional = adminUserDAO.findByUsername(query.getUsername());
+    public LoginUserInfoVo login(LoginAo query) {
+        Optional<AdminUserDo> optional = adminuserDao.findByUsername(query.getUsername());
         optional.orElseThrow(UserNotExistException::new);
 
         return optional
@@ -100,20 +98,29 @@ public class AdminUserServiceImpl implements AdminUserService {
                     }
                     return false;
                 })
-                .map(user -> new LoginUserInfoVO(JwtUtils.sign(user.getId().toString())))
+                .map(user -> {
+                    Set<String> permissions = userPermissionCacheService.get(user.getId());
+                    if (permissions != null && permissions.size() > 0) {
+                        return new LoginUserInfoVo(JwtUtils.sign(user.getId().toString()));
+                    }else {
+                        throw new NoPermissionAccessException();
+                    }
+
+                })
                 .orElseThrow(PasswordErrorException::new);
     }
 
     @ReadOnly
     @Override
-    public UserInfoVO info(Long id) {
-        return adminUserDAO.findById(id)
+    public UserInfoVo info(Long id) {
+        return adminuserDao.findById(id)
                 .map(user -> {
-                    List<String> roles = user.getRoles().stream().map(RoleDO::getName).collect(Collectors.toList());
-                    return new UserInfoVO()
+                    List<String> roles = user.getRoles().stream().map(RoleDo::getName).collect(Collectors.toList());
+                    String avatar = StringUtils.isEmpty(user.getAvatar()) ? "" : user.getAvatar().getUrl();
+                    return new UserInfoVo()
                             .setId(user.getId())
                             .setPermissions(userPermissionCacheService.get(id))
-                            .setAvatar(user.getAvatar())
+                            .setAvatar(avatar)
                             .setEmail(user.getEmail())
                             .setGender(user.getGender())
                             .setName(user.getName())
@@ -124,51 +131,51 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     @ReadOnly
     @Override
-    public PageVO<AdminUserListVO> list(AdminUserListAO listQuery) {
+    public PageVO<AdminUserListVo> list(AdminUserListAo listQuery) {
         ExampleMatcher matcher = ExampleMatcher.matching()
                 .withNullHandler(ExampleMatcher.NullHandler.IGNORE)
                 .withIgnoreNullValues()
                 .withMatcher("username", ExampleMatcher.GenericPropertyMatchers.contains())
                 .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains())
                 .withMatcher("email", ExampleMatcher.GenericPropertyMatchers.contains());
-        Example<AdminUserDO> example = Example.of(new AdminUserDO().setName(listQuery.getName()).setEmail(listQuery.getEmail()).setUsername(listQuery.getUsername()), matcher);
-        Page<AdminUserDO> page = adminUserDAO.findAll(example, PageRequest.of(listQuery.getPage() - 1, listQuery.getPageSize()));
-        return new PageVO<AdminUserListVO>()
+        Example<AdminUserDo> example = Example.of(new AdminUserDo().setName(listQuery.getName()).setEmail(listQuery.getEmail()).setUsername(listQuery.getUsername()), matcher);
+        Page<AdminUserDo> page = adminuserDao.findAll(example, PageRequest.of(listQuery.getPage() - 1, listQuery.getPageSize()));
+        return new PageVO<AdminUserListVo>()
                 .setPageSize(listQuery.getPageSize())
                 .setPage(listQuery.getPage())
                 .setTotal(page.getNumber())
                 .setRows(page.getContent().stream()
-                        .map(adminUser -> new AdminUserListVO()
-                                .setAvatar(adminUser.getAvatar())
-                                .setCreatorName(Optional.ofNullable(adminUser.getCreatedBy()).map(AdminUserDO::getName).orElse(""))
-                                .setEmail(adminUser.getEmail())
-                                .setGender(adminUser.getGender())
-                                .setName(adminUser.getName())
-                                .setId(adminUser.getId())
-                                .setUsername(adminUser.getUsername())
-                                .setCreateTime(adminUser.getCreatedTime())
+                        .map(adminUser -> {
+                                    String avatar = StringUtils.isEmpty(adminUser.getAvatar()) ? "" : adminUser.getAvatar().getUrl();
+                                    return new AdminUserListVo()
+                                            .setAvatar(avatar)
+                                            .setCreatorName(Optional.ofNullable(adminUser.getCreatedBy()).map(AdminUserDo::getName).orElse(""))
+                                            .setEmail(adminUser.getEmail())
+                                            .setGender(adminUser.getGender())
+                                            .setName(adminUser.getName())
+                                            .setId(adminUser.getId())
+                                            .setUsername(adminUser.getUsername())
+                                            .setCreateTime(adminUser.getCreatedTime());
+                                }
                         )
                         .collect(Collectors.toList()));
     }
 
     @Commit
     @Override
-    public void save(SaveAdminUserAO adminUser) {
+    public void save(SaveAdminUserAo adminUser) {
         String salt = StringUtils.getRandomStr(RANDOM_STRING_LENGTH);
-        Long id = IdUtils.getId();
         try {
-            AdminUserDO user = new AdminUserDO()
-                    .setId(id)
+            AdminUserDo user = new AdminUserDo()
                     .setUsername(adminUser.getUsername())
                     .setName(adminUser.getName())
-                    .setCreatedTime(LocalDateTime.now())
                     .setEmail(adminUser.getEmail())
                     .setGender(adminUser.getGender())
-                    .setAvatar(uploadAvatar(id, adminUser.getImg()))
-                    .setCreatedBy(new AdminUserDO().setId(commonService.getLoginUserId()))
+                    .setAvatar(sysFileService.save(adminUser.getImg(), FileType.avatar))
                     .setSalt(salt)
                     .setPassword(DesUtils.encrypt(Constant.INITIAL_PASSWORD, salt));
-            adminUserDAO.save(user);
+            commonService.beforeSave(user);
+            adminuserDao.save(user);
         } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException | InvalidKeySpecException | BadPaddingException | IllegalBlockSizeException | InvalidAlgorithmParameterException e) {
             log.error("解密失败，密文：{}，秘钥：{}", Constant.INITIAL_PASSWORD, salt);
             log.error("", e);
@@ -176,32 +183,17 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     }
 
-    /**
-     * 上传头像图片
-     *
-     * @param id     id
-     * @param avatar 头像文件
-     * @author 阮雪峰
-     * @date 2019/2/18 14:31
-     */
-    private String uploadAvatar(Long id, MultipartFile avatar) {
-        String key = AVATAR_FOLDER + id
-                + FileUtils.getFileSuffix(Objects.requireNonNull(avatar.getOriginalFilename()));
-
-        return fileUploadService.upload(avatar, key);
-    }
-
     @Commit
     @Override
     public void delete(Long id) {
-        adminUserDAO.deleteById(id);
+        adminuserDao.deleteById(id);
         userPermissionCacheService.remove(id);
     }
 
     @ReadOnly
     @Override
     public Boolean isEmailExist(String email) {
-        return adminUserDAO.findByEmail(email).isPresent();
+        return adminuserDao.findByEmail(email).isPresent();
     }
 
     @Commit
@@ -211,11 +203,11 @@ public class AdminUserServiceImpl implements AdminUserService {
         try {
             String password = DesUtils.encrypt(PASSWORD, salt);
 
-            adminUserDAO.findById(id)
-                    .ifPresent(adminUser -> adminUserDAO.save(
-                            adminUser.setPassword(password)
-                                    .setSalt(salt)
-                    ));
+            adminuserDao.findById(id)
+                    .ifPresent(adminUser -> {
+                        commonService.beforeSave(adminUser);
+                        adminuserDao.save(adminUser.setPassword(password).setSalt(salt));
+                    });
         } catch (NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException | InvalidKeySpecException | BadPaddingException | IllegalBlockSizeException | InvalidAlgorithmParameterException e) {
             log.error("加密异常，Text：{}，秘钥：{}", PASSWORD, salt);
         }
@@ -224,10 +216,16 @@ public class AdminUserServiceImpl implements AdminUserService {
     @Commit
     @Override
     public void updateRole(Long id, List<Long> roleIdList) {
-        adminUserDAO.findById(id)
+        adminuserDao.findById(id)
                 .ifPresent(adminUser -> {
-                    List<RoleDO> roles = roleIdList.stream().map(roleId -> new RoleDO().setId(roleId)).collect(Collectors.toList());
-                    adminUserDAO.save(adminUser.setRoles(roles));
+                    List<RoleDo> roles = roleIdList.stream().map(roleId -> {
+                        RoleDo roleDo = new RoleDo();
+                        roleDo.setId(roleId);
+                        return roleDo;
+                    }).collect(Collectors.toList());
+
+                    commonService.beforeSave(adminUser);
+                    adminuserDao.save(adminUser.setRoles(roles));
                     userPermissionCacheService.remove(id);
                     simpMessagingTemplate.convertAndSend("/topic/permission/" + id, true);
                 });
@@ -235,39 +233,43 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     @Commit
     @Override
-    public void update(UpdateAdminUserAO user) {
-        adminUserDAO.findById(user.getId())
+    public void update(UpdateAdminUserAo user) {
+        adminuserDao.findById(user.getId())
                 .ifPresent(adminUser -> {
                     if (user.getImg() != null && !user.getImg().isEmpty()) {
-                        adminUser.setAvatar(uploadAvatar(user.getId(), user.getImg()));
+                        sysFileService.updateFileContent(user.getImg(), adminUser.getAvatar());
                     }
                     adminUser.setUsername(user.getUsername())
                             .setName(user.getName())
                             .setEmail(user.getEmail())
                             .setGender(user.getGender());
-                    adminUserDAO.save(adminUser);
+
+                    commonService.beforeSave(adminUser);
+                    adminuserDao.save(adminUser);
                 });
     }
 
     @Override
-    public void update(UpdateUserInfoAO user) {
-        adminUserDAO.findById(user.getId())
+    public void update(UpdateUserInfoAo user) {
+        adminuserDao.findById(user.getId())
                 .ifPresent(adminUser -> {
                     if (user.getImg() != null && !user.getImg().isEmpty()) {
-                        adminUser.setAvatar(uploadAvatar(user.getId(), user.getImg()));
+                        sysFileService.updateFileContent(user.getImg(), adminUser.getAvatar());
                     }
                     adminUser.setName(user.getName())
                             .setEmail(user.getEmail())
                             .setGender(user.getGender());
-                    adminUserDAO.save(adminUser);
+
+                    commonService.beforeSave(adminUser);
+                    adminuserDao.save(adminUser);
                 });
     }
 
 
     @Override
     public List<Long> findRoleIdList(Long id) {
-        return adminUserDAO.findById(id)
-                .map(AdminUserDO::getRoles)
+        return adminuserDao.findById(id)
+                .map(AdminUserDo::getRoles)
                 .map(roles -> {
                     List<Long> list = new ArrayList<>(roles.size());
                     roles.forEach(role -> list.add(role.getId()));
@@ -277,16 +279,16 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     @Override
     public Boolean isUsernameExist(String username) {
-        return adminUserDAO.findByUsername(username).isPresent();
+        return adminuserDao.findByUsername(username).isPresent();
     }
 
     @Override
     public Boolean isEmailExistWithId(String email, Long id) {
-        return adminUserDAO.findByIdNotAndEmail(id, email).isPresent();
+        return adminuserDao.findByIdNotAndEmail(id, email).isPresent();
     }
 
     @Override
     public Boolean isUsernameExistWithId(String username, Long id) {
-        return adminUserDAO.findByIdNotAndUsername(id, username).isPresent();
+        return adminuserDao.findByIdNotAndUsername(id, username).isPresent();
     }
 }

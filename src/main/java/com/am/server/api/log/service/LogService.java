@@ -1,8 +1,8 @@
 package com.am.server.api.log.service;
 
-import com.am.server.api.log.pojo.ao.LogListAO;
-import com.am.server.api.log.pojo.ao.SaveLogAO;
-import com.am.server.api.log.pojo.vo.LogListVO;
+import com.am.server.api.log.pojo.ao.LogListAo;
+import com.am.server.api.log.pojo.ao.SaveLogAo;
+import com.am.server.api.log.pojo.vo.LogListVo;
 import com.am.server.common.base.pojo.vo.PageVO;
 
 /**
@@ -17,7 +17,7 @@ public interface LogService {
      * @author 阮雪峰
      * @date 2018/8/1 14:36
      */
-    void save(SaveLogAO log);
+    void save(SaveLogAo log);
 
     /**
      * list
@@ -26,5 +26,5 @@ public interface LogService {
      * @date 2018/9/17 9:30
      * @return PageVO<LogListVO>
      */
-    PageVO<LogListVO> list(LogListAO log);
+    PageVO<LogListVo> list(LogListAo log);
 }

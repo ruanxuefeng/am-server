@@ -1,13 +1,14 @@
 package com.am.server.api.user.controller;
 
-import com.am.server.api.user.pojo.ao.LoginAO;
-import com.am.server.api.user.pojo.ao.UpdateUserInfoAO;
-import com.am.server.api.user.pojo.vo.LoginUserInfoVO;
-import com.am.server.api.user.pojo.vo.UserInfoVO;
+import com.am.server.api.user.pojo.ao.LoginAo;
+import com.am.server.api.user.pojo.ao.UpdateUserInfoAo;
+import com.am.server.api.user.pojo.vo.LoginUserInfoVo;
+import com.am.server.api.user.pojo.vo.UserInfoVo;
 import com.am.server.api.user.service.AdminUserService;
 import com.am.server.api.user.service.UserPermissionCacheService;
 import com.am.server.common.base.controller.BaseController;
 import com.am.server.common.base.pojo.vo.MessageVO;
+import com.am.server.common.base.service.Message;
 import com.am.server.common.base.validator.Login;
 import com.am.server.common.constant.Constant;
 import com.am.server.common.util.JwtUtils;
@@ -50,7 +51,7 @@ public class LoginController extends BaseController {
      */
     @ApiOperation(value = "登录", notes = "登录接口")
     @PostMapping("/login")
-    public ResponseEntity<LoginUserInfoVO> login(@Validated(Login.class) @RequestBody @ApiParam(name = "登录对象", value = "传入json格式", required = true) LoginAO query) {
+    public ResponseEntity<LoginUserInfoVo> login(@Validated(Login.class) @RequestBody @ApiParam(name = "登录对象", value = "传入json格式", required = true) LoginAo query) {
         return new ResponseEntity<>(adminUserService.login(query), HttpStatus.OK);
     }
 
@@ -64,7 +65,7 @@ public class LoginController extends BaseController {
      */
     @ApiOperation(value = "获取登录用户信息")
     @GetMapping("/user/info")
-    public ResponseEntity<UserInfoVO> info(@RequestHeader(Constant.TOKEN) String token) {
+    public ResponseEntity<UserInfoVo> info(@RequestHeader(Constant.TOKEN) String token) {
         return new ResponseEntity<>(adminUserService.info(Long.valueOf(JwtUtils.getSubject(token))), HttpStatus.OK);
     }
 
@@ -78,7 +79,7 @@ public class LoginController extends BaseController {
      * @date 2018/8/3 16:47
      */
     @PostMapping("/user/update/info")
-    public ResponseEntity<MessageVO> updateUserInfo(@RequestHeader(Constant.TOKEN) String token, UpdateUserInfoAO user) {
+    public ResponseEntity<MessageVO> updateUserInfo(@RequestHeader(Constant.TOKEN) String token, UpdateUserInfoAo user) {
         user.setId(Long.valueOf(JwtUtils.getSubject(token)));
         adminUserService.update(user);
         return ResponseEntity.ok(message.get(UPDATE_SUCCESS));
@@ -93,8 +94,8 @@ public class LoginController extends BaseController {
      */
     @ApiOperation(value = "退出登录")
     @PostMapping("/logout")
-    public ResponseEntity logout(@RequestHeader(Constant.TOKEN) String token) {
+    public ResponseEntity<MessageVO> logout(@RequestHeader(Constant.TOKEN) String token) {
         userPermissionCacheService.remove(Long.valueOf(JwtUtils.getSubject(token)));
-        return ResponseEntity.ok(SUCCESS);
+        return ResponseEntity.ok(message.get(SUCCESS));
     }
 }

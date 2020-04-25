@@ -1,9 +1,13 @@
 package com.am.server.api.upload.service.impl;
 
 import com.am.server.api.upload.config.LocalFileUploadConfig;
+import com.am.server.api.upload.enumerate.FileType;
 import com.am.server.api.upload.exception.UploadFileException;
 import com.am.server.api.upload.service.FileUploadService;
+import com.am.server.common.util.FileUtils;
+import com.am.server.common.util.IdUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;

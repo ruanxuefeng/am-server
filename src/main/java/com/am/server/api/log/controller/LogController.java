@@ -1,7 +1,7 @@
 package com.am.server.api.log.controller;
 
-import com.am.server.api.log.pojo.ao.LogListAO;
-import com.am.server.api.log.pojo.vo.LogListVO;
+import com.am.server.api.log.pojo.ao.LogListAo;
+import com.am.server.api.log.pojo.vo.LogListVo;
 import com.am.server.api.log.service.LogService;
 import com.am.server.api.permission.annotation.Permission;
 import com.am.server.common.base.pojo.vo.PageVO;
@@ -36,8 +36,7 @@ public class LogController {
     /**
      * 分页
      *
-     * @param page 分页
-     * @param log  条件
+     * @param logListAo logListAo
      * @return org.springframework.http.ResponseEntity
      * @author 阮雪峰
      * @date 2018/8/22 9:44
@@ -45,7 +44,7 @@ public class LogController {
     @ApiOperation("列表查询")
     @ApiImplicitParams({@ApiImplicitParam(paramType = "header", dataType = "String", name = Constant.TOKEN, value = "登录凭证", required = true)})
     @GetMapping("list")
-    public ResponseEntity<PageVO<LogListVO>> list(LogListAO logListAo) {
+    public ResponseEntity<PageVO<LogListVo>> list(LogListAo logListAo) {
 
         return ResponseEntity.ok(logService.list(logListAo));
     }

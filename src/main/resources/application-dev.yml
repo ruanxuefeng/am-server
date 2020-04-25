@@ -2,11 +2,11 @@ spring:
   datasource:
     druid:
       #基本属性 url、user、password
-      url: jdbc:mariadb://localhost:3306/am-server?characterEncoding=utf-8&serverTimezone=UTC
-      username: root
+      url: jdbc:mysql://localhost:3306/am-server?characterEncoding=utf-8&serverTimezone=UTC
+      username: rxf
       #java -cp druid-1.1.9.jar com.alibaba.druid.filter.config.ConfigTools you_password 加密密码命令
       #生成public-key和加密后的密码
-      password: GhY3T30MVxj5Lg995Wu034HMtpKBNFnkpage++cM4WpH+rDZRyinQ+Mv5Jc/sHC22VuP8qibgFX0fTVRFDc5mA==
+      password: Pf4guOQsxXByFuGXn1ifr/3W0wEJuiQX2zwOOfWwE88oWBRSaODpgm7f+eGiiG4vUnrD/RgTehf5A1c0eNo9VA==
       connection-properties: config.decrypt=true;config.decrypt.key=${public-key}
       filters: stat,wall,slf4j
       filter:
@@ -47,7 +47,7 @@ spring:
         max-active: 8
 server:
   port: 9527
-public-key: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAIGZ7YV84EEM1bLwpMvlrLU0gFsbSMIIesR0+imr/dlzcCC4mIIdziHb+zUuVLd7Pewg28/yE+455rEQQVG1rEUCAwEAAQ==
+public-key: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJQHm7pDoMHVOmmFBs9EPYXIQcg9fS4BkyCUmZqqgTrp65g1EnV1iipCyhAi5VLCKy53/H33TYDv9eFMTAwTWzMCAwEAAQ==
 logging:
   level:
     druid:

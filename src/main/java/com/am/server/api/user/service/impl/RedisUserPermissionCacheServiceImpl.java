@@ -1,10 +1,10 @@
 package com.am.server.api.user.service.impl;
 
-import com.am.server.api.role.pojo.po.RoleDO;
-import com.am.server.api.user.dao.cache.UserPermissionCacheDAO;
-import com.am.server.api.user.dao.rdb.AdminUserDAO;
-import com.am.server.api.user.pojo.po.AdminUserDO;
-import com.am.server.api.user.pojo.po.UserPermissionDO;
+import com.am.server.api.role.pojo.po.RoleDo;
+import com.am.server.api.user.dao.cache.UserPermissionCacheDao;
+import com.am.server.api.user.dao.rdb.AdminUserDao;
+import com.am.server.api.user.pojo.po.AdminUserDo;
+import com.am.server.api.user.pojo.po.UserPermissionDo;
 import com.am.server.api.user.service.UserPermissionCacheService;
 import com.am.server.common.annotation.transaction.ReadOnly;
 import org.springframework.stereotype.Service;
@@ -20,11 +20,11 @@ import java.util.*;
 @Service
 public class RedisUserPermissionCacheServiceImpl implements UserPermissionCacheService {
 
-    private final UserPermissionCacheDAO userPermissionCacheDAO;
+    private final UserPermissionCacheDao userPermissionCacheDAO;
 
-    private final AdminUserDAO adminUserDao;
+    private final AdminUserDao adminUserDao;
 
-    public RedisUserPermissionCacheServiceImpl(UserPermissionCacheDAO userPermissionCacheDAO, AdminUserDAO adminUserDao) {
+    public RedisUserPermissionCacheServiceImpl(UserPermissionCacheDao userPermissionCacheDAO, AdminUserDao adminUserDao) {
         this.userPermissionCacheDAO = userPermissionCacheDAO;
         this.adminUserDao = adminUserDao;
     }
@@ -38,14 +38,14 @@ public class RedisUserPermissionCacheServiceImpl implements UserPermissionCacheS
     @Override
     public Set<String> get(Long uid) {
         return Optional.ofNullable(userPermissionCacheDAO.findById(uid))
-                .map(UserPermissionDO::getPermissions)
+                .map(UserPermissionDo::getPermissions)
                 .orElseGet(() -> {
                     Set<String> permissions = new HashSet<>();
-                    List<RoleDO> roleList = adminUserDao.findById(uid)
-                            .map(AdminUserDO::getRoles)
+                    List<RoleDo> roleList = adminUserDao.findById(uid)
+                            .map(AdminUserDo::getRoles)
                             .orElse(new ArrayList<>());
                     roleList.stream()
-                            .map(RoleDO::getPermissions)
+                            .map(RoleDo::getPermissions)
                             .forEach(permissions::addAll);
                     if (permissions.size() == 0) {
                         return null;

@@ -46,7 +46,7 @@ public class PermissionInterceptor implements HandlerInterceptor {
             //判断在方法或者类上有没有加权限，如果都有以方法上为准
             Permission permission = Optional.ofNullable(methodPermission).orElse(classPermission);
 
-            return Optional.ofNullable(permission).map(p -> {
+            Optional.ofNullable(permission).map(p -> {
                 boolean hasPermission = userPermissionCacheService.hasPermission(commonService.getLoginUserId(), permission.value());
                 if (permission.check() && !hasPermission) {
 
@@ -56,7 +56,8 @@ public class PermissionInterceptor implements HandlerInterceptor {
                 } else {
                     return true;
                 }
-            }).orElse(true);
+            });
+            return true;
         } else {
             throw new IllegalRequestException();
         }

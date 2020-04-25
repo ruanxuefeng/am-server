@@ -4,7 +4,7 @@ import com.am.server.api.log.aspect.annotation.WriteLog;
 import com.am.server.api.permission.annotation.Menu;
 import com.am.server.api.permission.annotation.Permission;
 import com.am.server.api.user.pojo.ao.*;
-import com.am.server.api.user.pojo.vo.AdminUserListVO;
+import com.am.server.api.user.pojo.vo.AdminUserListVo;
 import com.am.server.api.user.service.AdminUserService;
 import com.am.server.common.base.controller.BaseController;
 import com.am.server.common.base.pojo.vo.Exist;
@@ -22,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -61,7 +62,7 @@ public class AdminUserController extends BaseController {
     @ApiOperation(value = "列表")
     @ApiImplicitParams({@ApiImplicitParam(paramType = "header", dataType = "String", name = Constant.TOKEN, value = "登录凭证", required = true)})
     @GetMapping("/list")
-    public ResponseEntity<PageVO<AdminUserListVO>> list(AdminUserListAO list) {
+    public ResponseEntity<PageVO<AdminUserListVo>> list(AdminUserListAo list) {
         return ResponseEntity.ok(adminUserService.list(list));
     }
 
@@ -78,7 +79,7 @@ public class AdminUserController extends BaseController {
     @ApiImplicitParams({@ApiImplicitParam(paramType = "header", dataType = "String", name = Constant.TOKEN, value = "登录凭证", required = true)})
     @WriteLog("新增")
     @PostMapping("/save")
-    public ResponseEntity<MessageVO> save(@Validated SaveAdminUserAO user) {
+    public ResponseEntity<MessageVO> save(@Validated SaveAdminUserAo user) {
         //检验邮箱是否存在
         if (adminUserService.isEmailExist(user.getEmail())) {
             return new ResponseEntity<>(message.get(EMAIL_EXIST), HttpStatus.BAD_REQUEST);
@@ -110,7 +111,7 @@ public class AdminUserController extends BaseController {
     @ApiImplicitParams({@ApiImplicitParam(paramType = "header", dataType = "String", name = Constant.TOKEN, value = "登录凭证", required = true)})
     @WriteLog("修改")
     @PostMapping("/update")
-    public ResponseEntity<MessageVO> update(@Validated UpdateAdminUserAO user) {
+    public ResponseEntity<MessageVO> update(@Validated UpdateAdminUserAo user) {
         if (adminUserService.isEmailExistWithId(user.getEmail(), user.getId())) {
             return new ResponseEntity<>(message.get(EMAIL_EXIST), HttpStatus.BAD_REQUEST);
         }
@@ -188,7 +189,7 @@ public class AdminUserController extends BaseController {
     @ApiImplicitParams({@ApiImplicitParam(paramType = "header", dataType = "String", name = Constant.TOKEN, value = "登录凭证", required = true)})
     @WriteLog("修改角色")
     @PostMapping("/updateRole")
-    public ResponseEntity<MessageVO> updateRole(@Validated(Id.class) @RequestBody UpdateRoleAO updateRole) {
+    public ResponseEntity<MessageVO> updateRole(@Validated(Id.class) @RequestBody UpdateRoleAo updateRole) {
         adminUserService.updateRole(updateRole.getId(), updateRole.getRoleIdList());
         return ResponseEntity.ok(message.get(UPDATE_SUCCESS));
     }
@@ -204,9 +205,9 @@ public class AdminUserController extends BaseController {
     @ApiOperation(value = "邮件是否已经被注册")
     @ApiImplicitParams({@ApiImplicitParam(paramType = "header", dataType = "String", name = Constant.TOKEN, value = "登录凭证", required = true)})
     @GetMapping("/isEmailExist")
-    public ResponseEntity<Exist> isEmailExist(EmailExistAO emailExist) {
+    public ResponseEntity<Exist> isEmailExist(EmailExistAo emailExist) {
         Exist exist = Optional.of(emailExist)
-                .map(EmailExistAO::getId)
+                .map(EmailExistAo::getId)
                 .map(id -> new Exist(adminUserService.isEmailExistWithId(emailExist.getEmail(), id)))
                 .orElseGet(() -> new Exist(adminUserService.isEmailExist(emailExist.getEmail())));
         return new ResponseEntity<>(exist, HttpStatus.OK);
@@ -223,9 +224,9 @@ public class AdminUserController extends BaseController {
     @ApiOperation(value = "用户名是否被使用")
     @ApiImplicitParams({@ApiImplicitParam(paramType = "header", dataType = "String", name = Constant.TOKEN, value = "登录凭证", required = true)})
     @GetMapping("/isUsernameExist")
-    public ResponseEntity<Exist> isUsernameExist(UsernameExistAO usernameExist) {
+    public ResponseEntity<Exist> isUsernameExist(UsernameExistAo usernameExist) {
         Exist exist = Optional.of(usernameExist)
-                .map(UsernameExistAO::getId)
+                .map(UsernameExistAo::getId)
                 .map(id -> new Exist(adminUserService.isUsernameExistWithId(usernameExist.getUsername(), id)))
                 .orElseGet(() -> new Exist(adminUserService.isUsernameExist(usernameExist.getUsername())));
 
@@ -247,7 +248,7 @@ public class AdminUserController extends BaseController {
             @ApiImplicitParam(paramType = "header", dataType = "String", name = Constant.TOKEN, value = "登录凭证", required = true)
     })
     @GetMapping("roleIdList")
-    public ResponseEntity roleIdList(Long id) {
+    public ResponseEntity<List<Long>> roleIdList(Long id) {
         return ResponseEntity.ok(adminUserService.findRoleIdList(id));
     }
 }

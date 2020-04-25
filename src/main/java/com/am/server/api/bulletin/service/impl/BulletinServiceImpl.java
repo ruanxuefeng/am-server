@@ -1,21 +1,20 @@
 package com.am.server.api.bulletin.service.impl;
 
-import com.am.server.api.bulletin.dao.rdb.BulletinDAO;
+import com.am.server.api.bulletin.dao.rdb.BulletinDao;
 import com.am.server.api.bulletin.pojo.BulletinExpiredDelayedImpl;
 import com.am.server.api.bulletin.pojo.Status;
-import com.am.server.api.bulletin.pojo.ao.BulletinListAO;
-import com.am.server.api.bulletin.pojo.ao.SaveBulletinAO;
-import com.am.server.api.bulletin.pojo.ao.UpdateBulletinAO;
-import com.am.server.api.bulletin.pojo.po.BulletinDO;
-import com.am.server.api.bulletin.pojo.vo.BulletinContentVO;
-import com.am.server.api.bulletin.pojo.vo.BulletinListVO;
+import com.am.server.api.bulletin.pojo.ao.BulletinListAo;
+import com.am.server.api.bulletin.pojo.ao.SaveBulletinAo;
+import com.am.server.api.bulletin.pojo.ao.UpdateBulletinAo;
+import com.am.server.api.bulletin.pojo.po.BulletinDo;
+import com.am.server.api.bulletin.pojo.vo.BulletinContentVo;
+import com.am.server.api.bulletin.pojo.vo.BulletinListVo;
 import com.am.server.api.bulletin.service.BulletinService;
-import com.am.server.api.user.pojo.po.AdminUserDO;
+import com.am.server.api.user.pojo.po.AdminUserDo;
 import com.am.server.common.annotation.transaction.Commit;
 import com.am.server.common.annotation.transaction.ReadOnly;
 import com.am.server.common.base.pojo.vo.PageVO;
 import com.am.server.common.base.service.CommonService;
-import com.am.server.common.util.IdUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -38,7 +37,7 @@ import java.util.stream.Collectors;
 @Service
 public class BulletinServiceImpl implements BulletinService {
 
-    private final BulletinDAO bulletinDAO;
+    private final BulletinDao bulletinDao;
 
     private final CommonService commonService;
 
@@ -47,8 +46,8 @@ public class BulletinServiceImpl implements BulletinService {
     private final SimpMessagingTemplate simpMessagingTemplate;
 
     @Autowired
-    public BulletinServiceImpl(BulletinDAO bulletinDAO, CommonService commonService, DelayQueue<BulletinExpiredDelayedImpl> delayQueue, SimpMessagingTemplate simpMessagingTemplate) {
-        this.bulletinDAO = bulletinDAO;
+    public BulletinServiceImpl(BulletinDao bulletinDao, CommonService commonService, DelayQueue<BulletinExpiredDelayedImpl> delayQueue, SimpMessagingTemplate simpMessagingTemplate) {
+        this.bulletinDao = bulletinDao;
         this.commonService = commonService;
         this.delayQueue = delayQueue;
         this.simpMessagingTemplate = simpMessagingTemplate;
@@ -56,25 +55,25 @@ public class BulletinServiceImpl implements BulletinService {
 
     @ReadOnly
     @Override
-    public PageVO<BulletinListVO> list(BulletinListAO bulletinAo) {
+    public PageVO<BulletinListVo> list(BulletinListAo bulletinAo) {
         ExampleMatcher matcher = ExampleMatcher.matching()
                 .withIgnoreNullValues()
                 .withNullHandler(ExampleMatcher.NullHandler.IGNORE)
                 .withMatcher("content", ExampleMatcher.GenericPropertyMatchers.contains());
-        Example<BulletinDO> example = Example.of(new BulletinDO().setContent(bulletinAo.getContent()), matcher);
+        Example<BulletinDo> example = Example.of(new BulletinDo().setContent(bulletinAo.getContent()), matcher);
 
-        Page<BulletinDO> page = bulletinDAO.findAll(example, PageRequest.of(bulletinAo.getPage() - 1, bulletinAo.getPageSize()));
-        return new PageVO<BulletinListVO>()
+        Page<BulletinDo> page = bulletinDao.findAll(example, PageRequest.of(bulletinAo.getPage() - 1, bulletinAo.getPageSize()));
+        return new PageVO<BulletinListVo>()
                 .setPage(bulletinAo.getPage())
                 .setPageSize(bulletinAo.getPageSize())
                 .setTotal(page.getNumber())
                 .setRows(
                         page.getContent()
                                 .stream().map(bulletin ->
-                                new BulletinListVO().setId(bulletin.getId())
+                                new BulletinListVo().setId(bulletin.getId())
                                         .setContent(bulletin.getContent())
                                         .setCreatedTime(bulletin.getCreatedTime())
-                                        .setCreatorBy(Optional.ofNullable(bulletin.getCreatedBy()).map(AdminUserDO::getUsername).orElse(""))
+                                        .setCreatorBy(Optional.ofNullable(bulletin.getCreatedBy()).map(AdminUserDo::getUsername).orElse(""))
                                         .setDate(bulletin.getDate())
                                         .setDays(bulletin.getDays())
                                         .setStatus(bulletin.getStatus())
@@ -84,55 +83,57 @@ public class BulletinServiceImpl implements BulletinService {
 
     @Commit
     @Override
-    public void save(SaveBulletinAO saveBulletinAo) {
-        bulletinDAO.save(new BulletinDO()
-                .setId(IdUtils.getId())
+    public void save(SaveBulletinAo saveBulletinAo) {
+        BulletinDo bulletinDo = new BulletinDo()
                 .setStatus(Status.UNPUBLISHED)
-                .setCreatedTime(LocalDateTime.now())
-                .setCreatedBy(new AdminUserDO().setId(commonService.getLoginUserId()))
                 .setContent(saveBulletinAo.getContent())
-                .setDays(saveBulletinAo.getDays()));
+                .setDays(saveBulletinAo.getDays());
+
+        commonService.beforeSave(bulletinDo);
+        bulletinDao.save(bulletinDo);
     }
 
     @Commit
     @Override
-    public void update(UpdateBulletinAO updateBulletinAo) {
-        bulletinDAO.save(new BulletinDO()
-                .setId(updateBulletinAo.getId())
-                .setContent(updateBulletinAo.getContent())
-                .setDays(updateBulletinAo.getDays()));
+    public void update(UpdateBulletinAo updateBulletinAo) {
+        bulletinDao.findById(updateBulletinAo.getId())
+                .ifPresent(bulletinDo -> {
+                    bulletinDo.setContent(updateBulletinAo.getContent()).setDays(updateBulletinAo.getDays());
+                    commonService.beforeSave(bulletinDo);
+                    bulletinDao.save(bulletinDo);
+                });
     }
 
     @Commit
     @Override
     public void publish(Long id) {
-        bulletinDAO.findById(id)
+        bulletinDao.findById(id)
                 .ifPresent(bulletin -> {
                     LocalDate nowDate = LocalDate.now();
                     bulletin.setStatus(Status.PUBLISHED)
                             .setDate(nowDate);
-                    bulletinDAO.save(bulletin);
+                    bulletinDao.save(bulletin);
                     delayQueue.put(new BulletinExpiredDelayedImpl(id, nowDate.atStartOfDay().plusDays(bulletin.getDays())));
-                    simpMessagingTemplate.convertAndSend("/topic/bulletin", new BulletinContentVO(bulletin.getContent()));
+                    simpMessagingTemplate.convertAndSend("/topic/bulletin", new BulletinContentVo(bulletin.getContent()));
                 });
     }
 
     @ReadOnly
     @Override
-    public List<BulletinDO> findPublishedAndUnexpiredList() {
-        return bulletinDAO.findByStatusOrderByIdDesc(Status.PUBLISHED);
+    public List<BulletinDo> findPublishedAndUnexpiredList() {
+        return bulletinDao.findByStatusOrderByIdDesc(Status.PUBLISHED);
     }
 
     @Commit
     @Override
     public void delete(Long id) {
-        bulletinDAO.deleteById(id);
+        bulletinDao.deleteById(id);
         delayQueue.remove(new BulletinExpiredDelayedImpl(id, LocalDateTime.now()));
     }
 
     @Commit
     @Override
     public void expire(Long id) {
-        bulletinDAO.findById(id).ifPresent(bulletin -> bulletinDAO.save(bulletin.setStatus(Status.EXPIRED)));
+        bulletinDao.findById(id).ifPresent(bulletin -> bulletinDao.save(bulletin.setStatus(Status.EXPIRED)));
     }
 }

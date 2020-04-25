@@ -1,9 +1,9 @@
 package com.am.server.api.bulletin.controller;
 
-import com.am.server.api.bulletin.pojo.ao.BulletinListAO;
-import com.am.server.api.bulletin.pojo.ao.SaveBulletinAO;
-import com.am.server.api.bulletin.pojo.ao.UpdateBulletinAO;
-import com.am.server.api.bulletin.pojo.vo.BulletinListVO;
+import com.am.server.api.bulletin.pojo.ao.BulletinListAo;
+import com.am.server.api.bulletin.pojo.ao.SaveBulletinAo;
+import com.am.server.api.bulletin.pojo.ao.UpdateBulletinAo;
+import com.am.server.api.bulletin.pojo.vo.BulletinListVo;
 import com.am.server.api.bulletin.service.BulletinService;
 import com.am.server.api.log.aspect.annotation.WriteLog;
 import com.am.server.api.permission.annotation.Permission;
@@ -55,7 +55,7 @@ public class BulletinController extends BaseController {
     @ApiOperation(value = "列表查询")
     @ApiImplicitParams({@ApiImplicitParam(paramType = "header", dataType = "String", name = Constant.TOKEN, value = "登录凭证", required = true)})
     @GetMapping("/list")
-    public ResponseEntity<PageVO<BulletinListVO>> list(BulletinListAO bulletinListAo) {
+    public ResponseEntity<PageVO<BulletinListVo>> list(BulletinListAo bulletinListAo) {
         return ResponseEntity.ok(bulletinService.list(bulletinListAo));
     }
 
@@ -71,7 +71,7 @@ public class BulletinController extends BaseController {
     @ApiImplicitParams({@ApiImplicitParam(paramType = "header", dataType = "String", name = Constant.TOKEN, value = "登录凭证", required = true)})
     @WriteLog("新增")
     @PostMapping("/save")
-    public ResponseEntity<MessageVO> save(@Validated @RequestBody SaveBulletinAO saveBulletinAo) {
+    public ResponseEntity<MessageVO> save(@Validated @RequestBody SaveBulletinAo saveBulletinAo) {
         bulletinService.save(saveBulletinAo);
         return ResponseEntity.ok(message.get(SAVE_SUCCESS));
     }
@@ -89,7 +89,7 @@ public class BulletinController extends BaseController {
     @ApiImplicitParams({@ApiImplicitParam(paramType = "header", dataType = "String", name = Constant.TOKEN, value = "登录凭证", required = true)})
     @WriteLog("修改")
     @PostMapping("/update")
-    public ResponseEntity<MessageVO> update(@Validated @RequestBody UpdateBulletinAO updateBulletinAo) {
+    public ResponseEntity<MessageVO> update(@Validated @RequestBody UpdateBulletinAo updateBulletinAo) {
         bulletinService.update(updateBulletinAo);
         return ResponseEntity.ok(message.get(UPDATE_SUCCESS));
     }

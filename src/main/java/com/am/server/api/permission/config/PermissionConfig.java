@@ -17,4 +17,17 @@ public class PermissionConfig {
      * 不支持表达式匹配
      */
     private String basePackage;
+
+    /**
+     * 是否允许超级管理员登录
+     */
+    private Boolean enableSuperUser;
+
+    private String username;
+
+    /**
+     * DES3加密后的密码
+     * 默认123456
+     */
+    private String password;
 }

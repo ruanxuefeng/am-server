@@ -1,8 +1,9 @@
 package com.am.server.api.permission.service;
 
-import com.am.server.api.role.pojo.vo.PermissionTreeVO;
+import com.am.server.api.role.pojo.vo.PermissionTreeVo;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author 阮雪峰
@@ -18,5 +19,11 @@ public interface PermissionService {
      * 查询所有的权限
      * @return List<PermissionTreeVO>
      */
-    List<PermissionTreeVO> findAll();
+    List<PermissionTreeVo> findAll();
+
+    /**
+     * 获取所有权限标识
+     * @return List<String>
+     */
+    Set<String> findAllPermissionRemarkList();
 }

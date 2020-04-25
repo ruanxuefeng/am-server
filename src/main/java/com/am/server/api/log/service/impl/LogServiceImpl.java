@@ -1,11 +1,10 @@
 package com.am.server.api.log.service.impl;
 
 import com.am.server.api.log.dao.nosql.LogDao;
-import com.am.server.api.log.pojo.Log;
-import com.am.server.api.log.pojo.ao.LogListAO;
-import com.am.server.api.log.pojo.ao.SaveLogAO;
-import com.am.server.api.log.pojo.po.LogPO;
-import com.am.server.api.log.pojo.vo.LogListVO;
+import com.am.server.api.log.pojo.ao.LogListAo;
+import com.am.server.api.log.pojo.ao.SaveLogAo;
+import com.am.server.api.log.pojo.po.LogPo;
+import com.am.server.api.log.pojo.vo.LogListVo;
 import com.am.server.api.log.service.LogService;
 import com.am.server.common.base.pojo.vo.PageVO;
 import com.am.server.common.util.IdUtils;
@@ -38,9 +37,9 @@ public class LogServiceImpl implements LogService {
     }
 
     @Override
-    public void save(SaveLogAO saveLogAo) {
+    public void save(SaveLogAo saveLogAo) {
         logDao.save(
-                new LogPO().setId(IdUtils.getId())
+                new LogPo().setId(IdUtils.getId())
                         .setName(saveLogAo.getName())
                         .setOperate(saveLogAo.getOperate())
                         .setMenu(saveLogAo.getMenu())
@@ -50,16 +49,16 @@ public class LogServiceImpl implements LogService {
     }
 
     @Override
-    public PageVO<LogListVO> list(LogListAO logListAo) {
-        PageVO<LogListVO> page = new PageVO<LogListVO>().setPage(logListAo.getPage()).setPageSize(logListAo.getPageSize());
+    public PageVO<LogListVo> list(LogListAo logListAo) {
+        PageVO<LogListVo> page = new PageVO<LogListVo>().setPage(logListAo.getPage()).setPageSize(logListAo.getPageSize());
 
         Query query = new Query()
                 .with(Sort.by(Sort.Direction.DESC, "id"));
 
-        Optional<LogListAO> optional = Optional.of(logListAo);
+        Optional<LogListAo> optional = Optional.of(logListAo);
 
-        Optional<LocalDate> startTime = optional.map(LogListAO::getStartDate);
-        Optional<LocalDate> endTime = optional.map(LogListAO::getEndDate);
+        Optional<LocalDate> startTime = optional.map(LogListAo::getStartDate);
+        Optional<LocalDate> endTime = optional.map(LogListAo::getEndDate);
 
         if (startTime.isPresent() || endTime.isPresent()) {
             Criteria criteria = new Criteria("createTime");
@@ -71,26 +70,26 @@ public class LogServiceImpl implements LogService {
         }
 
 
-        optional.map(LogListAO::getName)
+        optional.map(LogListAo::getName)
                 .filter(name -> !name.isEmpty())
                 .ifPresent(name -> query.addCriteria(new Criteria("name").regex(MongoUtils.getRegx(logListAo.getName()))));
 
-        optional.map(LogListAO::getMenu)
+        optional.map(LogListAo::getMenu)
                 .filter(menu -> !menu.isEmpty())
                 .ifPresent(menu -> query.addCriteria(new Criteria("menu").regex(MongoUtils.getRegx(logListAo.getMenu()))));
 
-        optional.map(LogListAO::getOperate)
+        optional.map(LogListAo::getOperate)
                 .filter(operate -> !operate.isEmpty())
                 .ifPresent(operate -> query.addCriteria(new Criteria("operate").regex(MongoUtils.getRegx(logListAo.getOperate()))));
 
-        page.setTotal((int) mongoTemplate.count(query, Log.class));
+        page.setTotal((int) mongoTemplate.count(query, LogPo.class));
 
         query.skip(page.getCol()).limit(page.getPageSize());
         page.setRows(
-                mongoTemplate.find(query, LogPO.class)
+                mongoTemplate.find(query, LogPo.class)
                         .stream()
                         .map(
-                                log -> new LogListVO()
+                                log -> new LogListVo()
                                         .setIp(log.getIp())
                                         .setMenu(log.getMenu())
                                         .setOperate(log.getOperate())
