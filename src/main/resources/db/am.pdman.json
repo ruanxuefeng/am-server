@@ -31,7 +31,7 @@
             },
             {
               "name": "avatar",
-              "type": "MiddleString",
+              "type": "BigInt",
               "chnname": "头像",
               "remark": "",
               "pk": false,
@@ -109,6 +109,24 @@
               "notNull": false,
               "autoIncrement": false,
               "defaultValue": ""
+            },
+            {
+              "name": "updated_by",
+              "type": "IdOrKey",
+              "remark": "",
+              "chnname": "更新人"
+            },
+            {
+              "name": "updated_time",
+              "type": "DateTime",
+              "remark": "",
+              "chnname": "更新时间"
+            },
+            {
+              "name": "revision",
+              "type": "BigInt",
+              "remark": "",
+              "chnname": "乐观锁"
             }
           ],
           "indexs": [],
@@ -232,6 +250,24 @@
               "notNull": false,
               "autoIncrement": false,
               "defaultValue": ""
+            },
+            {
+              "name": "updated_by",
+              "type": "IdOrKey",
+              "remark": "",
+              "chnname": "更新人"
+            },
+            {
+              "name": "updated_time",
+              "type": "DateTime",
+              "remark": "",
+              "chnname": "更新时间"
+            },
+            {
+              "name": "revision",
+              "type": "BigInt",
+              "remark": "",
+              "chnname": "乐观锁"
             }
           ],
           "indexs": [],
@@ -335,6 +371,24 @@
               "notNull": false,
               "autoIncrement": false,
               "defaultValue": ""
+            },
+            {
+              "name": "updated_by",
+              "type": "IdOrKey",
+              "remark": "",
+              "chnname": "更新人"
+            },
+            {
+              "name": "updated_time",
+              "type": "DateTime",
+              "remark": "",
+              "chnname": "更新时间"
+            },
+            {
+              "name": "revision",
+              "type": "BigInt",
+              "remark": "",
+              "chnname": "乐观锁"
             }
           ],
           "indexs": [],
@@ -530,6 +584,115 @@
               "relationNoShow": true
             }
           ]
+        },
+        {
+          "title": "sys_file",
+          "fields": [
+            {
+              "name": "id",
+              "type": "BigInt",
+              "remark": "",
+              "chnname": "主键",
+              "pk": true,
+              "notNull": true
+            },
+            {
+              "name": "type",
+              "type": "DefaultString",
+              "remark": "",
+              "chnname": "类型"
+            },
+            {
+              "name": "url",
+              "type": "MiddleString",
+              "remark": "",
+              "chnname": "网络请求路径"
+            },
+            {
+              "name": "dir",
+              "type": "MiddleString",
+              "remark": "",
+              "chnname": "本地资源访问路径"
+            },
+            {
+              "name": "revision",
+              "type": "BigInt",
+              "remark": "",
+              "chnname": "乐观锁"
+            },
+            {
+              "name": "created_by",
+              "type": "IdOrKey",
+              "remark": "",
+              "chnname": "创建人"
+            },
+            {
+              "name": "created_time",
+              "type": "DateTime",
+              "remark": "",
+              "chnname": "创建时间"
+            },
+            {
+              "name": "updated_by",
+              "type": "IdOrKey",
+              "remark": "",
+              "chnname": "更新人"
+            },
+            {
+              "name": "updated_time",
+              "type": "DateTime",
+              "remark": "",
+              "chnname": "更新时间"
+            }
+          ],
+          "indexs": [],
+          "headers": [
+            {
+              "fieldName": "chnname",
+              "relationNoShow": false
+            },
+            {
+              "fieldName": "name",
+              "relationNoShow": false
+            },
+            {
+              "fieldName": "type",
+              "relationNoShow": false
+            },
+            {
+              "fieldName": "dataType",
+              "relationNoShow": true
+            },
+            {
+              "fieldName": "remark",
+              "relationNoShow": true
+            },
+            {
+              "fieldName": "pk",
+              "relationNoShow": false
+            },
+            {
+              "fieldName": "notNull",
+              "relationNoShow": true
+            },
+            {
+              "fieldName": "autoIncrement",
+              "relationNoShow": true
+            },
+            {
+              "fieldName": "defaultValue",
+              "relationNoShow": true
+            },
+            {
+              "fieldName": "relationNoShow",
+              "relationNoShow": true
+            },
+            {
+              "fieldName": "uiHint",
+              "relationNoShow": true
+            }
+          ],
+          "chnname": "文件表"
         }
       ],
       "graphCanvas": {
@@ -1092,6 +1255,43 @@
     ]
   },
   "profile": {
+    "defaultFields": [
+      {
+        "name": "revision",
+        "type": "Integer",
+        "remark": "",
+        "chnname": "乐观锁"
+      },
+      {
+        "name": "created_by",
+        "type": "IdOrKey",
+        "remark": "",
+        "chnname": "创建人"
+      },
+      {
+        "name": "created_time",
+        "type": "DateTime",
+        "remark": "",
+        "chnname": "创建时间"
+      },
+      {
+        "name": "updated_by",
+        "type": "IdOrKey",
+        "remark": "",
+        "chnname": "更新人"
+      },
+      {
+        "name": "updated_time",
+        "type": "DateTime",
+        "remark": "",
+        "chnname": "更新时间"
+      }
+    ],
+    "defaultFieldsType": "2",
+    "javaConfig": {
+      "JAVA_HOME": "C:\\Program Files\\AdoptOpenJDK\\jdk-8.0.242.08-openj9\\"
+    },
+    "sqlConfig": ";",
     "dbs": [
       {
         "name": "dev",
@@ -1099,8 +1299,8 @@
         "properties": {
           "driver_class_name": "com.mysql.jdbc.Driver",
           "url": "jdbc:mysql://localhost:3306/am-server?characterEncoding=UTF-8&useSSL=false&useUnicode=true&serverTimezone=UTC",
-          "password": "r19931229.",
-          "username": "root"
+          "password": "Rxf19931229.",
+          "username": "rxf"
         }
       },
       {
@@ -1113,6 +1313,7 @@
           "username": ""
         }
       }
-    ]
+    ],
+    "wordTemplateConfig": ""
   }
 }
