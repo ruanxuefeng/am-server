@@ -37,7 +37,7 @@ public class AdminUserDo extends BaseDo {
     @Column(updatable = false)
     private String salt;
 
-    @OneToOne(cascade = CascadeType.DETACH)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "avatar", referencedColumnName = "id")
     private SysFileDo avatar;
 

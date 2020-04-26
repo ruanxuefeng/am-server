@@ -1,5 +1,6 @@
 package com.am.server.api.user.service.impl;
 
+import com.am.server.api.role.dao.rdb.RoleDao;
 import com.am.server.api.role.pojo.po.RoleDo;
 import com.am.server.api.upload.enumerate.FileType;
 import com.am.server.api.upload.service.SysFileService;
@@ -38,10 +39,7 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -70,13 +68,16 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     private final CommonService commonService;
 
+    private final RoleDao roleDao;
+
     private final SimpMessagingTemplate simpMessagingTemplate;
 
-    public AdminUserServiceImpl(UserPermissionCacheService userPermissionCacheService, AdminUserDao adminuserDao, SysFileService sysFileService, CommonService commonService, SimpMessagingTemplate simpMessagingTemplate) {
+    public AdminUserServiceImpl(UserPermissionCacheService userPermissionCacheService, AdminUserDao adminuserDao, SysFileService sysFileService, CommonService commonService, RoleDao roleDao, SimpMessagingTemplate simpMessagingTemplate) {
         this.userPermissionCacheService = userPermissionCacheService;
         this.adminuserDao = adminuserDao;
         this.sysFileService = sysFileService;
         this.commonService = commonService;
+        this.roleDao = roleDao;
         this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
@@ -218,14 +219,13 @@ public class AdminUserServiceImpl implements AdminUserService {
     public void updateRole(Long id, List<Long> roleIdList) {
         adminuserDao.findById(id)
                 .ifPresent(adminUser -> {
-                    List<RoleDo> roles = roleIdList.stream().map(roleId -> {
-                        RoleDo roleDo = new RoleDo();
-                        roleDo.setId(roleId);
-                        return roleDo;
-                    }).collect(Collectors.toList());
-
                     commonService.beforeSave(adminUser);
-                    adminuserDao.save(adminUser.setRoles(roles));
+                    if (!roleIdList.isEmpty()) {
+                        adminUser.setRoles(roleDao.findAllById(roleIdList));
+                    }else {
+                        adminUser.setRoles(Collections.emptyList());
+                    }
+                    adminuserDao.save(adminUser);
                     userPermissionCacheService.remove(id);
                     simpMessagingTemplate.convertAndSend("/topic/permission/" + id, true);
                 });

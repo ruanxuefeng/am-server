@@ -30,4 +30,11 @@ public interface CommonService {
      * @param entity entity
      */
     void beforeSave(BaseDo entity);
+
+    /**
+     * 当前用户是否是超级用户
+     *
+     * @return boolean
+     */
+    boolean isSupperUser();
 }

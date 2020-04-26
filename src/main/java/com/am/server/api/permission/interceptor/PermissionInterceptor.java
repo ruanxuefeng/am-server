@@ -1,6 +1,7 @@
 package com.am.server.api.permission.interceptor;
 
 import com.am.server.api.permission.annotation.Permission;
+import com.am.server.api.permission.config.PermissionConfig;
 import com.am.server.api.user.exception.IllegalRequestException;
 import com.am.server.api.user.exception.NoPermissionAccessException;
 import com.am.server.api.user.service.UserPermissionCacheService;
@@ -25,6 +26,9 @@ public class PermissionInterceptor implements HandlerInterceptor {
     private CommonService commonService;
 
     @Autowired
+    private PermissionConfig permissionConfig;
+
+    @Autowired
     private UserPermissionCacheService userPermissionCacheService;
 
     private static final String OPTION = "OPTIONS";
@@ -46,7 +50,12 @@ public class PermissionInterceptor implements HandlerInterceptor {
             //判断在方法或者类上有没有加权限，如果都有以方法上为准
             Permission permission = Optional.ofNullable(methodPermission).orElse(classPermission);
 
+
             Optional.ofNullable(permission).map(p -> {
+                //如果允许超级管理员登录并且当前登录用户是超级管理员
+                if (permissionConfig.getEnableSuperUser() && commonService.isSupperUser()) {
+                    return true;
+                }
                 boolean hasPermission = userPermissionCacheService.hasPermission(commonService.getLoginUserId(), permission.value());
                 if (permission.check() && !hasPermission) {
 

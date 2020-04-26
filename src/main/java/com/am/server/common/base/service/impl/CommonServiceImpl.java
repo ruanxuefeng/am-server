@@ -1,5 +1,6 @@
 package com.am.server.common.base.service.impl;
 
+import com.am.server.api.permission.config.PermissionConfig;
 import com.am.server.common.base.exception.NoTokenException;
 import com.am.server.common.base.pojo.po.BaseDo;
 import com.am.server.common.base.service.CommonService;
@@ -7,6 +8,7 @@ import com.am.server.common.constant.Constant;
 import com.am.server.common.util.IdUtils;
 import com.am.server.common.util.IpUtils;
 import com.am.server.common.util.JwtUtils;
+import com.sun.istack.internal.NotNull;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,8 +23,11 @@ import java.util.Optional;
 public class CommonServiceImpl implements CommonService {
     private final HttpServletRequest request;
 
-    public CommonServiceImpl(HttpServletRequest request) {
+    private final PermissionConfig permissionConfig;
+
+    public CommonServiceImpl(HttpServletRequest request, PermissionConfig permissionConfig) {
         this.request = request;
+        this.permissionConfig = permissionConfig;
     }
 
 
@@ -48,5 +53,11 @@ public class CommonServiceImpl implements CommonService {
         }
         entity.setUpdatedTime(LocalDateTime.now());
         entity.setUpdatedById(getLoginUserId());
+    }
+
+    @Override
+    public boolean isSupperUser() {
+
+        return getLoginUserId().equals(permissionConfig.getId());
     }
 }

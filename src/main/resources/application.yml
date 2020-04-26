@@ -3,7 +3,7 @@ spring:
     active: @profileActive@
   datasource:
     druid:
-      driver-class-name: org.mariadb.jdbc.Driver
+      driver-class-name: com.mysql.cj.jdbc.Driver
       #配置初始化大小、最小、最大
       initialSize: 3
       minIdle: 1
@@ -50,7 +50,7 @@ spring:
         enabled: false
 server:
   tomcat:
-      uri-encoding: utf-8
+    uri-encoding: utf-8
 logging:
   level:
     org:
@@ -61,6 +61,6 @@ logging:
 permission:
   base-package: com.am.server.api
   enable-super-user: true
+  id: 88489527
   username: 88489527
-  password: ODg0ODk1Mjc=
-  login-api: /api/admin/login
+  password: 88489527

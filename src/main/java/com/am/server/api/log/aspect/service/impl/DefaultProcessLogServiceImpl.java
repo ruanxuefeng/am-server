@@ -4,6 +4,7 @@ import com.am.server.api.log.aspect.annotation.WriteLog;
 import com.am.server.api.log.aspect.service.ProcessLogService;
 import com.am.server.api.log.pojo.ao.SaveLogAo;
 import com.am.server.api.log.service.LogService;
+import com.am.server.api.permission.config.PermissionConfig;
 import com.am.server.api.user.dao.rdb.AdminUserDao;
 import com.am.server.api.user.exception.UserNotExistException;
 import com.am.server.api.user.pojo.po.AdminUserDo;
@@ -28,18 +29,25 @@ public class DefaultProcessLogServiceImpl implements ProcessLogService {
 
     private final CommonService commonService;
 
-    public DefaultProcessLogServiceImpl(AdminUserDao adminUserDAO, LogService logService, CommonService commonService) {
+    private final PermissionConfig permissionConfig;
+
+    public DefaultProcessLogServiceImpl(AdminUserDao adminUserDAO, LogService logService, CommonService commonService, PermissionConfig permissionConfig) {
         this.adminUserDAO = adminUserDAO;
         this.logService = logService;
         this.commonService = commonService;
+        this.permissionConfig = permissionConfig;
     }
 
     @Override
     public void process(Class<?> targetClass, WriteLog targetClassWriteLog, Method targetMethod, WriteLog targetMethodWriteLog) {
-        String name = adminUserDAO.findById(commonService.getLoginUserId())
-                .map(AdminUserDo::getUsername)
-                .orElseThrow(UserNotExistException::new);
-
+        String name;
+        if (permissionConfig.getEnableSuperUser() && commonService.isSupperUser()) {
+            name = "超级管理员";
+        }else{
+            name = adminUserDAO.findById(commonService.getLoginUserId())
+                    .map(AdminUserDo::getUsername)
+                    .orElseThrow(UserNotExistException::new);
+        }
         SaveLogAo log = new SaveLogAo()
                 .setMenu(Optional.ofNullable(targetClassWriteLog).map(WriteLog::value).orElse(""))
                 .setOperate(Optional.ofNullable(targetMethodWriteLog).map(WriteLog::value).orElse(""))

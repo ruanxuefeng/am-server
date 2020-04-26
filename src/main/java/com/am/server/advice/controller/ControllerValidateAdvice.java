@@ -60,8 +60,6 @@ public class ControllerValidateAdvice {
      */
     private final static String FILE_UPLOAD_FAIL = "exception.file.upload.fail";
 
-    private final static String ERROR_TITLE = "error";
-
     private static final String USERNAME_DOES_NOT_EXIST = "login.username.does_not_exist";
 
     /**
@@ -80,6 +78,7 @@ public class ControllerValidateAdvice {
     @ExceptionHandler(BindException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public MessageVO formBindException(BindException e) {
+        log.error("表单验证错误", e);
         BindingResult bindingResult = e.getBindingResult();
         return message.get(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
     }
@@ -95,6 +94,7 @@ public class ControllerValidateAdvice {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public MessageVO rawBindException(MethodArgumentNotValidException e) {
+        log.error("raw格式json数据校验", e);
         BindingResult bindingResult = e.getBindingResult();
         return message.get(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
     }
@@ -108,7 +108,8 @@ public class ControllerValidateAdvice {
      */
     @ExceptionHandler(NoTokenException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public MessageVO noTokenException() {
+    public MessageVO noTokenException(NoTokenException e) {
+        log.error("token，提示登录，401", e);
         return message.get(NO_TOKEN);
 
     }
@@ -122,7 +123,8 @@ public class ControllerValidateAdvice {
      */
     @ExceptionHandler(UserNotExistException.class)
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
-    public MessageVO userNotExist() {
+    public MessageVO userNotExist( UserNotExistException e) {
+        log.error("用户不存在", e);
         return message.get(USERNAME_DOES_NOT_EXIST);
 
     }
@@ -136,7 +138,8 @@ public class ControllerValidateAdvice {
      */
     @ExceptionHandler(PasswordErrorException.class)
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
-    public MessageVO passwordError() {
+    public MessageVO passwordError( PasswordErrorException e) {
+        log.error("密码不正确", e);
         return message.get(PASSWORD_ERROR);
 
     }
@@ -150,7 +153,8 @@ public class ControllerValidateAdvice {
      */
     @ExceptionHandler(ExpiredJwtException.class)
     @ResponseStatus(HttpStatus.PRECONDITION_FAILED)
-    public MessageVO tokenException() {
+    public MessageVO tokenException( ExpiredJwtException e) {
+        log.error("token过期或者不是正确的token，412", e);
         return message.get(TOKEN_EXPIRED);
 
     }
@@ -163,8 +167,8 @@ public class ControllerValidateAdvice {
      * @date 2018/10/8 15:25
      */
     @ExceptionHandler(NoPermissionAccessException.class)
-    public ResponseEntity<MessageVO> noPermissionException() {
-
+    public ResponseEntity<MessageVO> noPermissionException(NoPermissionAccessException e) {
+        log.error("没有权限访问，403", e);
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(message.get(NO_PERMISSION_ACCESS));
 
     }
@@ -179,7 +183,7 @@ public class ControllerValidateAdvice {
      */
     @ExceptionHandler(UploadFileException.class)
     public ResponseEntity<MessageVO> noPermissionException(UploadFileException e) {
-        log.error(ERROR_TITLE, e);
+        log.error("上传文件失败，521", e);
         return ResponseEntity.status(521).body(message.get(FILE_UPLOAD_FAIL));
 
     }
@@ -195,7 +199,7 @@ public class ControllerValidateAdvice {
     @ExceptionHandler(SocketTimeoutException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public MessageVO noPermissionException(SocketTimeoutException e) {
-        log.error(ERROR_TITLE, e);
+        log.error("服务器异常，500", e);
         return message.get(SERVER_ERROR);
 
     }

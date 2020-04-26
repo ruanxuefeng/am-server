@@ -23,6 +23,14 @@ public class PermissionConfig {
      */
     private Boolean enableSuperUser;
 
+    /**
+     * 超级管理员主键
+     */
+    private Long id;
+
+    /**
+     * 超级管理员用户名
+     */
     private String username;
 
     /**
