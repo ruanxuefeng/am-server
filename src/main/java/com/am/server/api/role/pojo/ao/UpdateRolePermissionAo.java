@@ -18,6 +18,6 @@ public class UpdateRolePermissionAo {
     @NotNull(message = "common.operate.primaryKey.null")
     private Long id;
 
-    @ApiModelProperty(value = "permissions", example = "[system, system-user]")
+    @ApiModelProperty(value = "permissions", example = "system, system-user")
     private List<String> permissions;
 }

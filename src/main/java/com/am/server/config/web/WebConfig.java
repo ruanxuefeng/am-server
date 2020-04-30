@@ -23,7 +23,8 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- *  web相关配置
+ * web相关配置
+ *
  * @author 阮雪峰
  * @date 2018/7/24 10:42
  */
@@ -33,6 +34,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     /**
      * 跨域
+     *
      * @param registry registry
      * @author 阮雪峰
      * @date 2018/7/24 17:47
@@ -50,6 +52,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     /**
      * 解决Long类型id在前端丢失精度问题
+     *
      * @param converters converters
      * @author 阮雪峰
      * @date 2018/7/24 17:47
@@ -74,11 +77,9 @@ public class WebConfig implements WebMvcConfigurer {
      */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("doc.html")
-                .addResourceLocations("classpath:/META-INF/resources/");
-
-        registry.addResourceHandler("/webjars/**")
-                .addResourceLocations("classpath:/META-INF/resources/webjars/");
+        registry.addResourceHandler("service-worker.js").addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("doc.html").addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 
     @Bean
@@ -87,6 +88,7 @@ public class WebConfig implements WebMvcConfigurer {
         slr.setDefaultLocale(Locale.CHINA);
         return slr;
     }
+
     @Bean
     public Message message() {
         return new I18nMessageImpl();

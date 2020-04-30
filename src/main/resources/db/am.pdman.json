@@ -693,6 +693,145 @@
             }
           ],
           "chnname": "文件表"
+        },
+        {
+          "title": "scheduled_task",
+          "fields": [
+            {
+              "name": "id",
+              "type": "BigInt",
+              "remark": "",
+              "chnname": "主键",
+              "pk": true,
+              "notNull": true
+            },
+            {
+              "name": "name",
+              "type": "ShortString",
+              "remark": "",
+              "chnname": "名称"
+            },
+            {
+              "name": "corn",
+              "type": "ShortString",
+              "remark": "",
+              "chnname": "cron表达式"
+            },
+            {
+              "name": "bean",
+              "type": "ShortString",
+              "remark": "",
+              "chnname": "实现标识"
+            },
+            {
+              "name": "status",
+              "type": "DefaultString",
+              "remark": "",
+              "chnname": "状态"
+            },
+            {
+              "name": "memo",
+              "type": "MiddleString",
+              "remark": "",
+              "chnname": "备注"
+            },
+            {
+              "name": "latest_date",
+              "type": "DateTime",
+              "remark": "",
+              "chnname": "上次执行日期"
+            },
+            {
+              "name": "execute_status",
+              "type": "DefaultString",
+              "remark": "",
+              "chnname": "上次执行状态"
+            },
+            {
+              "name": "time_consuming",
+              "type": "BigInt",
+              "remark": "",
+              "chnname": "执行耗时(秒)"
+            },
+            {
+              "name": "revision",
+              "type": "Integer",
+              "remark": "",
+              "chnname": "乐观锁"
+            },
+            {
+              "name": "created_by",
+              "type": "IdOrKey",
+              "remark": "",
+              "chnname": "创建人"
+            },
+            {
+              "name": "created_time",
+              "type": "DateTime",
+              "remark": "",
+              "chnname": "创建时间"
+            },
+            {
+              "name": "updated_by",
+              "type": "IdOrKey",
+              "remark": "",
+              "chnname": "更新人"
+            },
+            {
+              "name": "updated_time",
+              "type": "DateTime",
+              "remark": "",
+              "chnname": "更新时间"
+            }
+          ],
+          "indexs": [],
+          "headers": [
+            {
+              "fieldName": "chnname",
+              "relationNoShow": false
+            },
+            {
+              "fieldName": "name",
+              "relationNoShow": false
+            },
+            {
+              "fieldName": "type",
+              "relationNoShow": false
+            },
+            {
+              "fieldName": "dataType",
+              "relationNoShow": true
+            },
+            {
+              "fieldName": "remark",
+              "relationNoShow": true
+            },
+            {
+              "fieldName": "pk",
+              "relationNoShow": false
+            },
+            {
+              "fieldName": "notNull",
+              "relationNoShow": true
+            },
+            {
+              "fieldName": "autoIncrement",
+              "relationNoShow": true
+            },
+            {
+              "fieldName": "defaultValue",
+              "relationNoShow": true
+            },
+            {
+              "fieldName": "relationNoShow",
+              "relationNoShow": true
+            },
+            {
+              "fieldName": "uiHint",
+              "relationNoShow": true
+            }
+          ],
+          "chnname": "定时任务"
         }
       ],
       "graphCanvas": {
@@ -1256,6 +1395,14 @@
   },
   "profile": {
     "defaultFields": [
+      {
+        "name": "id",
+        "type": "BigInt",
+        "remark": "",
+        "chnname": "主键",
+        "pk": true,
+        "notNull": true
+      },
       {
         "name": "revision",
         "type": "Integer",

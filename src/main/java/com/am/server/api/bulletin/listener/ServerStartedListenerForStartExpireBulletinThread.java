@@ -3,6 +3,7 @@ package com.am.server.api.bulletin.listener;
 import com.am.server.api.bulletin.pojo.BulletinExpiredDelayedImpl;
 import com.am.server.api.bulletin.service.BulletinService;
 import com.am.server.api.bulletin.thread.ExpireBulletinThread;
+import com.am.server.common.util.ThreadUtils;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
@@ -24,19 +25,6 @@ public class ServerStartedListenerForStartExpireBulletinThread implements Applic
 
     private final DelayQueue<BulletinExpiredDelayedImpl> delayQueue;
 
-    private static final ThreadFactory EXPIRE_BULLETIN_THREAD_FACTORY = new ThreadFactoryBuilder()
-            .setNameFormat("expire-bulletin-pool-%d").build();
-
-    private static final ExecutorService POOL = new ThreadPoolExecutor(
-            1,
-            1,
-            0L,
-            TimeUnit.MILLISECONDS,
-            new LinkedBlockingQueue<>(1),
-            EXPIRE_BULLETIN_THREAD_FACTORY,
-            new ThreadPoolExecutor.AbortPolicy()
-    );
-
     public ServerStartedListenerForStartExpireBulletinThread(BulletinService bulletinService, DelayQueue<BulletinExpiredDelayedImpl> delayQueue) {
         this.bulletinService = bulletinService;
         this.delayQueue = delayQueue;
@@ -45,7 +33,7 @@ public class ServerStartedListenerForStartExpireBulletinThread implements Applic
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         if (event.getApplicationContext().getParent() == null) {
-            POOL.execute(new ExpireBulletinThread(bulletinService, delayQueue));
+            ThreadUtils.execute(new ExpireBulletinThread(bulletinService, delayQueue));
         }
     }
 }

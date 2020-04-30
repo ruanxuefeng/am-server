@@ -8,7 +8,6 @@ import com.am.server.common.constant.Constant;
 import com.am.server.common.util.IdUtils;
 import com.am.server.common.util.IpUtils;
 import com.am.server.common.util.JwtUtils;
-import com.sun.istack.internal.NotNull;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -57,7 +56,6 @@ public class CommonServiceImpl implements CommonService {
 
     @Override
     public boolean isSupperUser() {
-
         return getLoginUserId().equals(permissionConfig.getId());
     }
 }
