@@ -18,10 +18,18 @@ import javax.validation.constraints.NotBlank;
 @Data
 public class SaveBulletinAo {
     /**
+     * 标题
+     */
+    @NotBlank(message = "bulletin.title.blank")
+    @Length(max = 100, message = "bulletin.title.tooLong")
+    @ApiModelProperty(value = "标题")
+    private String title;
+
+    /**
      * 内容
      */
-    @NotBlank(message = "bulletin.content.blank", groups = {Save.class, Update.class})
-    @Length(max = 200, message = "bulletin.content.tooLong", groups = {Save.class, Update.class})
+    @NotBlank(message = "bulletin.content.blank")
+    @Length(max = 200, message = "bulletin.content.tooLong")
     @ApiModelProperty(value = "内容")
     private String content;
 

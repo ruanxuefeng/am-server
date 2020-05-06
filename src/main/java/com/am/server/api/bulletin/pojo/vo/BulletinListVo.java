@@ -25,13 +25,9 @@ public class BulletinListVo {
     @ApiModelProperty(value = "id", example = "1234567890")
     private Long id;
 
-    @ApiModelProperty(value = "创建人")
-    private String creatorBy;
+    @ApiModelProperty(value = "标题")
+    private String title;
 
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
-    @ApiModelProperty(value = "创建时间")
-    private LocalDateTime createdTime;
     /**
      * 内容
      */
@@ -57,4 +53,12 @@ public class BulletinListVo {
      */
     @ApiModelProperty(value = "days", example = "10")
     private Integer days;
+
+    @ApiModelProperty(value = "创建人")
+    private String creatorBy;
+
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+    @ApiModelProperty(value = "创建时间")
+    private LocalDateTime createdTime;
 }

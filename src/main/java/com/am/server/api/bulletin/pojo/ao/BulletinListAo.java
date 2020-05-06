@@ -16,6 +16,13 @@ public class BulletinListAo {
 
     @ApiModelProperty(value = "每页记录数", required = true, example = "20")
     private Integer pageSize;
+
+    /**
+     * 标题
+     */
+    @ApiModelProperty(value = "标题")
+    private String title;
+
     /**
      * 内容
      */

@@ -21,6 +21,12 @@ import java.time.LocalDate;
 public class BulletinDo extends BaseDo {
 
     /**
+     * 标题
+     */
+    @Column
+    private String title;
+
+    /**
      * 内容
      */
     @Column(length = 256)

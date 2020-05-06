@@ -71,6 +71,7 @@ public class BulletinServiceImpl implements BulletinService {
                         page.getContent()
                                 .stream().map(bulletin ->
                                 new BulletinListVo().setId(bulletin.getId())
+                                        .setTitle(bulletin.getTitle())
                                         .setContent(bulletin.getContent())
                                         .setCreatedTime(bulletin.getCreatedTime())
                                         .setCreatorBy(Optional.ofNullable(bulletin.getCreatedBy()).map(AdminUserDo::getUsername).orElse(""))
@@ -86,6 +87,7 @@ public class BulletinServiceImpl implements BulletinService {
     public void save(SaveBulletinAo saveBulletinAo) {
         BulletinDo bulletinDo = new BulletinDo()
                 .setStatus(Status.UNPUBLISHED)
+                .setTitle(saveBulletinAo.getTitle())
                 .setContent(saveBulletinAo.getContent())
                 .setDays(saveBulletinAo.getDays());
 
@@ -98,7 +100,9 @@ public class BulletinServiceImpl implements BulletinService {
     public void update(UpdateBulletinAo updateBulletinAo) {
         bulletinDao.findById(updateBulletinAo.getId())
                 .ifPresent(bulletinDo -> {
-                    bulletinDo.setContent(updateBulletinAo.getContent()).setDays(updateBulletinAo.getDays());
+                    bulletinDo.setTitle(updateBulletinAo.getTitle())
+                            .setContent(updateBulletinAo.getContent())
+                            .setDays(updateBulletinAo.getDays());
                     commonService.beforeSave(bulletinDo);
                     bulletinDao.save(bulletinDo);
                 });
@@ -114,7 +118,8 @@ public class BulletinServiceImpl implements BulletinService {
                             .setDate(nowDate);
                     bulletinDao.save(bulletin);
                     delayQueue.put(new BulletinExpiredDelayedImpl(id, nowDate.atStartOfDay().plusDays(bulletin.getDays())));
-                    simpMessagingTemplate.convertAndSend("/topic/bulletin", new BulletinContentVo(bulletin.getContent()));
+                    BulletinContentVo vo = new BulletinContentVo().setTitle(bulletin.getTitle()).setContent(bulletin.getContent());
+                    simpMessagingTemplate.convertAndSend("/topic/bulletin", vo);
                 });
     }
 

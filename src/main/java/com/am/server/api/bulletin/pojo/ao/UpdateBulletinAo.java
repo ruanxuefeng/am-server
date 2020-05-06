@@ -23,6 +23,14 @@ public class UpdateBulletinAo {
     private Long id;
 
     /**
+     * 标题
+     */
+    @NotBlank(message = "bulletin.title.blank")
+    @Length(max = 100, message = "bulletin.title.tooLong")
+    @ApiModelProperty(value = "标题")
+    private String title;
+
+    /**
      * 内容
      */
     @NotBlank(message = "bulletin.content.blank", groups = {Save.class, Update.class})

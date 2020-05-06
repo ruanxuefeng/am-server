@@ -192,6 +192,12 @@
               "defaultValue": ""
             },
             {
+              "name": "title",
+              "type": "ShortString",
+              "remark": "",
+              "chnname": "标题"
+            },
+            {
               "name": "content",
               "type": "VARCHAR_512",
               "chnname": "内容",

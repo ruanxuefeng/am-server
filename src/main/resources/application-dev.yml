@@ -2,7 +2,7 @@ spring:
   datasource:
     druid:
       #基本属性 url、user、password
-      url: jdbc:mysql://localhost:3306/am-server?characterEncoding=utf-8
+      url: jdbc:mysql://localhost:3306/am-server?characterEncoding=utf-8&serverTimezone=UTC
       username: rxf
       #java -cp druid-1.1.9.jar com.alibaba.druid.filter.config.ConfigTools you_password 加密密码命令
       #生成public-key和加密后的密码
