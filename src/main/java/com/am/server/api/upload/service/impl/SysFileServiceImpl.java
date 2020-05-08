@@ -1,15 +1,14 @@
 package com.am.server.api.upload.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.am.server.api.upload.dao.rdb.SysFileDao;
 import com.am.server.api.upload.enumerate.FileType;
 import com.am.server.api.upload.pojo.po.SysFileDo;
 import com.am.server.api.upload.service.FileUploadService;
 import com.am.server.api.upload.service.SysFileService;
 import com.am.server.common.base.service.CommonService;
-import com.am.server.common.util.FileUtils;
 import com.am.server.common.util.IdUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -21,7 +20,7 @@ public class SysFileServiceImpl implements SysFileService {
     /**
      * 默认文件名后缀
      */
-    private static final String DEFAULT_FILE_SUFFIX = ".jpg";
+    private static final String DEFAULT_FILE_SUFFIX = "jpg";
 
     private final FileUploadService fileUploadService;
 
@@ -37,7 +36,9 @@ public class SysFileServiceImpl implements SysFileService {
 
     @Override
     public SysFileDo save(MultipartFile file, FileType type) {
-        String key = type.getFolder() + "/" + IdUtils.getId() + FileUtils.getFileSuffix(StringUtils.isEmpty(file.getOriginalFilename()) ? file.getOriginalFilename() : DEFAULT_FILE_SUFFIX);
+        //获取文件后缀名
+        String suffix = StrUtil.isEmpty(file.getOriginalFilename()) ? StrUtil.subAfter(file.getOriginalFilename(), ".", true) : DEFAULT_FILE_SUFFIX;
+        String key = type.getFolder() + "/" + IdUtils.getId() + "." + suffix;
         String url = fileUploadService.upload(file, key);
         SysFileDo sysFile = new SysFileDo().setType(type)
                 .setDir(key)
