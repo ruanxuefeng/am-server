@@ -1,5 +1,6 @@
 package com.am.server.api.permission.advice;
 
+import cn.hutool.core.codec.Base64;
 import com.am.server.api.permission.config.PermissionConfig;
 import com.am.server.api.permission.service.PermissionService;
 import com.am.server.api.user.pojo.ao.LoginAo;
@@ -8,7 +9,6 @@ import com.am.server.api.user.pojo.vo.UserInfoVo;
 import com.am.server.common.base.enumerate.Gender;
 import com.am.server.common.base.service.CommonService;
 import com.am.server.common.util.JwtUtils;
-import org.apache.commons.codec.binary.Base64;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -48,7 +48,7 @@ public class LoginAdvice {
     @Around("execution(* *..AdminUserService.login(..))")
     public Object login(ProceedingJoinPoint pjp) throws Throwable {
         LoginAo loginAo = (LoginAo) pjp.getArgs()[0];
-        String inputPassword = new String(Base64.decodeBase64(loginAo.getPassword()));
+        String inputPassword = Base64.decodeStr(loginAo.getPassword());
         if (permissionConfig.getEnableSuperUser()
                 && loginAo.getUsername().equals(permissionConfig.getUsername())
                 && inputPassword.equals(permissionConfig.getPassword())) {

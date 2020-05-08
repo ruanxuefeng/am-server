@@ -168,7 +168,7 @@ public class AdminUserController extends BaseController {
             @ApiImplicitParam(paramType = "header", dataType = "String", name = Constant.TOKEN, value = "登录凭证", required = true)
     })
     @WriteLog("重置密码")
-    @PostMapping("/reset/password")
+    @PutMapping("/reset/password")
     public ResponseEntity<MessageVO> resetPassword(Long id) {
         if (id == null) {
             return new ResponseEntity<>(message.get(COMMON_OPERATE_PRIMARY_KEY_NULL), HttpStatus.BAD_REQUEST);
