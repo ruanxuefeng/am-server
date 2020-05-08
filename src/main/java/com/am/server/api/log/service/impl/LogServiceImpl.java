@@ -1,5 +1,6 @@
 package com.am.server.api.log.service.impl;
 
+import cn.hutool.core.util.IdUtil;
 import com.am.server.api.log.dao.nosql.LogDao;
 import com.am.server.api.log.pojo.ao.LogListAo;
 import com.am.server.api.log.pojo.ao.SaveLogAo;
@@ -7,7 +8,6 @@ import com.am.server.api.log.pojo.po.LogPo;
 import com.am.server.api.log.pojo.vo.LogListVo;
 import com.am.server.api.log.service.LogService;
 import com.am.server.common.base.pojo.vo.PageVO;
-import com.am.server.common.util.IdUtils;
 import com.am.server.common.util.MongoUtils;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -39,7 +39,7 @@ public class LogServiceImpl implements LogService {
     @Override
     public void save(SaveLogAo saveLogAo) {
         logDao.save(
-                new LogPo().setId(IdUtils.getId())
+                new LogPo().setId(IdUtil.getSnowflake(1,1).nextId())
                         .setName(saveLogAo.getName())
                         .setOperate(saveLogAo.getOperate())
                         .setMenu(saveLogAo.getMenu())

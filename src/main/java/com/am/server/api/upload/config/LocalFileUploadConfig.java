@@ -1,6 +1,7 @@
 package com.am.server.api.upload.config;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -13,7 +14,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @ConfigurationProperties(prefix = "local.file")
 @Configuration
-@Data
+@Setter
+@Getter
 public class LocalFileUploadConfig implements WebMvcConfigurer {
     /**
      * 存储文件的路径

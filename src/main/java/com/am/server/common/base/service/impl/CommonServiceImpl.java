@@ -1,13 +1,14 @@
 package com.am.server.common.base.service.impl;
 
+import cn.hutool.core.util.IdUtil;
 import com.am.server.api.permission.config.PermissionConfig;
 import com.am.server.common.base.exception.NoTokenException;
 import com.am.server.common.base.pojo.po.BaseDo;
 import com.am.server.common.base.service.CommonService;
 import com.am.server.common.constant.Constant;
-import com.am.server.common.util.IdUtils;
 import com.am.server.common.util.IpUtils;
 import com.am.server.common.util.JwtUtils;
+import com.am.server.config.sys.IdConfig;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,9 +25,12 @@ public class CommonServiceImpl implements CommonService {
 
     private final PermissionConfig permissionConfig;
 
-    public CommonServiceImpl(HttpServletRequest request, PermissionConfig permissionConfig) {
+    private final IdConfig idConfig;
+
+    public CommonServiceImpl(HttpServletRequest request, PermissionConfig permissionConfig, IdConfig idConfig) {
         this.request = request;
         this.permissionConfig = permissionConfig;
+        this.idConfig = idConfig;
     }
 
 
@@ -45,7 +49,7 @@ public class CommonServiceImpl implements CommonService {
     @Override
     public void beforeSave(BaseDo entity) {
         if (entity.getId() == null) {
-            entity.setId(IdUtils.getId());
+            entity.setId(IdUtil.getSnowflake(idConfig.getWorkerId(),idConfig.getDataCenterId()).nextId());
             entity.setCreatedTime(LocalDateTime.now());
             entity.setCreatedById(getLoginUserId());
 
