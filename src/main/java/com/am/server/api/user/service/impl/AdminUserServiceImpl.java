@@ -1,7 +1,6 @@
 package com.am.server.api.user.service.impl;
 
 import cn.hutool.core.codec.Base64;
-import cn.hutool.crypto.KeyUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.symmetric.DES;
 import cn.hutool.crypto.symmetric.SymmetricAlgorithm;
@@ -26,7 +25,6 @@ import com.am.server.common.base.pojo.vo.PageVO;
 import com.am.server.common.base.service.CommonService;
 import com.am.server.common.constant.Constant;
 import com.am.server.common.util.JwtUtils;
-import com.am.server.common.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -35,7 +33,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.SecretKey;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -100,7 +97,7 @@ public class AdminUserServiceImpl implements AdminUserService {
         return adminuserDao.findById(id)
                 .map(user -> {
                     List<String> roles = user.getRoles().stream().map(RoleDo::getName).collect(Collectors.toList());
-                    String avatar = StringUtils.isEmpty(user.getAvatar()) ? "" : user.getAvatar().getUrl();
+                    String avatar = user.getAvatar() == null ? "" : user.getAvatar().getUrl();
                     return new UserInfoVo()
                             .setId(user.getId())
                             .setPermissions(userPermissionCacheService.get(id))
@@ -130,7 +127,7 @@ public class AdminUserServiceImpl implements AdminUserService {
                 .setTotal(page.getNumber())
                 .setRows(page.getContent().stream()
                         .map(adminUser -> {
-                                    String avatar = StringUtils.isEmpty(adminUser.getAvatar()) ? "" : adminUser.getAvatar().getUrl();
+                                    String avatar = adminUser.getAvatar() == null ? "" : adminUser.getAvatar().getUrl();
                                     return new AdminUserListVo()
                                             .setAvatar(avatar)
                                             .setCreatorName(Optional.ofNullable(adminUser.getCreatedBy()).map(AdminUserDo::getName).orElse(""))
