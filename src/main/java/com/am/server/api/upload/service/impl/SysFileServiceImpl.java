@@ -7,6 +7,7 @@ import com.am.server.api.upload.enumerate.FileType;
 import com.am.server.api.upload.pojo.po.SysFileDo;
 import com.am.server.api.upload.service.FileUploadService;
 import com.am.server.api.upload.service.SysFileService;
+import com.am.server.common.annotation.transaction.Commit;
 import com.am.server.common.base.service.CommonService;
 import com.am.server.config.sys.IdConfig;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,7 @@ public class SysFileServiceImpl implements SysFileService {
         this.idConfig = idConfig;
     }
 
+    @Commit
     @Override
     public SysFileDo save(MultipartFile file, FileType type) {
         //获取文件后缀名
@@ -53,6 +55,7 @@ public class SysFileServiceImpl implements SysFileService {
         return sysFile;
     }
 
+    @Commit
     @Override
     public void updateFileContent(MultipartFile file, SysFileDo sysFile) {
         fileUploadService.upload(file, sysFile.getDir());
