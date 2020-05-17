@@ -56,13 +56,7 @@ public class BulletinServiceImpl implements BulletinService {
     @ReadOnly
     @Override
     public PageVO<BulletinListVo> list(BulletinListAo bulletinAo) {
-        ExampleMatcher matcher = ExampleMatcher.matching()
-                .withIgnoreNullValues()
-                .withNullHandler(ExampleMatcher.NullHandler.IGNORE)
-                .withMatcher("content", ExampleMatcher.GenericPropertyMatchers.contains());
-        Example<BulletinDo> example = Example.of(new BulletinDo().setContent(bulletinAo.getContent()), matcher);
-
-        Page<BulletinDo> page = bulletinDao.findAll(example, PageRequest.of(bulletinAo.getPage() - 1, bulletinAo.getPageSize()));
+        Page<BulletinDo> page = bulletinDao.findAll(bulletinAo);
         return new PageVO<BulletinListVo>()
                 .setPage(bulletinAo.getPage())
                 .setPageSize(bulletinAo.getPageSize())

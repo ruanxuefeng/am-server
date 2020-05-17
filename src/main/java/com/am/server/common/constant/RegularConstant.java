@@ -1,11 +1,11 @@
-package com.am.server.common.util;
+package com.am.server.common.constant;
 
 /**
  *
  * @author 阮雪峰
  * @date 2018/7/11 14:53
  */
-public class RegularUtils {
+public class RegularConstant {
 
     /**
      * 整数或者小数
@@ -81,22 +81,6 @@ public class RegularUtils {
      */
     public static final String ZIP = ".+(.zip|.ZIP|.rar|.RAR)$";
 
-    private RegularUtils() {}
-
-    /**
-     * 字符串校验
-     * @param str 校验字符串
-     * @param reg 正则
-     * @return boolean
-     * @author 阮雪峰
-     * @date 2018/9/10 12:57
-     */
-    public static boolean matches(String str, String reg) {
-        if ((str == null)) {
-            throw new RuntimeException("待验证字符串为空");
-        }
-
-        return str.matches(reg);
-    }
+    private RegularConstant() {}
 
 }

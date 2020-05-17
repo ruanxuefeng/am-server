@@ -4,7 +4,7 @@ import cn.hutool.core.util.IdUtil;
 import com.am.server.api.log.dao.nosql.LogDao;
 import com.am.server.api.log.pojo.ao.LogListAo;
 import com.am.server.api.log.pojo.ao.SaveLogAo;
-import com.am.server.api.log.pojo.po.LogPo;
+import com.am.server.api.log.pojo.po.LogDo;
 import com.am.server.api.log.pojo.vo.LogListVo;
 import com.am.server.api.log.service.LogService;
 import com.am.server.common.base.pojo.vo.PageVO;
@@ -39,7 +39,7 @@ public class LogServiceImpl implements LogService {
     @Override
     public void save(SaveLogAo saveLogAo) {
         logDao.save(
-                new LogPo().setId(IdUtil.getSnowflake(1,1).nextId())
+                new LogDo().setId(IdUtil.getSnowflake(1,1).nextId())
                         .setName(saveLogAo.getName())
                         .setOperate(saveLogAo.getOperate())
                         .setMenu(saveLogAo.getMenu())
@@ -82,11 +82,11 @@ public class LogServiceImpl implements LogService {
                 .filter(operate -> !operate.isEmpty())
                 .ifPresent(operate -> query.addCriteria(new Criteria("operate").regex(MongoUtils.getRegx(logListAo.getOperate()))));
 
-        page.setTotal((int) mongoTemplate.count(query, LogPo.class));
+        page.setTotal((int) mongoTemplate.count(query, LogDo.class));
 
         query.skip(page.getCol()).limit(page.getPageSize());
         page.setRows(
-                mongoTemplate.find(query, LogPo.class)
+                mongoTemplate.find(query, LogDo.class)
                         .stream()
                         .map(
                                 log -> new LogListVo()

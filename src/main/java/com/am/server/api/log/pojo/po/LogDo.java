@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Document("log")
 @Accessors(chain = true)
 @Data
-public class LogPo {
+public class LogDo {
     @Id
     private Long id;
 

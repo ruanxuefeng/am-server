@@ -17,7 +17,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  * @author 阮雪峰
  * @date 2018/6/25 16:04
  */
-@EnableJpaRepositories(basePackages = {"com.am.server.api.*.dao.rdb"})
+@EnableJpaRepositories(basePackages = {"com.am.server.api.*.repository"})
 @EnableMongoRepositories(basePackages = "com.am.server.api.*.dao.nosql")
 @EnableRedisRepositories(basePackages = "com.am.server.api.*.dao.cache")
 @SpringBootApplication

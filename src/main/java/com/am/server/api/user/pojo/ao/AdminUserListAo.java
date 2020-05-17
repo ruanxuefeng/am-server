@@ -1,8 +1,11 @@
 package com.am.server.api.user.pojo.ao;
 
+import com.am.server.common.base.pojo.ao.PageAo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 列表查询条件
@@ -11,14 +14,9 @@ import lombok.Data;
  * @date 2019年6月20日15:56:36
  */
 @ApiModel
-@Data
-public class AdminUserListAo {
-
-    @ApiModelProperty(value = "要查询页数", required = true, example = "1")
-    private Integer page;
-
-    @ApiModelProperty(value = "每页记录数", required = true, example = "20")
-    private Integer pageSize;
+@Setter
+@Getter
+public class AdminUserListAo extends PageAo {
 
     @ApiModelProperty("姓名")
     private String name;

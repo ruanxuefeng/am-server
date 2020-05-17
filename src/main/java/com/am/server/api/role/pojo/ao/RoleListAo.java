@@ -1,5 +1,6 @@
 package com.am.server.api.role.pojo.ao;
 
+import com.am.server.common.base.pojo.ao.PageAo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -11,13 +12,7 @@ import lombok.Data;
  */
 @ApiModel
 @Data
-public class RoleListAo {
-    @ApiModelProperty(value = "要查询页数", required = true, example = "1")
-    private Integer page;
-
-    @ApiModelProperty(value = "每页记录数", required = true, example = "20")
-    private Integer pageSize;
-
+public class RoleListAo extends PageAo {
     @ApiModelProperty("角色名称")
     private String name;
 }

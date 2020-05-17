@@ -15,7 +15,7 @@ import com.am.server.common.annotation.transaction.Commit;
 import com.am.server.common.annotation.transaction.ReadOnly;
 import com.am.server.common.base.pojo.vo.PageVO;
 import com.am.server.common.base.service.CommonService;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -49,13 +49,7 @@ public class RoleServiceImpl implements RoleService {
     @ReadOnly
     @Override
     public PageVO<RoleListVo> list(RoleListAo roleListAo) {
-        ExampleMatcher matcher = ExampleMatcher.matching()
-                .withIgnoreNullValues()
-                .withNullHandler(ExampleMatcher.NullHandler.IGNORE)
-                .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains());
-        Example<RoleDo> example = Example.of(new RoleDo().setName(roleListAo.getName()), matcher);
-
-        Page<RoleDo> page = roleDao.findAll(example, PageRequest.of(roleListAo.getPage() - 1, roleListAo.getPageSize()));
+        Page<RoleDo> page = roleDao.findAll(roleListAo);
         return new PageVO<RoleListVo>()
                 .setPage(roleListAo.getPage())
                 .setPageSize(roleListAo.getPageSize())
@@ -103,7 +97,7 @@ public class RoleServiceImpl implements RoleService {
     @ReadOnly
     @Override
     public List<SelectRoleVo> findAll() {
-        return roleDao.findAll(Sort.by(Sort.Order.desc("id")))
+        return roleDao.findAllOrderByIdDesc()
                 .stream()
                 .map(role -> new SelectRoleVo().setId(role.getId()).setName(role.getName()))
                 .collect(Collectors.toList());

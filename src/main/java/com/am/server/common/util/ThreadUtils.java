@@ -14,8 +14,7 @@ public class ThreadUtils {
     private ThreadUtils() {
     }
 
-    private static final ThreadFactory EXPIRE_BULLETIN_THREAD_FACTORY = new ThreadFactoryBuilder()
-            .setNameFormat("expire-bulletin-pool-%d").build();
+    private static final ThreadFactory EXPIRE_BULLETIN_THREAD_FACTORY = new ThreadFactoryBuilder().build();
 
     private static final ExecutorService POOL = new ThreadPoolExecutor(
             16,

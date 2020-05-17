@@ -1,5 +1,6 @@
 package com.am.server.api.log.pojo.ao;
 
+import com.am.server.common.base.pojo.ao.PageAo;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
@@ -18,13 +19,7 @@ import java.time.LocalDate;
 @ApiModel
 @Accessors(chain = true)
 @Data
-public class LogListAo {
-    @ApiModelProperty(value = "要查询页数", required = true, example = "1")
-    private Integer page;
-
-    @ApiModelProperty(value = "每页记录数", required = true, example = "20")
-    private Integer pageSize;
-
+public class LogListAo extends PageAo {
     @ApiModelProperty(value = "操作人姓名")
     private String name;
 

@@ -17,10 +17,7 @@ import com.am.server.common.base.pojo.vo.PageVO;
 import com.am.server.common.base.service.CommonService;
 import com.am.server.common.util.ThreadUtils;
 import org.springframework.context.ApplicationContext;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Service;
@@ -66,14 +63,7 @@ public class ScheduledTaskServiceImpl implements ScheduledTaskService {
 
     @Override
     public PageVO<ScheduledTaskListListVo> list(ScheduledTaskListAo scheduledTaskListAo) {
-        ExampleMatcher matcher = ExampleMatcher.matching()
-                .withNullHandler(ExampleMatcher.NullHandler.IGNORE)
-                .withIgnoreNullValues()
-                .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains());
-
-        Example<ScheduledTaskDo> example = Example.of(new ScheduledTaskDo().setName(scheduledTaskListAo.getName()), matcher);
-
-        Page<ScheduledTaskDo> page = scheduledTaskDao.findAll(example, PageRequest.of(scheduledTaskListAo.getPage() - 1, scheduledTaskListAo.getPageSize()));
+        Page<ScheduledTaskDo> page = scheduledTaskDao.findAll(scheduledTaskListAo);
 
         return new PageVO<ScheduledTaskListListVo>()
                 .setPageSize(scheduledTaskListAo.getPageSize())

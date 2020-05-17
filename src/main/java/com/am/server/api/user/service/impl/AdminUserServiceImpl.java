@@ -26,10 +26,7 @@ import com.am.server.common.base.service.CommonService;
 import com.am.server.common.constant.Constant;
 import com.am.server.common.util.JwtUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -113,14 +110,7 @@ public class AdminUserServiceImpl implements AdminUserService {
     @ReadOnly
     @Override
     public PageVO<AdminUserListVo> list(AdminUserListAo listQuery) {
-        ExampleMatcher matcher = ExampleMatcher.matching()
-                .withNullHandler(ExampleMatcher.NullHandler.IGNORE)
-                .withIgnoreNullValues()
-                .withMatcher("username", ExampleMatcher.GenericPropertyMatchers.contains())
-                .withMatcher("name", ExampleMatcher.GenericPropertyMatchers.contains())
-                .withMatcher("email", ExampleMatcher.GenericPropertyMatchers.contains());
-        Example<AdminUserDo> example = Example.of(new AdminUserDo().setName(listQuery.getName()).setEmail(listQuery.getEmail()).setUsername(listQuery.getUsername()), matcher);
-        Page<AdminUserDo> page = adminuserDao.findAll(example, PageRequest.of(listQuery.getPage() - 1, listQuery.getPageSize()));
+        Page<AdminUserDo> page = adminuserDao.findAll(listQuery);
         return new PageVO<AdminUserListVo>()
                 .setPageSize(listQuery.getPageSize())
                 .setPage(listQuery.getPage())
@@ -264,17 +254,5 @@ public class AdminUserServiceImpl implements AdminUserService {
     @Override
     public Boolean isUsernameExistWithId(String username, Long id) {
         return adminuserDao.findByIdNotAndUsername(id, username).isPresent();
-    }
-
-    public static void main(String[] args) {
-        byte[] key = SecureUtil.generateKey(SymmetricAlgorithm.DESede.getValue(), 192).getEncoded();
-        String salt = Base64.encode(key);
-        DES des = SecureUtil.des(key);
-        String password = des.encryptBase64(Constant.INITIAL_PASSWORD);
-        System.out.println(salt);
-        System.out.println(password);
-        byte[] key1 = Base64.decode(salt);
-        DES des1 = SecureUtil.des(key1);
-        System.out.println(des1.decryptStr(password));
     }
 }
