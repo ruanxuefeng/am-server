@@ -13,6 +13,8 @@ import com.am.server.api.task.service.ScheduledTaskService;
 import com.am.server.api.task.thread.ScheduledTaskThread;
 import com.am.server.api.task.util.ScheduledTaskUtils;
 import com.am.server.api.user.pojo.po.AdminUserDo;
+import com.am.server.common.annotation.transaction.Commit;
+import com.am.server.common.annotation.transaction.ReadOnly;
 import com.am.server.common.base.pojo.vo.PageVO;
 import com.am.server.common.base.service.CommonService;
 import com.am.server.common.util.ThreadUtils;
@@ -50,17 +52,20 @@ public class ScheduledTaskServiceImpl implements ScheduledTaskService {
         this.applicationContext = applicationContext;
     }
 
+    @Commit
     @Override
     public void save(SaveScheduledTaskAo saveScheduledTaskAo) {
         ScheduledTaskDo scheduledTask = new ScheduledTaskDo()
                 .setCorn(saveScheduledTaskAo.getCorn())
                 .setName(saveScheduledTaskAo.getName())
                 .setMemo(saveScheduledTaskAo.getMemo())
+                .setBean(saveScheduledTaskAo.getBean())
                 .setStatus(ScheduledTaskStatus.Disable);
         commonService.beforeSave(scheduledTask);
         scheduledTaskDao.save(scheduledTask);
     }
 
+    @ReadOnly
     @Override
     public PageVO<ScheduledTaskListListVo> list(ScheduledTaskListAo scheduledTaskListAo) {
         Page<ScheduledTaskDo> page = scheduledTaskDao.findAll(scheduledTaskListAo);
@@ -87,6 +92,7 @@ public class ScheduledTaskServiceImpl implements ScheduledTaskService {
                         .collect(Collectors.toList()));
     }
 
+    @Commit
     @Override
     public void update(UpdateScheduledTaskAo updateScheduledTaskAo) {
         scheduledTaskDao.findById(updateScheduledTaskAo.getId())
@@ -100,11 +106,13 @@ public class ScheduledTaskServiceImpl implements ScheduledTaskService {
                 });
     }
 
+    @Commit
     @Override
     public void delete(Long id) {
         scheduledTaskDao.deleteById(id);
     }
 
+    @Commit
     @Override
     public void updateStatus(Long id) {
         scheduledTaskDao.findById(id)
@@ -126,11 +134,13 @@ public class ScheduledTaskServiceImpl implements ScheduledTaskService {
                 });
     }
 
+    @ReadOnly
     @Override
     public List<ScheduledTaskDo> findAllByStatus(ScheduledTaskStatus status) {
         return scheduledTaskDao.findAllByStatus(status);
     }
 
+    @Commit
     @Override
     public void updateExecutedInfo(Long id, long timeConsuming, LocalDateTime executeTime, ExecuteStatus executeStatus) {
         scheduledTaskDao.findById(id)
@@ -146,19 +156,20 @@ public class ScheduledTaskServiceImpl implements ScheduledTaskService {
     public void startScheduledTask(ScheduledTaskDo scheduledTask) {
         ExecuteScheduledTaskService executeScheduledTaskService = applicationContext.getBean(scheduledTask.getBean(), ExecuteScheduledTaskService.class);
 
-        Thread thread = new ScheduledTaskThread(applicationContext, scheduledTask, executeScheduledTaskService, this);
+        Thread thread = new ScheduledTaskThread(scheduledTask, executeScheduledTaskService, this);
 
         ScheduledFuture<?> scheduledFuture = threadPoolTaskScheduler.schedule(thread, new CronTrigger(scheduledTask.getCorn()));
 
         ScheduledTaskUtils.addScheduledTaskFuture(scheduledTask.getId(), scheduledFuture);
     }
 
+    @ReadOnly
     @Override
     public void trigger(Long id) {
         scheduledTaskDao.findById(id)
                 .ifPresent(scheduledTask -> {
                     ExecuteScheduledTaskService executeScheduledTaskService = applicationContext.getBean(scheduledTask.getBean(), ExecuteScheduledTaskService.class);
-                    Thread thread = new ScheduledTaskThread(applicationContext, scheduledTask, executeScheduledTaskService, this);
+                    Thread thread = new ScheduledTaskThread(scheduledTask, executeScheduledTaskService, this);
                     ThreadUtils.execute(thread);
                 });
     }

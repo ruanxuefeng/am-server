@@ -1,12 +1,10 @@
 package com.am.server.api.task.thread;
 
-import com.am.server.api.task.dao.rdb.ScheduledTaskDao;
 import com.am.server.api.task.enumerate.ExecuteStatus;
 import com.am.server.api.task.execute.ExecuteScheduledTaskService;
 import com.am.server.api.task.pojo.po.ScheduledTaskDo;
 import com.am.server.api.task.service.ScheduledTaskService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationContext;
 
 import java.time.LocalDateTime;
 
@@ -18,8 +16,6 @@ import java.time.LocalDateTime;
  */
 @Slf4j
 public class ScheduledTaskThread extends Thread {
-    private final ApplicationContext applicationContext;
-
     private final ExecuteScheduledTaskService executeScheduledTaskService;
 
     private final ScheduledTaskService scheduledTaskService;
@@ -29,12 +25,10 @@ public class ScheduledTaskThread extends Thread {
      */
     private final Long key;
 
-    public ScheduledTaskThread(ApplicationContext applicationContext, ScheduledTaskDo scheduledTask, ExecuteScheduledTaskService executeScheduledTaskService, ScheduledTaskService scheduledTaskService) {
-        this.applicationContext = applicationContext;
+    public ScheduledTaskThread(ScheduledTaskDo scheduledTask, ExecuteScheduledTaskService executeScheduledTaskService, ScheduledTaskService scheduledTaskService) {
         this.executeScheduledTaskService = executeScheduledTaskService;
         this.scheduledTaskService = scheduledTaskService;
         this.key = scheduledTask.getId();
-//        this.setName(scheduledTask.getName());
     }
 
     @Override
