@@ -5,10 +5,14 @@ import com.am.server.api.permission.config.PermissionConfig;
 import com.am.server.api.user.exception.IllegalRequestException;
 import com.am.server.api.user.exception.NoPermissionAccessException;
 import com.am.server.api.user.service.UserPermissionCacheService;
+import com.am.server.api.user.uitl.UserUtils;
+import com.am.server.common.base.exception.NoTokenException;
 import com.am.server.common.base.service.CommonService;
+import com.am.server.common.constant.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -41,6 +45,8 @@ public class PermissionInterceptor implements HandlerInterceptor {
             return true;
         }
 
+        String uri = request.getRequestURI();
+
         if (handler instanceof HandlerMethod) {
             HandlerMethod handlerMethod = (HandlerMethod) handler;
 
@@ -67,8 +73,15 @@ public class PermissionInterceptor implements HandlerInterceptor {
                 }
             });
             return true;
+        } else if (handler instanceof ResourceHttpRequestHandler) {
+            if (UserUtils.logged(request)) {
+                return true;
+            }else{
+                throw new NoTokenException();
+            }
         } else {
             throw new IllegalRequestException();
         }
     }
+
 }

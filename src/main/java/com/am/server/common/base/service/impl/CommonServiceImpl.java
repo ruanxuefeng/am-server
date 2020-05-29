@@ -62,4 +62,5 @@ public class CommonServiceImpl implements CommonService {
     public boolean isSupperUser() {
         return getLoginUserId().equals(permissionConfig.getId());
     }
+
 }

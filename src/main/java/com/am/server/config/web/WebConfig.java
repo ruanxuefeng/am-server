@@ -1,6 +1,7 @@
 package com.am.server.config.web;
 
 import com.am.server.api.permission.interceptor.PermissionInterceptor;
+import com.am.server.common.base.pojo.vo.MessageVO;
 import com.am.server.common.base.service.Message;
 import com.am.server.common.constant.Constant;
 import com.am.server.config.i18n.component.I18nMessageImpl;
@@ -90,7 +91,7 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public Message message() {
+    public Message<MessageVO> message() {
         return new I18nMessageImpl();
     }
 
@@ -102,7 +103,9 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new CustomLocaleChangeInterceptor()).addPathPatterns(Constant.ADMIN_ROOT + "/**");
-        registry.addInterceptor(permissionInterceptor()).addPathPatterns(Constant.ADMIN_ROOT + "/**");
+        registry.addInterceptor(permissionInterceptor())
+                .addPathPatterns("/**")
+                .excludePathPatterns("/login");
     }
 
 

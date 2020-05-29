@@ -30,7 +30,7 @@ import java.util.Objects;
  */
 @Slf4j
 @RestControllerAdvice
-public class ControllerValidateAdvice {
+public class ControllerAdvice {
 
     @Resource(name = "message")
     private Message<MessageVO> message;
