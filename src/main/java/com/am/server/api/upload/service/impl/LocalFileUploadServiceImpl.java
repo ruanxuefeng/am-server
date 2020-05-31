@@ -9,8 +9,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 /**
  * 本地文件上传
@@ -33,7 +31,7 @@ public class LocalFileUploadServiceImpl implements FileUploadService {
                 log.info("创建文件夹成功（{}）", config.getFilePath() + key);
             }
             file.transferTo(file1);
-            return config.getRequestUrl() + config.getUri() + key+"?"+ System.currentTimeMillis();
+            return config.getRequestUrl() + config.getUri() + key + "?" + System.currentTimeMillis();
         } catch (IOException e) {
             throw new UploadFileException(e);
         }

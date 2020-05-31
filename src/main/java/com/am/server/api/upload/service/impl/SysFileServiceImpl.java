@@ -2,7 +2,6 @@ package com.am.server.api.upload.service.impl;
 
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
-import com.am.server.api.upload.dao.rdb.SysFileDao;
 import com.am.server.api.upload.enumerate.FileType;
 import com.am.server.api.upload.pojo.po.SysFileDo;
 import com.am.server.api.upload.service.FileUploadService;
@@ -28,20 +27,25 @@ public class SysFileServiceImpl implements SysFileService {
 
     private final IdConfig idConfig;
 
-    public SysFileServiceImpl(FileUploadService fileUploadService, IdConfig idConfig) {
+    private final CommonService commonService;
+
+    public SysFileServiceImpl(FileUploadService fileUploadService, IdConfig idConfig, CommonService commonService) {
         this.fileUploadService = fileUploadService;
         this.idConfig = idConfig;
+        this.commonService = commonService;
     }
 
     @Commit
     @Override
     public SysFileDo save(MultipartFile file, FileType type) {
+        SysFileDo sysFileDo = new SysFileDo();
+        commonService.beforeSave(sysFileDo);
         //获取文件后缀名
         String suffix = StrUtil.isEmpty(file.getOriginalFilename()) ? StrUtil.subAfter(file.getOriginalFilename(), ".", true) : DEFAULT_FILE_SUFFIX;
-        String key = type.getFolder() + "/" + IdUtil.getSnowflake(idConfig.getWorkerId(), idConfig.getDataCenterId()).nextId() + "." + suffix;
+        String key = type.getFolder() + "/" + sysFileDo.getId() + "." + suffix;
         String url = fileUploadService.upload(file, key);
 
-        return new SysFileDo().setType(type)
+        return sysFileDo.setType(type)
                 .setDir(key)
                 .setUrl(url);
     }

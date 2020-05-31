@@ -139,15 +139,13 @@ public class AdminUserServiceImpl implements AdminUserService {
         byte[] key = SecureUtil.generateKey(SymmetricAlgorithm.DES.getValue()).getEncoded();
         String salt = Base64.encode(key);
         DES des = SecureUtil.des(key);
-        SysFileDo sysFileDo = sysFileService.save(adminUser.getImg(), FileType.avatar);
-        commonService.beforeSave(sysFileDo);
 
         AdminUserDo user = new AdminUserDo()
                 .setUsername(adminUser.getUsername())
                 .setName(adminUser.getName())
                 .setEmail(adminUser.getEmail())
                 .setGender(adminUser.getGender())
-                .setAvatar(sysFileDo)
+                .setAvatar(sysFileService.save(adminUser.getImg(), FileType.avatar))
                 .setSalt(salt)
                 .setPassword(des.encryptBase64(Constant.INITIAL_PASSWORD));
 
