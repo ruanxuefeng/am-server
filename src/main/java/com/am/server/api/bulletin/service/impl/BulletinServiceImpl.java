@@ -85,7 +85,7 @@ public class BulletinServiceImpl implements BulletinService {
                 .setContent(saveBulletinAo.getContent())
                 .setDays(saveBulletinAo.getDays());
 
-        commonService.beforeSave(bulletinDo);
+
         bulletinDao.save(bulletinDo);
     }
 
@@ -97,7 +97,7 @@ public class BulletinServiceImpl implements BulletinService {
                     bulletinDo.setTitle(updateBulletinAo.getTitle())
                             .setContent(updateBulletinAo.getContent())
                             .setDays(updateBulletinAo.getDays());
-                    commonService.beforeSave(bulletinDo);
+
                     bulletinDao.save(bulletinDo);
                 });
     }

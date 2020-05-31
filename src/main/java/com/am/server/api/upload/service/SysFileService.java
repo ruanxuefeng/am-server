@@ -24,9 +24,9 @@ public interface SysFileService {
 
     /**
      * 修改文件内容
-     *
-     * @param file    用户上传的新闻文件
+     *  @param file    用户上传的新闻文件
      * @param sysFile 本地原来的文件
+     * @param avatar
      */
-    void updateFileContent(MultipartFile file, SysFileDo sysFile);
+    SysFileDo updateFileContent(MultipartFile file, SysFileDo sysFile, FileType avatar);
 }

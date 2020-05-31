@@ -72,7 +72,7 @@ public class RoleServiceImpl implements RoleService {
         RoleDo role = new RoleDo()
                 .setName(roleAo.getName())
                 .setMemo(roleAo.getMemo());
-        commonService.beforeSave(role);
+
         roleDao.save(role);
     }
 
@@ -82,7 +82,7 @@ public class RoleServiceImpl implements RoleService {
         roleDao.findById(roleAo.getId())
                 .ifPresent(role -> {
                     role.setName(roleAo.getName()).setMemo(roleAo.getMemo());
-                    commonService.beforeSave(role);
+
                     roleDao.save(role);
                 });
     }

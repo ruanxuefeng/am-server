@@ -7,6 +7,7 @@ import cn.hutool.crypto.symmetric.SymmetricAlgorithm;
 import com.am.server.api.role.dao.rdb.RoleDao;
 import com.am.server.api.role.pojo.po.RoleDo;
 import com.am.server.api.upload.enumerate.FileType;
+import com.am.server.api.upload.pojo.po.SysFileDo;
 import com.am.server.api.upload.service.SysFileService;
 import com.am.server.api.user.dao.rdb.AdminUserDao;
 import com.am.server.api.user.exception.NoPermissionAccessException;
@@ -138,15 +139,18 @@ public class AdminUserServiceImpl implements AdminUserService {
         byte[] key = SecureUtil.generateKey(SymmetricAlgorithm.DES.getValue()).getEncoded();
         String salt = Base64.encode(key);
         DES des = SecureUtil.des(key);
+        SysFileDo sysFileDo = sysFileService.save(adminUser.getImg(), FileType.avatar);
+        commonService.beforeSave(sysFileDo);
+
         AdminUserDo user = new AdminUserDo()
                 .setUsername(adminUser.getUsername())
                 .setName(adminUser.getName())
                 .setEmail(adminUser.getEmail())
                 .setGender(adminUser.getGender())
-                .setAvatar(sysFileService.save(adminUser.getImg(), FileType.avatar))
+                .setAvatar(sysFileDo)
                 .setSalt(salt)
                 .setPassword(des.encryptBase64(Constant.INITIAL_PASSWORD));
-        commonService.beforeSave(user);
+
         adminuserDao.save(user);
     }
 
@@ -173,7 +177,7 @@ public class AdminUserServiceImpl implements AdminUserService {
 
         adminuserDao.findById(id)
                 .ifPresent(adminUser -> {
-                    commonService.beforeSave(adminUser);
+
                     adminuserDao.save(adminUser.setPassword(password).setSalt(salt));
                 });
     }
@@ -183,7 +187,7 @@ public class AdminUserServiceImpl implements AdminUserService {
     public void updateRole(Long id, List<Long> roleIdList) {
         adminuserDao.findById(id)
                 .ifPresent(adminUser -> {
-                    commonService.beforeSave(adminUser);
+
                     if (!roleIdList.isEmpty()) {
                         adminUser.setRoles(roleDao.findAllById(roleIdList));
                     } else {
@@ -201,14 +205,14 @@ public class AdminUserServiceImpl implements AdminUserService {
         adminuserDao.findById(user.getId())
                 .ifPresent(adminUser -> {
                     if (user.getImg() != null && !user.getImg().isEmpty()) {
-                        sysFileService.updateFileContent(user.getImg(), adminUser.getAvatar());
+                        adminUser.setAvatar(sysFileService.updateFileContent(user.getImg(), adminUser.getAvatar(), FileType.avatar));
                     }
                     adminUser.setUsername(user.getUsername())
                             .setName(user.getName())
                             .setEmail(user.getEmail())
                             .setGender(user.getGender());
 
-                    commonService.beforeSave(adminUser);
+
                     adminuserDao.save(adminUser);
                 });
     }
@@ -218,13 +222,13 @@ public class AdminUserServiceImpl implements AdminUserService {
         adminuserDao.findById(user.getId())
                 .ifPresent(adminUser -> {
                     if (user.getImg() != null && !user.getImg().isEmpty()) {
-                        sysFileService.updateFileContent(user.getImg(), adminUser.getAvatar());
+                        adminUser.setAvatar(sysFileService.updateFileContent(user.getImg(), adminUser.getAvatar(), FileType.avatar));
                     }
                     adminUser.setName(user.getName())
                             .setEmail(user.getEmail())
                             .setGender(user.getGender());
 
-                    commonService.beforeSave(adminUser);
+
                     adminuserDao.save(adminUser);
                 });
     }

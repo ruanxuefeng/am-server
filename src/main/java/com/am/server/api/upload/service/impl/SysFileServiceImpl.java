@@ -26,16 +26,10 @@ public class SysFileServiceImpl implements SysFileService {
 
     private final FileUploadService fileUploadService;
 
-    private final CommonService commonService;
-
-    private final SysFileDao sysFileDao;
-
     private final IdConfig idConfig;
 
-    public SysFileServiceImpl(FileUploadService fileUploadService, CommonService commonService, SysFileDao sysFileDao, IdConfig idConfig) {
+    public SysFileServiceImpl(FileUploadService fileUploadService, IdConfig idConfig) {
         this.fileUploadService = fileUploadService;
-        this.commonService = commonService;
-        this.sysFileDao = sysFileDao;
         this.idConfig = idConfig;
     }
 
@@ -46,18 +40,21 @@ public class SysFileServiceImpl implements SysFileService {
         String suffix = StrUtil.isEmpty(file.getOriginalFilename()) ? StrUtil.subAfter(file.getOriginalFilename(), ".", true) : DEFAULT_FILE_SUFFIX;
         String key = type.getFolder() + "/" + IdUtil.getSnowflake(idConfig.getWorkerId(), idConfig.getDataCenterId()).nextId() + "." + suffix;
         String url = fileUploadService.upload(file, key);
-        SysFileDo sysFile = new SysFileDo().setType(type)
+
+        return new SysFileDo().setType(type)
                 .setDir(key)
                 .setUrl(url);
-
-        commonService.beforeSave(sysFile);
-        sysFileDao.save(sysFile);
-        return sysFile;
     }
 
     @Commit
     @Override
-    public void updateFileContent(MultipartFile file, SysFileDo sysFile) {
-        fileUploadService.upload(file, sysFile.getDir());
+    public SysFileDo updateFileContent(MultipartFile file, SysFileDo sysFile, FileType avatar) {
+        if (sysFile == null) {
+            return save(file, avatar);
+        }
+        String url = fileUploadService.upload(file, sysFile.getDir());
+        sysFile.setUrl(url);
+
+        return sysFile;
     }
 }

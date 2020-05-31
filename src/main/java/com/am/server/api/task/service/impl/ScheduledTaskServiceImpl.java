@@ -61,7 +61,7 @@ public class ScheduledTaskServiceImpl implements ScheduledTaskService {
                 .setMemo(saveScheduledTaskAo.getMemo())
                 .setBean(saveScheduledTaskAo.getBean())
                 .setStatus(ScheduledTaskStatus.Disable);
-        commonService.beforeSave(scheduledTask);
+
         scheduledTaskDao.save(scheduledTask);
     }
 
@@ -101,7 +101,7 @@ public class ScheduledTaskServiceImpl implements ScheduledTaskService {
                             .setName(updateScheduledTaskAo.getName())
                             .setMemo(updateScheduledTaskAo.getMemo())
                             .setBean(updateScheduledTaskAo.getBean());
-                    commonService.beforeSave(scheduledTask);
+
                     scheduledTaskDao.save(scheduledTask);
                 });
     }
@@ -129,7 +129,7 @@ public class ScheduledTaskServiceImpl implements ScheduledTaskService {
                         scheduledTask.setStatus(ScheduledTaskStatus.Enable);
                         startScheduledTask(scheduledTask);
                     }
-                    commonService.beforeSave(scheduledTask);
+
                     scheduledTaskDao.save(scheduledTask);
                 });
     }
