@@ -3,8 +3,11 @@ package com.am.server.api.log.controller;
 import com.am.server.api.log.pojo.ao.LogListAo;
 import com.am.server.api.log.pojo.vo.LogListVo;
 import com.am.server.api.log.service.LogService;
+import com.am.server.api.permission.annotation.Menu;
 import com.am.server.api.permission.annotation.Permission;
 import com.am.server.common.base.pojo.vo.PageVO;
+import com.am.server.common.base.service.Message;
+import com.am.server.common.base.service.impl.NormalMessageImpl;
 import com.am.server.common.constant.Constant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -21,8 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
  * @author 阮雪峰
  * @date 2018/8/1 13:15
  */
-@Api(tags = "日志")
-@Permission(value = "log", name = "日志", sort = 20)
+@Api(tags = "用户操作日志")
+@Permission(value = "log-operate", name = "用户操作日志", sort = 0, menus = {@Menu(value = "log", name = "日志管理", sort = 20)})
 @RestController
 @RequestMapping(Constant.ADMIN_ROOT + "/log")
 public class LogController {
@@ -45,7 +48,6 @@ public class LogController {
     @ApiImplicitParams({@ApiImplicitParam(paramType = "header", dataType = "String", name = Constant.TOKEN, value = "登录凭证", required = true)})
     @GetMapping("list")
     public ResponseEntity<PageVO<LogListVo>> list(LogListAo logListAo) {
-
         return ResponseEntity.ok(logService.list(logListAo));
     }
 }

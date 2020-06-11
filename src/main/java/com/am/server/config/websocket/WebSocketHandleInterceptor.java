@@ -1,4 +1,4 @@
-package com.am.server.api.bulletin.interceptor;
+package com.am.server.config.websocket;
 
 
 import com.am.server.common.constant.Constant;

@@ -1,6 +1,5 @@
 package com.am.server.config.websocket;
 
-import com.am.server.api.bulletin.interceptor.WebSocketHandleInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;

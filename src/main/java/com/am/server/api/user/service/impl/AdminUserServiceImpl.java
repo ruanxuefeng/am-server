@@ -7,7 +7,6 @@ import cn.hutool.crypto.symmetric.SymmetricAlgorithm;
 import com.am.server.api.role.dao.rdb.RoleDao;
 import com.am.server.api.role.pojo.po.RoleDo;
 import com.am.server.api.upload.enumerate.FileType;
-import com.am.server.api.upload.pojo.po.SysFileDo;
 import com.am.server.api.upload.service.SysFileService;
 import com.am.server.api.user.dao.rdb.AdminUserDao;
 import com.am.server.api.user.exception.NoPermissionAccessException;

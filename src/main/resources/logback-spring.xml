@@ -3,6 +3,13 @@
     <contextName>logback</contextName>
     <property name="log.path" value="./logs"/>
 
+    <appender name="httpAppender" class="com.am.server.config.log.WebSocketAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>[%thread] %logger{48} : %msg %ex{20}</pattern>
+        </layout>
+    </appender>
+
+    <!-- 测试环境+开发环境. 多个使用逗号隔开. -->
     <springProfile name="test,dev">
         <!-- 彩色日志格式 -->
         <property name="log.pattern.color"
@@ -21,8 +28,15 @@
                 <pattern>${log.pattern.color}</pattern>
             </layout>
         </appender>
+
+        <root level="info">
+            <appender-ref ref="console"/>
+            <appender-ref ref="httpAppender"/>
+        </root>
+
     </springProfile>
 
+    <!-- 生产环境. -->
     <springProfile name="pro">
         <!--输出到文件-->
         <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
@@ -35,23 +49,11 @@
                 <pattern>%d{HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{36} - %msg%n</pattern>
             </encoder>
         </appender>
-    </springProfile>
-    <!-- 测试环境+开发环境. 多个使用逗号隔开. -->
-    <springProfile name="test,dev">
-        <root level="info">
-            <appender-ref ref="console"/>
-        </root>
-        <!--<logger name="com.peak.tally.api.**" level="debug" >
-            <appender-ref ref="console" />
-        </logger>-->
-    </springProfile>
-    <!-- 生产环境. -->
-    <springProfile name="pro">
+
         <root level="warn">
             <appender-ref ref="file"/>
+            <appender-ref ref="httpAppender"/>
         </root>
-        <!--<logger name="com.peak.tally.api.**" level="ERROR">
-            <appender-ref ref="file" />
-        </logger>-->
     </springProfile>
+
 </configuration>

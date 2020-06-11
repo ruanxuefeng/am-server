@@ -29,6 +29,13 @@
     </properties>
 
     <dependencies>
+        <!-- https://mvnrepository.com/artifact/org.logback-extensions/logback-ext-loggly -->
+        <dependency>
+            <groupId>org.logback-extensions</groupId>
+            <artifactId>logback-ext-loggly</artifactId>
+            <version>0.1.5</version>
+        </dependency>
+
         <!-- 工具类包 -->
         <dependency>
             <groupId>cn.hutool</groupId>

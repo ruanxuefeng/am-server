@@ -1,4 +1,4 @@
-package com.am.server.api.bulletin.listener;
+package com.am.server.config.websocket;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -17,12 +17,10 @@ public class WebSocketEventListener {
     @EventListener
     public void handleConnectListener(SessionConnectedEvent event) {
         log.info("[ws-connected] socket connect: {}", event.getMessage());
-        // do someting ...
     }
 
     @EventListener
     public void handleDisconnectListener(SessionDisconnectEvent event) {
         log.info("[ws-disconnect] socket disconnect: {}", event.getMessage());
-        // do someting ...
     }
 }
