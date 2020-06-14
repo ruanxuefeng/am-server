@@ -22,27 +22,26 @@ public class WebSocketAppender extends AppenderBase<ILoggingEvent> {
 
     public final static String SEND_LOG_FLAG = "SEND_TO";
     public final static String ON = "ON";
+    public final static String OFF = "OFF";
 
+    private ApplicationContext applicationContext = null;
     protected Encoder<ILoggingEvent> encoder;
 
     @Override
     protected void append(ILoggingEvent eventObject) {
-        if (ON.equals(getContext().getProperty(SEND_LOG_FLAG))) {
-            Level level = eventObject.getLevel();
-            byte[] bytes = this.encoder.encode(eventObject);
-            String message = new String(bytes);
-            LocalDateTime localDateTime = Instant.ofEpochMilli(eventObject.getTimeStamp()).atZone(ZoneOffset.ofHours(8)).toLocalDateTime();
-
-            SystemLogVo systemLogVo = new SystemLogVo(localDateTime, level.toInt(), level.levelStr, message);
-            ApplicationContext applicationContext = (ApplicationContext) getContext().getObject("SpringApplicationContext");
-            SimpMessagingTemplate simpMessagingTemplate = applicationContext.getBean(SimpMessagingTemplate.class);
-            simpMessagingTemplate.convertAndSend("/topic/log", systemLogVo);
+        getContext().getProperty(SEND_LOG_FLAG);
+        if (ON.equals(getContext().getProperty(SEND_LOG_FLAG)) && applicationContext == null) {
+            this.applicationContext = (ApplicationContext) getContext().getObject("SpringApplicationContext");
         }
-    }
+        Level level = eventObject.getLevel();
+        byte[] bytes = this.encoder.encode(eventObject);
+        String message = new String(bytes);
+        LocalDateTime localDateTime = Instant.ofEpochMilli(eventObject.getTimeStamp()).atZone(ZoneOffset.ofHours(8)).toLocalDateTime();
 
-    @Override
-    public void start() {
-        super.start();
+        SystemLogVo systemLogVo = new SystemLogVo(localDateTime, level.toInt(), level.levelStr, message);
+
+        SimpMessagingTemplate simpMessagingTemplate = applicationContext.getBean(SimpMessagingTemplate.class);
+        simpMessagingTemplate.convertAndSend("/topic/log", systemLogVo);
     }
 
     public void setLayout(Layout<ILoggingEvent> layout) {
