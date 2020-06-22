@@ -7,6 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -16,6 +17,7 @@ import java.time.LocalDate;
  * @author 阮雪峰
  * @date 2019年6月25日15:29:19
  */
+@EqualsAndHashCode(callSuper = true)
 @ApiModel
 @Accessors(chain = true)
 @Data
