@@ -7,8 +7,6 @@ package com.am.server.common.base.service;
  */
 public interface Message<T> {
 
-    String MESSAGE = "message";
-
     /**
      * 获取消息
      * @param message 消息
