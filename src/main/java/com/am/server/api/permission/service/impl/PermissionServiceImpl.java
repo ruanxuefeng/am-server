@@ -23,24 +23,24 @@ import java.util.stream.Collectors;
 @Service
 public class PermissionServiceImpl implements PermissionService {
 
-    private final PermissionDao permissionDAO;
+    private final PermissionDao permissionDao;
 
     private final PermissionConfig config;
 
-    public PermissionServiceImpl(PermissionDao permissionDAO, PermissionConfig config) {
-        this.permissionDAO = permissionDAO;
+    public PermissionServiceImpl(PermissionDao permissionDao, PermissionConfig config) {
+        this.permissionDao = permissionDao;
         this.config = config;
     }
 
     @Override
     public void loadPermissionToCache() {
-        permissionDAO.save(getPermissionTree());
+        permissionDao.save(getPermissionTree());
     }
 
     @Override
     public List<PermissionTreeVo> findAll() {
         List<PermissionTreeVo> list = new ArrayList<>();
-        Optional.ofNullable(permissionDAO.findAll())
+        Optional.ofNullable(permissionDao.findAll())
                 .ifPresent(permissionTreeList -> permissionTreeList.forEach(permissionTree -> list.add(mapToVO(permissionTree))));
         return list;
     }
@@ -63,7 +63,7 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     private PermissionTreeVo mapToVO(PermissionTreeDo permissionTree) {
-        PermissionTreeVo permissionTreeVO = new PermissionTreeVo()
+        PermissionTreeVo permissionTreeVo = new PermissionTreeVo()
                 .setName(permissionTree.getName())
                 .setMark(permissionTree.getMark());
         List<PermissionTreeVo> children = null;
@@ -73,8 +73,8 @@ public class PermissionServiceImpl implements PermissionService {
                 children.add(mapToVO(child));
             }
         }
-        Optional.ofNullable(children).ifPresent(permissionTreeVO::setChildren);
-        return permissionTreeVO;
+        Optional.ofNullable(children).ifPresent(permissionTreeVo::setChildren);
+        return permissionTreeVo;
     }
 
     private TreeSet<PermissionTreeDo> getPermissionTree() {

@@ -1,6 +1,7 @@
 package com.am.server.config.redis;
 
 
+import com.am.server.api.permission.pojo.po.PermissionCollection;
 import com.am.server.api.permission.pojo.po.PermissionTreeDo;
 import com.am.server.api.user.pojo.po.UserPermissionDo;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -62,16 +63,14 @@ public class RedisConfig {
     }
 
 
-    @SneakyThrows
     @Bean("permissionCacheRedisTemplate")
-    public RedisTemplate<String, TreeSet<PermissionTreeDo>> permissionCacheRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
+    public RedisTemplate<String, PermissionCollection> permissionCacheRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
 
-        RedisTemplate<String, TreeSet<PermissionTreeDo>> template = new RedisTemplate<>();
+        RedisTemplate<String, PermissionCollection> template = new RedisTemplate<>();
         template.setConnectionFactory(redisConnectionFactory);
 
         //使用Jackson2JsonRedisSerializer来序列化和反序列化redis的value值
-        Class<TreeSet<PermissionTreeDo>> set = (Class<TreeSet<PermissionTreeDo>>) Class.forName("java.util.TreeSet");
-        Jackson2JsonRedisSerializer<TreeSet<PermissionTreeDo>> serializer = new Jackson2JsonRedisSerializer<>(set);
+        Jackson2JsonRedisSerializer<PermissionCollection> serializer = new Jackson2JsonRedisSerializer<>(PermissionCollection.class);
 
         return configTemplate(template, serializer);
     }
