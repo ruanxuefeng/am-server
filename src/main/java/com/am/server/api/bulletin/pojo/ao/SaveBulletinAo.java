@@ -1,7 +1,5 @@
 package com.am.server.api.bulletin.pojo.ao;
 
-import com.am.server.common.base.validator.Save;
-import com.am.server.common.base.validator.Update;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
