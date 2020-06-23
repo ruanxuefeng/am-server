@@ -45,8 +45,6 @@ public class PermissionInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        String uri = request.getRequestURI();
-
         if (handler instanceof HandlerMethod) {
             HandlerMethod handlerMethod = (HandlerMethod) handler;
 
@@ -56,7 +54,6 @@ public class PermissionInterceptor implements HandlerInterceptor {
             //判断在方法或者类上有没有加权限，如果都有以方法上为准
             Permission permission = Optional.ofNullable(methodPermission).orElse(classPermission);
 
-
             Optional.ofNullable(permission).map(p -> {
                 //如果允许超级管理员登录并且当前登录用户是超级管理员
                 if (permissionConfig.getEnableSuperUser() && commonService.isSupperUser()) {
@@ -64,7 +61,6 @@ public class PermissionInterceptor implements HandlerInterceptor {
                 }
                 boolean hasPermission = userPermissionCacheService.hasPermission(commonService.getLoginUserId(), permission.value());
                 if (permission.check() && !hasPermission) {
-
                     //没有获取到uid说明token过期或者不是token
                     //判断是否拥有类访问权限
                     throw new NoPermissionAccessException();

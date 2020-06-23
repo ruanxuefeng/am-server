@@ -24,11 +24,13 @@ import org.springframework.web.bind.annotation.RestController;
  * @author 阮雪峰
  * @date 2018/8/1 13:15
  */
-@Api(tags = "用户操作日志")
-@Permission(value = "log-operate", name = "用户操作日志", sort = 0, menus = {@Menu(value = "log", name = "日志管理", sort = 20)})
+@Api(tags = LogController.MENU_NAME)
+@Permission(value = "log-operate", name = LogController.MENU_NAME, sort = 0, menus = {@Menu(value = "log", name = "日志管理", sort = 20)})
 @RestController
 @RequestMapping(Constant.ADMIN_ROOT + "/log")
 public class LogController {
+
+    public static final String MENU_NAME = "用户操作日志";
 
     private final LogService logService;
 

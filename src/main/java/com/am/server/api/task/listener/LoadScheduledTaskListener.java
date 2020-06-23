@@ -26,7 +26,7 @@ public class LoadScheduledTaskListener implements ApplicationListener<ContextRef
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        List<ScheduledTaskDo> scheduledTaskList = scheduledTaskService.findAllByStatus(ScheduledTaskStatus.Enable);
+        List<ScheduledTaskDo> scheduledTaskList = scheduledTaskService.findAllByStatus(ScheduledTaskStatus.ENABLE);
         for (ScheduledTaskDo scheduledTask : scheduledTaskList) {
             scheduledTaskService.startScheduledTask(scheduledTask);
         }

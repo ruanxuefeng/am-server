@@ -16,7 +16,7 @@ public enum FileType {
     /**
      * 文件夹
      */
-    private String folder;
+    private final String folder;
 
     FileType(String folder) {
         this.folder = folder;

@@ -28,12 +28,14 @@ import java.util.Optional;
  * @author 阮雪峰
  * @date 2018/11/13 10:52
  */
-@Api(tags = "公告管理")
-@WriteLog("公告管理")
-@Permission(value = "bulletin", name = "公告管理", sort = 30)
+@Api(tags = BulletinController.MENU_NAME)
+@WriteLog(BulletinController.MENU_NAME)
+@Permission(value = "bulletin", name = BulletinController.MENU_NAME, sort = 30)
 @RestController
 @RequestMapping(Constant.ADMIN_ROOT + "/bulletin")
 public class BulletinController extends BaseController {
+
+    public static final String MENU_NAME = "公告管理";
 
     private static final String CHOOSE_BULLETIN = "bulletin.choose.publish";
 

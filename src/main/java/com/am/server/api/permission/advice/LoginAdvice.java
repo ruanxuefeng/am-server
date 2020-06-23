@@ -72,8 +72,8 @@ public class LoginAdvice {
             return new UserInfoVo()
                     .setId(commonService.getLoginUserId())
                     .setPermissions(permissionService.findAllPermissionRemarkList())
-                    .setAvatar("")
-                    .setEmail("")
+                    .setAvatar("https://ruanxuefeng.gitee.io/source/am/admin-avatar.gif")
+                    .setEmail("admin@am.com")
                     .setGender(Gender.男)
                     .setName("超级管理员")
                     .setRoles(Arrays.asList("这管理员", "那管理员"));

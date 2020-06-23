@@ -5,6 +5,7 @@ import com.am.server.api.bulletin.pojo.Status;
 import com.am.server.api.bulletin.pojo.ao.BulletinListAo;
 import com.am.server.api.bulletin.pojo.po.BulletinDo;
 import com.am.server.api.bulletin.repository.BulletinRepository;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
@@ -27,7 +28,7 @@ public class BulletinDaoImpl implements BulletinDao {
     }
 
     @Override
-    public Page<BulletinDo> findAll(BulletinListAo bulletinAo) {
+    public Page<BulletinDo> findAll(@NotNull BulletinListAo bulletinAo) {
         ExampleMatcher matcher = ExampleMatcher.matching()
                 .withIgnoreNullValues()
                 .withNullHandler(ExampleMatcher.NullHandler.IGNORE)

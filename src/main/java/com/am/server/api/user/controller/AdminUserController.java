@@ -32,12 +32,14 @@ import java.util.Optional;
  * @author 阮雪峰
  * @date 2018/7/25 13:26
  */
-@Api(tags = "用户管理")
-@Permission(value = "system-user", name = "用户管理", sort = 1, menus = {@Menu(value = "system", name = "系统管理", sort = 1)})
-@WriteLog("用户管理")
+@Api(tags = AdminUserController.MENU_NAME)
+@Permission(value = "system-user", name = AdminUserController.MENU_NAME, sort = 1, menus = {@Menu(value = "system", name = "系统管理", sort = 1)})
+@WriteLog(AdminUserController.MENU_NAME)
 @RestController
 @RequestMapping(Constant.ADMIN_ROOT + "/user")
 public class AdminUserController extends BaseController {
+
+    public static final String MENU_NAME = "用户管理";
 
     private static final String EMAIL_EXIST = "user.email.exist";
     private static final String USERNAME_EXIST = "user.username.exist";

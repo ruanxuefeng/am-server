@@ -10,9 +10,9 @@ public enum ScheduledTaskStatus {
     /**
      * 启用
      */
-    Enable,
+    ENABLE,
     /**
      * 禁用
      */
-    Disable,
+    DISABLE,
 }

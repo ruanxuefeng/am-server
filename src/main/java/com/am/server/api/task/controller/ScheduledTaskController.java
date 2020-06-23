@@ -31,7 +31,7 @@ import java.util.Optional;
  */
 @Api(tags =  ScheduledTaskController.MENU_NAME)
 @Permission(value = "system-scheduled-task", name = ScheduledTaskController.MENU_NAME, sort = 3, menus = {@Menu(value = "system", name = "系统管理", sort = 1)})
-@WriteLog("定时任务管理")
+@WriteLog(ScheduledTaskController.MENU_NAME)
 @RequestMapping(Constant.ADMIN_ROOT + "/scheduled/task")
 @RestController
 public class ScheduledTaskController extends BaseController {

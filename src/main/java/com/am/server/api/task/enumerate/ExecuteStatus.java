@@ -10,9 +10,9 @@ public enum ExecuteStatus {
     /**
      * 成功
      */
-    Success,
+    SUCCESS,
     /**
      * 失败
      */
-    Failure
+    FAILURE
 }

@@ -1,6 +1,7 @@
 package com.am.server.api.bulletin.pojo;
 
 import lombok.Data;
+import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDateTime;
 import java.util.concurrent.Delayed;
@@ -23,12 +24,12 @@ public class BulletinExpiredDelayedImpl implements Delayed {
     private LocalDateTime executeTime;
 
     @Override
-    public long getDelay(TimeUnit unit) {
+    public long getDelay(@NotNull TimeUnit unit) {
         return executeTime.isBefore(LocalDateTime.now()) ? -1 : 1;
     }
 
     @Override
-    public int compareTo(Delayed o) {
+    public int compareTo(@NotNull Delayed o) {
         if (this == o) {
             return 0;
         }

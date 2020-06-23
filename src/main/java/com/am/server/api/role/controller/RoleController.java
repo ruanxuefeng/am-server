@@ -4,7 +4,10 @@ import com.am.server.api.log.aspect.annotation.WriteLog;
 import com.am.server.api.permission.annotation.Menu;
 import com.am.server.api.permission.annotation.Permission;
 import com.am.server.api.permission.service.PermissionService;
-import com.am.server.api.role.pojo.ao.*;
+import com.am.server.api.role.pojo.ao.RoleListAo;
+import com.am.server.api.role.pojo.ao.SaveRoleAo;
+import com.am.server.api.role.pojo.ao.UpdateRoleAo;
+import com.am.server.api.role.pojo.ao.UpdateRolePermissionAo;
 import com.am.server.api.role.pojo.vo.PermissionTreeVo;
 import com.am.server.api.role.pojo.vo.RoleListVo;
 import com.am.server.api.role.pojo.vo.SelectRoleVo;
@@ -31,12 +34,14 @@ import java.util.Optional;
  * @author 阮雪峰
  * @date 2018/7/27 10:31
  */
-@Api(tags = "角色管理")
-@Permission(value = "system-role", name = "角色管理", sort = 2, menus = {@Menu(value = "system", name = "系统管理", sort = 1)})
-@WriteLog("角色管理")
+@Api(tags = RoleController.MENU_NAME)
+@Permission(value = "system-role", name = RoleController.MENU_NAME, sort = 2, menus = {@Menu(value = "system", name = "系统管理", sort = 1)})
+@WriteLog(RoleController.MENU_NAME)
 @RestController
 @RequestMapping(Constant.ADMIN_ROOT + "/role")
 public class RoleController extends BaseController {
+
+    public static final String MENU_NAME = "角色管理";
 
     private final RoleService roleService;
 
@@ -123,7 +128,8 @@ public class RoleController extends BaseController {
 
     /**
      * 获取权限树
-     * @return ResponseEntity<List<PermissionTreeVO>>
+     *
+     * @return ResponseEntity<List < PermissionTreeVO>>
      */
     @ApiOperation(value = "获取权限树")
     @ApiImplicitParams({@ApiImplicitParam(paramType = "header", dataType = "String", name = Constant.TOKEN, value = "登录凭证", required = true)})
@@ -162,6 +168,7 @@ public class RoleController extends BaseController {
         roleService.updatePermissions(updateRolePermissionAo);
         return ResponseEntity.ok(message.get(UPDATE_SUCCESS));
     }
+
     /**
      * 查询所有
      *

@@ -39,15 +39,12 @@ public class ScheduledTaskServiceImpl implements ScheduledTaskService {
 
     private final ScheduledTaskDao scheduledTaskDao;
 
-    private final CommonService commonService;
-
     private final ThreadPoolTaskScheduler threadPoolTaskScheduler;
 
     private final ApplicationContext applicationContext;
 
-    public ScheduledTaskServiceImpl(ScheduledTaskDao scheduledTaskDao, CommonService commonService, ThreadPoolTaskScheduler threadPoolTaskScheduler, ApplicationContext applicationContext) {
+    public ScheduledTaskServiceImpl(ScheduledTaskDao scheduledTaskDao, ThreadPoolTaskScheduler threadPoolTaskScheduler, ApplicationContext applicationContext) {
         this.scheduledTaskDao = scheduledTaskDao;
-        this.commonService = commonService;
         this.threadPoolTaskScheduler = threadPoolTaskScheduler;
         this.applicationContext = applicationContext;
     }
@@ -60,7 +57,7 @@ public class ScheduledTaskServiceImpl implements ScheduledTaskService {
                 .setName(saveScheduledTaskAo.getName())
                 .setMemo(saveScheduledTaskAo.getMemo())
                 .setBean(saveScheduledTaskAo.getBean())
-                .setStatus(ScheduledTaskStatus.Disable);
+                .setStatus(ScheduledTaskStatus.DISABLE);
 
         scheduledTaskDao.save(scheduledTask);
     }
@@ -118,15 +115,15 @@ public class ScheduledTaskServiceImpl implements ScheduledTaskService {
         scheduledTaskDao.findById(id)
                 .ifPresent(scheduledTask -> {
                     ScheduledFuture<?> scheduledFuture = ScheduledTaskUtils.getScheduledTaskFuture(scheduledTask.getId());
-                    if (ScheduledTaskStatus.Enable.equals(scheduledTask.getStatus())) {
-                        scheduledTask.setStatus(ScheduledTaskStatus.Disable);
+                    if (ScheduledTaskStatus.ENABLE.equals(scheduledTask.getStatus())) {
+                        scheduledTask.setStatus(ScheduledTaskStatus.DISABLE);
 
                         if (scheduledFuture != null) {
                             scheduledFuture.cancel(true);
                             ScheduledTaskUtils.removeScheduledTaskFuture(scheduledTask.getId());
                         }
                     } else {
-                        scheduledTask.setStatus(ScheduledTaskStatus.Enable);
+                        scheduledTask.setStatus(ScheduledTaskStatus.ENABLE);
                         startScheduledTask(scheduledTask);
                     }
 

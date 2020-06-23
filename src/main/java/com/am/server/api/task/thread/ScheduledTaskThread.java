@@ -33,12 +33,12 @@ public class ScheduledTaskThread extends Thread {
 
     @Override
     public void run() {
-        ExecuteStatus executeStatus = ExecuteStatus.Failure;
+        ExecuteStatus executeStatus = ExecuteStatus.FAILURE;
         long startTime = System.currentTimeMillis();
         LocalDateTime dateTime = LocalDateTime.now();
         try {
             executeScheduledTaskService.execute();
-            executeStatus = ExecuteStatus.Success;
+            executeStatus = ExecuteStatus.SUCCESS;
         } catch (Exception e) {
             log.error("执行定时任务[{}({})]发生异常", getName(), key);
             log.error("Execute Scheduled Exception", e);
