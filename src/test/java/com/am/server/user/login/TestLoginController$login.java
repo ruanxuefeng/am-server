@@ -1,4 +1,4 @@
-package com.am.server.user;
+package com.am.server.user.login;
 
 import cn.hutool.core.codec.Base64;
 import com.am.server.common.constant.Constant;
