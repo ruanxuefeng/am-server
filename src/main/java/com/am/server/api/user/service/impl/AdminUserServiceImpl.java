@@ -48,17 +48,14 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     private final SysFileService sysFileService;
 
-    private final CommonService commonService;
-
     private final RoleDao roleDao;
 
     private final SimpMessagingTemplate simpMessagingTemplate;
 
-    public AdminUserServiceImpl(UserPermissionCacheService userPermissionCacheService, AdminUserDao adminuserDao, SysFileService sysFileService, CommonService commonService, RoleDao roleDao, SimpMessagingTemplate simpMessagingTemplate) {
+    public AdminUserServiceImpl(UserPermissionCacheService userPermissionCacheService, AdminUserDao adminuserDao, SysFileService sysFileService, RoleDao roleDao, SimpMessagingTemplate simpMessagingTemplate) {
         this.userPermissionCacheService = userPermissionCacheService;
         this.adminuserDao = adminuserDao;
         this.sysFileService = sysFileService;
-        this.commonService = commonService;
         this.roleDao = roleDao;
         this.simpMessagingTemplate = simpMessagingTemplate;
     }
@@ -173,10 +170,7 @@ public class AdminUserServiceImpl implements AdminUserService {
         String password = des.encryptBase64(Constant.INITIAL_PASSWORD);
 
         adminuserDao.findById(id)
-                .ifPresent(adminUser -> {
-
-                    adminuserDao.save(adminUser.setPassword(password).setSalt(salt));
-                });
+                .ifPresent(adminUser -> adminuserDao.save(adminUser.setPassword(password).setSalt(salt)));
     }
 
     @Commit

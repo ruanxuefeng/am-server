@@ -60,12 +60,7 @@ public class ControllerAdvice {
      */
     private final static String FILE_UPLOAD_FAIL = "exception.file.upload.fail";
 
-    private static final String USERNAME_DOES_NOT_EXIST = "login.username.does_not_exist";
-
-    /**
-     * 密码不正确
-     */
-    private static final String PASSWORD_ERROR = "login.password.error";
+    private static final String VALIDATE_FAIL = "login.validate.fail";
 
     /**
      * form表单验证错误
@@ -94,7 +89,7 @@ public class ControllerAdvice {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public MessageVO rawBindException(MethodArgumentNotValidException e) {
-        log.error("raw格式json数据校验", e);
+        log.error("raw格式json数据校验, 参数：{}", e.getBindingResult().getFieldErrors());
         BindingResult bindingResult = e.getBindingResult();
         return message.get(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
     }
@@ -123,9 +118,9 @@ public class ControllerAdvice {
      */
     @ExceptionHandler(UserNotExistException.class)
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
-    public MessageVO userNotExist( UserNotExistException e) {
-        log.error("用户不存在", e);
-        return message.get(USERNAME_DOES_NOT_EXIST);
+    public MessageVO userNotExist() {
+        log.error("用户登录校验失败：用户不存在");
+        return message.get(VALIDATE_FAIL);
 
     }
 
@@ -138,9 +133,9 @@ public class ControllerAdvice {
      */
     @ExceptionHandler(PasswordErrorException.class)
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
-    public MessageVO passwordError( PasswordErrorException e) {
-        log.error("密码不正确", e);
-        return message.get(PASSWORD_ERROR);
+    public MessageVO passwordError() {
+        log.error("用户登录校验失败：密码不正确");
+        return message.get(VALIDATE_FAIL);
 
     }
 
