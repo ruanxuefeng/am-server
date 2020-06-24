@@ -105,7 +105,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(new CustomLocaleChangeInterceptor()).addPathPatterns(Constant.ADMIN_ROOT + "/**");
         registry.addInterceptor(permissionInterceptor())
                 .addPathPatterns("/**")
-                .excludePathPatterns("/login");
+                .excludePathPatterns(Constant.ADMIN_ROOT + "/login");
     }
 
 
