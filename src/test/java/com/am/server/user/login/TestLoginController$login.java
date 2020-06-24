@@ -5,7 +5,6 @@ import com.am.server.common.constant.Constant;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.experimental.results.ResultMatchers;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -46,7 +45,7 @@ public class TestLoginController$login {
      *
      * @throws Exception Exception
      */
-    @Rollback(false)
+    @Rollback
     @Test
     public void testNoUserName() throws Exception {
         JSONObject jsonObject = new JSONObject();
@@ -73,7 +72,7 @@ public class TestLoginController$login {
      *
      * @throws Exception Exception
      */
-    @Rollback(false)
+    @Rollback
     @Test
     public void testNoPassword() throws Exception {
         JSONObject jsonObject = new JSONObject();
@@ -100,7 +99,7 @@ public class TestLoginController$login {
      *
      * @throws Exception Exception
      */
-    @Rollback(false)
+    @Rollback
     @Test
     public void testUsernameNotExit() throws Exception {
         JSONObject jsonObject = new JSONObject();
@@ -127,7 +126,7 @@ public class TestLoginController$login {
      *
      * @throws Exception Exception
      */
-    @Rollback(false)
+    @Rollback
     @Test
     public void testPasswordError() throws Exception {
         JSONObject jsonObject = new JSONObject();
@@ -154,7 +153,7 @@ public class TestLoginController$login {
      *
      * @throws Exception Exception
      */
-    @Rollback(false)
+    @Rollback
     @Test
     public void testLoginSuccess() throws Exception {
         JSONObject jsonObject = new JSONObject();
