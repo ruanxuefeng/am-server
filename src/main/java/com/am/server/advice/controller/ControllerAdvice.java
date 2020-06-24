@@ -8,6 +8,7 @@ import com.am.server.common.base.exception.NoTokenException;
 import com.am.server.common.base.pojo.vo.MessageVO;
 import com.am.server.common.base.service.Message;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -73,7 +74,7 @@ public class ControllerAdvice {
     @ExceptionHandler(BindException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public MessageVO formBindException(BindException e) {
-        log.error("表单验证错误", e);
+        log.error("表单验证错误, 参数：{}", e.getBindingResult().getFieldErrors());
         BindingResult bindingResult = e.getBindingResult();
         return message.get(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
     }
@@ -103,8 +104,8 @@ public class ControllerAdvice {
      */
     @ExceptionHandler(NoTokenException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public MessageVO noTokenException(NoTokenException e) {
-        log.error("token，提示登录，401", e);
+    public MessageVO noTokenException() {
+        log.error("token，提示登录，401");
         return message.get(NO_TOKEN);
 
     }
@@ -146,10 +147,10 @@ public class ControllerAdvice {
      * @author 阮雪峰
      * @date 2018/10/8 15:16
      */
-    @ExceptionHandler(ExpiredJwtException.class)
+    @ExceptionHandler(JwtException.class)
     @ResponseStatus(HttpStatus.PRECONDITION_FAILED)
-    public MessageVO tokenException( ExpiredJwtException e) {
-        log.error("token过期或者不是正确的token，412", e);
+    public MessageVO tokenException() {
+        log.error("token过期或者不是正确的token，412");
         return message.get(TOKEN_EXPIRED);
 
     }
@@ -162,8 +163,8 @@ public class ControllerAdvice {
      * @date 2018/10/8 15:25
      */
     @ExceptionHandler(NoPermissionAccessException.class)
-    public ResponseEntity<MessageVO> noPermissionException(NoPermissionAccessException e) {
-        log.error("没有权限访问，403", e);
+    public ResponseEntity<MessageVO> noPermissionException() {
+        log.error("没有权限访问，403");
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(message.get(NO_PERMISSION_ACCESS));
 
     }
@@ -171,14 +172,13 @@ public class ControllerAdvice {
     /**
      * 上传文件失败，521
      *
-     * @param e 错误信息
      * @return java.util.Map<java.lang.String, java.lang.String>
      * @author 阮雪峰
      * @date 2018/10/8 15:25
      */
     @ExceptionHandler(UploadFileException.class)
-    public ResponseEntity<MessageVO> noPermissionException(UploadFileException e) {
-        log.error("上传文件失败，521", e);
+    public ResponseEntity<MessageVO> uploadFileFailException() {
+        log.error("上传文件失败，521");
         return ResponseEntity.status(521).body(message.get(FILE_UPLOAD_FAIL));
 
     }
@@ -186,15 +186,14 @@ public class ControllerAdvice {
     /**
      * 服务器异常，500
      *
-     * @param e 错误信息
      * @return java.util.Map<java.lang.String, java.lang.String>
      * @author 阮雪峰
      * @date 2018/10/8 15:25
      */
     @ExceptionHandler(SocketTimeoutException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public MessageVO noPermissionException(SocketTimeoutException e) {
-        log.error("服务器异常，500", e);
+    public MessageVO serverException() {
+        log.error("服务器异常，500");
         return message.get(SERVER_ERROR);
 
     }
