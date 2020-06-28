@@ -16,7 +16,6 @@ import com.am.server.api.user.pojo.po.AdminUserDo;
 import com.am.server.common.annotation.transaction.Commit;
 import com.am.server.common.annotation.transaction.ReadOnly;
 import com.am.server.common.base.pojo.vo.PageVO;
-import com.am.server.common.base.service.CommonService;
 import com.am.server.common.util.ThreadUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;

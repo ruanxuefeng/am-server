@@ -22,7 +22,6 @@ import com.am.server.api.user.service.UserPermissionCacheService;
 import com.am.server.common.annotation.transaction.Commit;
 import com.am.server.common.annotation.transaction.ReadOnly;
 import com.am.server.common.base.pojo.vo.PageVO;
-import com.am.server.common.base.service.CommonService;
 import com.am.server.common.constant.Constant;
 import com.am.server.common.util.JwtUtils;
 import lombok.extern.slf4j.Slf4j;

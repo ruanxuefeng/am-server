@@ -6,8 +6,6 @@ import com.am.server.api.log.service.LogService;
 import com.am.server.api.permission.annotation.Menu;
 import com.am.server.api.permission.annotation.Permission;
 import com.am.server.common.base.pojo.vo.PageVO;
-import com.am.server.common.base.service.Message;
-import com.am.server.common.base.service.impl.NormalMessageImpl;
 import com.am.server.common.constant.Constant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;

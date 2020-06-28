@@ -1,10 +1,8 @@
 package com.am.server.api.role.service;
 
 import com.am.server.api.role.pojo.ao.*;
-import com.am.server.api.role.pojo.po.RoleDo;
 import com.am.server.api.role.pojo.vo.RoleListVo;
 import com.am.server.api.role.pojo.vo.SelectRoleVo;
-import com.am.server.api.user.pojo.po.AdminUserDo;
 import com.am.server.common.base.pojo.vo.PageVO;
 
 import java.util.List;

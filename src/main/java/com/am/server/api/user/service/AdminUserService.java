@@ -1,8 +1,6 @@
 package com.am.server.api.user.service;
 
-import com.am.server.api.bulletin.pojo.po.BulletinDo;
 import com.am.server.api.user.pojo.ao.*;
-import com.am.server.api.user.pojo.po.AdminUserDo;
 import com.am.server.api.user.pojo.vo.AdminUserListVo;
 import com.am.server.api.user.pojo.vo.LoginUserInfoVo;
 import com.am.server.api.user.pojo.vo.UserInfoVo;
