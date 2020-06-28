@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.annotation.Resource;
@@ -59,6 +60,7 @@ public class TestLoginController$updateUserInfo {
      *
      * @throws Exception Exception
      */
+    @Transactional
     @Rollback
     @Test
     public void noToken() throws Exception {
@@ -89,6 +91,7 @@ public class TestLoginController$updateUserInfo {
      *
      * @throws Exception Exception
      */
+    @Transactional
     @Rollback
     @Test
     public void validateEmailFormat() throws Exception {
@@ -118,6 +121,7 @@ public class TestLoginController$updateUserInfo {
      *
      * @throws Exception Exception
      */
+    @Transactional
     @Rollback
     @Test
     public void validateEmailBlank() throws Exception {
@@ -147,6 +151,7 @@ public class TestLoginController$updateUserInfo {
      *
      * @throws Exception Exception
      */
+    @Transactional
     @Rollback
     @Test
     public void validateAvatarNull() throws Exception {
@@ -175,6 +180,7 @@ public class TestLoginController$updateUserInfo {
      *
      * @throws Exception Exception
      */
+    @Transactional
     @Rollback
     @Test
     public void validateUpdateName() throws Exception {
@@ -204,6 +210,7 @@ public class TestLoginController$updateUserInfo {
      *
      * @throws Exception Exception
      */
+    @Transactional
     @Rollback
     @Test
     public void validateUpdateAvatar() throws Exception {
