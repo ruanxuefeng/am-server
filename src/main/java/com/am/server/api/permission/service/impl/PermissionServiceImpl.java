@@ -4,6 +4,7 @@ import com.am.server.api.permission.config.PermissionConfig;
 import com.am.server.api.permission.dao.cache.PermissionDao;
 import com.am.server.api.permission.annotation.Menu;
 import com.am.server.api.permission.annotation.Permission;
+import com.am.server.api.permission.pojo.po.PermissionCollection;
 import com.am.server.api.permission.pojo.po.PermissionTreeDo;
 import com.am.server.api.permission.service.PermissionService;
 import com.am.server.api.role.pojo.vo.PermissionTreeVo;
@@ -45,12 +46,18 @@ public class PermissionServiceImpl implements PermissionService {
         return list;
     }
 
+
     @Override
     public Set<String> findAllPermissionRemarkList() {
         List<PermissionTreeVo> list = findAll();
         Set<String> set = new HashSet<>();
         setRemark(list, set);
         return set;
+    }
+
+    @Override
+    public List<String> all() {
+        return permissionDao.findAllList();
     }
 
     private void setRemark(List<PermissionTreeVo> list, Set<String> set) {
@@ -77,12 +84,13 @@ public class PermissionServiceImpl implements PermissionService {
         return permissionTreeVo;
     }
 
-    private TreeSet<PermissionTreeDo> getPermissionTree() {
+    private PermissionCollection getPermissionTree() {
         Reflections reflections = new Reflections(config.getBasePackage(), TypeAnnotationsScanner.class, MethodAnnotationsScanner.class);
         Set<Class<?>> classSet = reflections.getTypesAnnotatedWith(Permission.class);
         Set<Method> methods = reflections.getMethodsAnnotatedWith(Permission.class);
         Map<String, PermissionTreeDo> map = new HashMap<>(8);
         TreeSet<PermissionTreeDo> set = new TreeSet<>();
+        Set<String> permissionValueSet = new HashSet<>();
         for (Class<?> permissionClass : classSet) {
             Permission permission = permissionClass.getAnnotation(Permission.class);
             if (permission.check()) {
@@ -113,10 +121,11 @@ public class PermissionServiceImpl implements PermissionService {
                         );
                     }
                 }
+                permissionValueSet.add(tree.getMark());
+                permissionValueSet.addAll(tree.getChildren().stream().map(PermissionTreeDo::getMark).collect(Collectors.toList()));
             }
         }
-
-        return set;
+        return new PermissionCollection(set, new ArrayList<>(permissionValueSet));
     }
 
     private PermissionTreeDo operate(String mark, String name, Integer sort, Map<String, PermissionTreeDo> permissionMap,

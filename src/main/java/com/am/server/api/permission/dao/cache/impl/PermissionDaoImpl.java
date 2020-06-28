@@ -6,8 +6,7 @@ import com.am.server.api.permission.pojo.po.PermissionTreeDo;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * @author 阮雪峰
@@ -26,8 +25,8 @@ public class PermissionDaoImpl implements PermissionDao {
 
 
     @Override
-    public void save(TreeSet<PermissionTreeDo> permissionTree) {
-        permissionCacheRedisTemplate.opsForValue().set(PERMISSION_TREE_KEY, new PermissionCollection(permissionTree));
+    public void save(PermissionCollection collection) {
+        permissionCacheRedisTemplate.opsForValue().set(PERMISSION_TREE_KEY, collection);
     }
 
     @Override
@@ -35,5 +34,12 @@ public class PermissionDaoImpl implements PermissionDao {
         return Optional.ofNullable(permissionCacheRedisTemplate.opsForValue().get(PERMISSION_TREE_KEY))
                 .map(PermissionCollection::getSet)
                 .orElse(new TreeSet<>());
+    }
+
+    @Override
+    public List<String> findAllList() {
+        return Optional.ofNullable(permissionCacheRedisTemplate.opsForValue().get(PERMISSION_TREE_KEY))
+                .map(PermissionCollection::getPermissionList)
+                .orElseGet(ArrayList::new);
     }
 }

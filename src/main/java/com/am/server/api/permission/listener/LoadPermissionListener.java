@@ -2,6 +2,7 @@ package com.am.server.api.permission.listener;
 
 import com.am.server.api.permission.service.PermissionService;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
@@ -21,7 +22,7 @@ public class LoadPermissionListener implements ApplicationListener<ContextRefres
     }
 
     @Override
-    public void onApplicationEvent(ContextRefreshedEvent event) {
+    public void onApplicationEvent(@NotNull ContextRefreshedEvent event) {
         permissionService.loadPermissionToCache();
     }
 }

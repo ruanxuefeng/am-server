@@ -26,4 +26,10 @@ public interface PermissionService {
      * @return List<String>
      */
     Set<String> findAllPermissionRemarkList();
+
+    /**
+     * 获取所有权限标识
+     * @return List<String>
+     */
+    List<String> all();
 }
