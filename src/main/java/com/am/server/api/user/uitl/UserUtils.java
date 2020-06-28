@@ -27,13 +27,13 @@ public class UserUtils {
      */
     public static boolean logged(HttpServletRequest request) {
         //请求头和Cookie中都没有token说明未登录
-        return Optional.ofNullable(request.getHeader(Constant.TOKEN))
+        boolean hadHeaderToken = Optional.ofNullable(request.getHeader(Constant.TOKEN))
                 .map(JwtUtils::getSubject)
-                .isPresent()
-                ||
-                Optional.ofNullable(ServletUtil.getCookie(request, Constant.TOKEN))
-                        .map(Cookie::getValue)
-                        .map(JwtUtils::getSubject)
-                        .isPresent();
+                .isPresent();
+        boolean hedCookie = Optional.ofNullable(ServletUtil.getCookie(request, Constant.TOKEN))
+                .map(Cookie::getValue)
+                .map(JwtUtils::getSubject)
+                .isPresent();
+        return hadHeaderToken || hedCookie;
     }
 }

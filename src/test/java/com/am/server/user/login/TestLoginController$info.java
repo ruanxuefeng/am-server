@@ -1,7 +1,10 @@
 package com.am.server.user.login;
 
+import com.am.server.common.base.pojo.vo.MessageVO;
+import com.am.server.common.base.service.Message;
 import com.am.server.common.constant.Constant;
 import com.am.server.common.util.JwtUtils;
+import com.am.server.config.test.TestConfig;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +21,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.annotation.Resource;
+
 /**
  * 登录方法测试
  */
@@ -25,18 +30,47 @@ import org.springframework.web.context.WebApplicationContext;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class TestLoginController$info {
 
+    public static final String URL = Constant.ADMIN_ROOT + "/user/info";
+
     @Autowired
     private WebApplicationContext context;
 
+    @Autowired
+    private TestConfig testConfig;
+
+    @Resource(name = "message")
+    protected Message<MessageVO> message;
+
     private MockMvc mockMvc;
+
 
     @Before
     public void init() {
         mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
     }
 
-    public static final String TOKEN = JwtUtils.sign("940823560740409344");
-    public static final String URL = Constant.ADMIN_ROOT + "/user/info";
+    /**
+     * 获取登录用户信息,没有token
+     *
+     * @throws Exception Exception
+     */
+    @Rollback
+    @Test
+    public void testNoToken() throws Exception {
+        ResultActions resultActions = mockMvc.perform(
+                MockMvcRequestBuilders.get(URL)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+        )
+                .andExpect(MockMvcResultMatchers.status().is(401))
+                .andExpect(MockMvcResultMatchers.content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").value(message.get("exception.noToken").getMessage()));
+
+        resultActions.andReturn().getResponse()
+                .setCharacterEncoding("UTF-8");
+
+        resultActions.andDo(MockMvcResultHandlers.print());
+    }
 
     /**
      * 获取登录用户信息
@@ -50,7 +84,7 @@ public class TestLoginController$info {
                 MockMvcRequestBuilders.get(URL)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header(Constant.TOKEN, TOKEN)
+                        .header(Constant.TOKEN, JwtUtils.sign(testConfig.getUid()))
         )
                 .andExpect(MockMvcResultMatchers.status().is(200))
                 .andExpect(MockMvcResultMatchers.content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))

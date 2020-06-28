@@ -68,3 +68,7 @@ sys:
   id:
     data-center-id: 1
     worker-id: 1
+test:
+  uid: 940823560740409344
+  username: admin
+  password: MTIzNDU2

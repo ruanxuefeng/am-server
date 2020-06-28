@@ -25,20 +25,20 @@ import org.springframework.web.context.WebApplicationContext;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class TestLoginController$login {
+    public static final String URL = Constant.ADMIN_ROOT + "/login";
 
     @Autowired
     private WebApplicationContext context;
 
     private MockMvc mockMvc;
 
+
     @Before
     public void init() {
         mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
     }
-
     public static final String USERNAME = "admin";
     public static final String PASSWORD = "MTIzNDU2";
-    public static final String URL = Constant.ADMIN_ROOT + "/login";
 
     /**
      * 不输入用户名

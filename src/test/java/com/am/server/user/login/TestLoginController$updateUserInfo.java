@@ -4,6 +4,7 @@ import com.am.server.common.base.pojo.vo.MessageVO;
 import com.am.server.common.base.service.Message;
 import com.am.server.common.constant.Constant;
 import com.am.server.common.util.JwtUtils;
+import com.am.server.config.test.TestConfig;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,24 +34,25 @@ import java.io.InputStream;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 public class TestLoginController$updateUserInfo {
+    public static final String URL = Constant.ADMIN_ROOT + "/user/update/info";
+    public static final String DEFAULT_AVATAR = "http://localhost:9527/file/avatar/1266942450736435200.jpg?1590923560835";
 
     @Autowired
     private WebApplicationContext context;
+
+    @Autowired
+    private TestConfig testConfig;
 
     @Resource(name = "message")
     protected Message<MessageVO> message;
 
     private MockMvc mockMvc;
 
+
     @Before
     public void init() {
         mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
     }
-
-    public static final String TOKEN = JwtUtils.sign("940823560740409344");
-    public static final String URL = Constant.ADMIN_ROOT + "/user/update/info";
-
-    public static final String DEFAULT_AVATAR = "http://localhost:9527/file/avatar/1266942450736435200.jpg?1590923560835";
 
     /**
      * 没有token
@@ -95,7 +97,7 @@ public class TestLoginController$updateUserInfo {
                 MockMvcRequestBuilders.multipart(URL)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header(Constant.TOKEN, TOKEN)
+                        .header(Constant.TOKEN, JwtUtils.sign(testConfig.getUid()))
                         .param("name", "admin")
                         .param("email", "admi")
                         .param("gender", "男")
@@ -124,7 +126,7 @@ public class TestLoginController$updateUserInfo {
                 MockMvcRequestBuilders.multipart(URL)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header(Constant.TOKEN, TOKEN)
+                        .header(Constant.TOKEN, JwtUtils.sign(testConfig.getUid()))
                         .param("name", "admin")
                         .param("gender", "男")
                         .param("avatar", DEFAULT_AVATAR)
@@ -153,7 +155,7 @@ public class TestLoginController$updateUserInfo {
                 MockMvcRequestBuilders.multipart(URL)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header(Constant.TOKEN, TOKEN)
+                        .header(Constant.TOKEN, JwtUtils.sign(testConfig.getUid()))
                         .param("name", "admin")
                         .param("gender", "男")
                         .param("email", "admin@am.com")
@@ -181,7 +183,7 @@ public class TestLoginController$updateUserInfo {
                 MockMvcRequestBuilders.multipart(URL)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .header(Constant.TOKEN, TOKEN)
+                        .header(Constant.TOKEN, JwtUtils.sign(testConfig.getUid()))
                         .param("name", "admin1")
                         .param("gender", "男")
                         .param("email", "admin@am.com")
@@ -211,7 +213,7 @@ public class TestLoginController$updateUserInfo {
         ResultActions resultActions = mockMvc.perform(
                 MockMvcRequestBuilders.multipart(URL)
                         .file(mockMultipartFile)
-                        .header(Constant.TOKEN, TOKEN)
+                        .header(Constant.TOKEN, JwtUtils.sign(testConfig.getUid()))
                         .param("name", "admin1")
                         .param("gender", "男")
                         .param("email", "admin@am.com")
