@@ -24,7 +24,7 @@ import org.springframework.web.context.WebApplicationContext;
 import javax.annotation.Resource;
 
 /**
- * 登录方法测试
+ * 获取登录用户信息方法测试
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)

@@ -29,7 +29,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 
 /**
- * 登录方法测试
+ * 修改登录用户信息
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
