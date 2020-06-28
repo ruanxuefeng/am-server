@@ -98,6 +98,7 @@ public class LogServiceImpl implements LogService {
                         ).collect(Collectors.toList())
         );
 
+        page.setTotalPage(Math.toIntExact((page.getTotal() % page.getTotalPage() == 0 ? (page.getTotal() / page.getTotalPage()) : (page.getTotal() / page.getTotalPage() + 1))));
         return page;
     }
 }

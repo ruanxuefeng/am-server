@@ -35,14 +35,11 @@ public class RoleServiceImpl implements RoleService {
 
     private final UserPermissionCacheService userPermissionCacheService;
 
-    private final CommonService commonService;
-
     private final SimpMessagingTemplate simpMessagingTemplate;
 
-    public RoleServiceImpl(RoleDao roleDao, UserPermissionCacheService userPermissionCacheService, CommonService commonService, SimpMessagingTemplate simpMessagingTemplate) {
+    public RoleServiceImpl(RoleDao roleDao, UserPermissionCacheService userPermissionCacheService, SimpMessagingTemplate simpMessagingTemplate) {
         this.roleDao = roleDao;
         this.userPermissionCacheService = userPermissionCacheService;
-        this.commonService = commonService;
         this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
@@ -53,7 +50,8 @@ public class RoleServiceImpl implements RoleService {
         return new PageVO<RoleListVo>()
                 .setPage(roleListAo.getPage())
                 .setPageSize(roleListAo.getPageSize())
-                .setTotal(page.getNumber())
+                .setTotal((int) page.getTotalElements())
+                .setTotalPage(page.getTotalPages())
                 .setRows(
                         page.getContent()
                                 .stream().map(role ->

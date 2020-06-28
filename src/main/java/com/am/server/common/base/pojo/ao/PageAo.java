@@ -16,4 +16,9 @@ public class PageAo {
 
     @ApiModelProperty(value = "每页记录数", required = true, example = "20")
     private Integer pageSize;
+
+    public PageAo() {
+        this.page = 1;
+        this.pageSize = 20;
+    }
 }

@@ -60,7 +60,8 @@ public class BulletinServiceImpl implements BulletinService {
         return new PageVO<BulletinListVo>()
                 .setPage(bulletinAo.getPage())
                 .setPageSize(bulletinAo.getPageSize())
-                .setTotal(page.getNumber())
+                .setTotal((int) page.getTotalElements())
+                .setTotalPage(page.getTotalPages())
                 .setRows(
                         page.getContent()
                                 .stream().map(bulletin ->

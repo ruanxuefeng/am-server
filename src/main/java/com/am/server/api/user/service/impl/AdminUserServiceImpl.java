@@ -111,7 +111,8 @@ public class AdminUserServiceImpl implements AdminUserService {
         return new PageVO<AdminUserListVo>()
                 .setPageSize(listQuery.getPageSize())
                 .setPage(listQuery.getPage())
-                .setTotal(page.getNumber())
+                .setTotal((int) page.getTotalElements())
+                .setTotalPage(page.getTotalPages())
                 .setRows(page.getContent().stream()
                         .map(adminUser -> {
                                     String avatar = adminUser.getAvatar() == null ? "" : adminUser.getAvatar().getUrl();

@@ -46,12 +46,9 @@ public class PageVO<T> implements Serializable {
     /**
      * 获取总页数
      *
-     * @return int
      */
     @ApiModelProperty(value = "当前页", example = "200")
-    public Integer getTotalPage() {
-        return Math.toIntExact((total % pageSize == 0 ? (total / pageSize) : (total / pageSize + 1)));
-    }
+    private Integer totalPage;
 
     /**
      * 获取开始查询的记录数
