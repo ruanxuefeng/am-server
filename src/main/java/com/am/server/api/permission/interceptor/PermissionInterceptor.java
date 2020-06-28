@@ -45,6 +45,10 @@ public class PermissionInterceptor implements HandlerInterceptor {
             return true;
         }
 
+        if (!UserUtils.logged(request)) {
+            throw new NoTokenException();
+        }
+
         if (handler instanceof HandlerMethod) {
             HandlerMethod handlerMethod = (HandlerMethod) handler;
 

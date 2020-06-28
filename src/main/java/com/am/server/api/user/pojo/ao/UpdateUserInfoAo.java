@@ -7,6 +7,9 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+
 /**
  * 登录用户修改自己的信息
  * @author 阮雪峰
@@ -22,6 +25,8 @@ public class UpdateUserInfoAo {
     @ApiModelProperty("姓名")
     private String name;
 
+    @NotBlank(message = "user.email.blank")
+    @Email(message = "user.email.format")
     @ApiModelProperty("邮箱")
     private String email;
 

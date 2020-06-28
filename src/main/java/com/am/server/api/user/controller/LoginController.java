@@ -1,5 +1,6 @@
 package com.am.server.api.user.controller;
 
+import cn.hutool.core.util.StrUtil;
 import com.am.server.api.user.pojo.ao.LoginAo;
 import com.am.server.api.user.pojo.ao.UpdateUserInfoAo;
 import com.am.server.api.user.pojo.vo.LoginUserInfoVo;
@@ -31,6 +32,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(Constant.ADMIN_ROOT)
 public class LoginController extends BaseController {
+
+    private static final String NO_AVATAR = "user.avatar.blank";
 
     private final AdminUserService adminUserService;
 
@@ -79,8 +82,11 @@ public class LoginController extends BaseController {
      * @date 2018/8/3 16:47
      */
     @PostMapping("/user/update/info")
-    public ResponseEntity<MessageVO> updateUserInfo(@RequestHeader(Constant.TOKEN) String token, UpdateUserInfoAo user) {
+    public ResponseEntity<MessageVO> updateUserInfo(@RequestHeader(Constant.TOKEN) String token, @Validated UpdateUserInfoAo user) {
         user.setId(Long.valueOf(JwtUtils.getSubject(token)));
+        if (StrUtil.isEmpty(user.getAvatar()) && user.getImg() == null) {
+            return ResponseEntity.badRequest().body(message.get(NO_AVATAR));
+        }
         adminUserService.update(user);
         return ResponseEntity.ok(message.get(UPDATE_SUCCESS));
     }
