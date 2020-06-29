@@ -9,7 +9,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -45,7 +44,6 @@ public class TestLoginController$login {
      *
      * @throws Exception Exception
      */
-    @Rollback
     @Test
     public void testNoUserName() throws Exception {
         JSONObject jsonObject = new JSONObject();
@@ -72,7 +70,6 @@ public class TestLoginController$login {
      *
      * @throws Exception Exception
      */
-    @Rollback
     @Test
     public void testNoPassword() throws Exception {
         JSONObject jsonObject = new JSONObject();
@@ -99,7 +96,6 @@ public class TestLoginController$login {
      *
      * @throws Exception Exception
      */
-    @Rollback
     @Test
     public void testUsernameNotExit() throws Exception {
         JSONObject jsonObject = new JSONObject();
@@ -126,7 +122,6 @@ public class TestLoginController$login {
      *
      * @throws Exception Exception
      */
-    @Rollback
     @Test
     public void testPasswordError() throws Exception {
         JSONObject jsonObject = new JSONObject();
@@ -153,7 +148,6 @@ public class TestLoginController$login {
      *
      * @throws Exception Exception
      */
-    @Rollback
     @Test
     public void testLoginSuccess() throws Exception {
         JSONObject jsonObject = new JSONObject();

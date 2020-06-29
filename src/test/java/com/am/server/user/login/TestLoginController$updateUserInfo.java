@@ -61,7 +61,6 @@ public class TestLoginController$updateUserInfo {
      * @throws Exception Exception
      */
     @Transactional
-    @Rollback
     @Test
     public void noToken() throws Exception {
         JSONObject jsonObject = new JSONObject();
@@ -92,7 +91,6 @@ public class TestLoginController$updateUserInfo {
      * @throws Exception Exception
      */
     @Transactional
-    @Rollback
     @Test
     public void validateEmailFormat() throws Exception {
 
@@ -122,7 +120,6 @@ public class TestLoginController$updateUserInfo {
      * @throws Exception Exception
      */
     @Transactional
-    @Rollback
     @Test
     public void validateEmailBlank() throws Exception {
 
@@ -152,7 +149,6 @@ public class TestLoginController$updateUserInfo {
      * @throws Exception Exception
      */
     @Transactional
-    @Rollback
     @Test
     public void validateAvatarNull() throws Exception {
 
@@ -181,7 +177,6 @@ public class TestLoginController$updateUserInfo {
      * @throws Exception Exception
      */
     @Transactional
-    @Rollback
     @Test
     public void validateUpdateName() throws Exception {
 
@@ -211,7 +206,6 @@ public class TestLoginController$updateUserInfo {
      * @throws Exception Exception
      */
     @Transactional
-    @Rollback
     @Test
     public void validateUpdateAvatar() throws Exception {
         File file = new File("E:\\test1.jpg");

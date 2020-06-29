@@ -46,7 +46,7 @@ public class TestLoginController$logout {
      *
      * @throws Exception Exception
      */
-    @Rollback
+
     @Test
     public void testNoToken() throws Exception {
         ResultActions resultActions = mockMvc.perform(
@@ -69,7 +69,7 @@ public class TestLoginController$logout {
      *
      * @throws Exception Exception
      */
-    @Rollback
+
     @Test
     public void testErrorToken() throws Exception {
         ResultActions resultActions = mockMvc.perform(
@@ -93,7 +93,7 @@ public class TestLoginController$logout {
      *
      * @throws Exception Exception
      */
-    @Rollback
+
     @Test
     public void test() throws Exception {
         ResultActions resultActions = mockMvc.perform(
