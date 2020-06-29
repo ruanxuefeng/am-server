@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -37,16 +36,12 @@ import java.io.InputStream;
 public class TestLoginController$updateUserInfo {
     public static final String URL = Constant.ADMIN_ROOT + "/user/update/info";
     public static final String DEFAULT_AVATAR = "http://localhost:9527/file/avatar/1266942450736435200.jpg?1590923560835";
-
-    @Autowired
-    private WebApplicationContext context;
-
-    @Autowired
-    private TestConfig testConfig;
-
     @Resource(name = "message")
     protected Message<MessageVO> message;
-
+    @Autowired
+    private WebApplicationContext context;
+    @Autowired
+    private TestConfig testConfig;
     private MockMvc mockMvc;
 
 
