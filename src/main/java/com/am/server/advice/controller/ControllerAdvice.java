@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -74,8 +75,8 @@ public class ControllerAdvice {
     @ExceptionHandler(BindException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public MessageVO formBindException(BindException e) {
-        log.error("表单验证错误, 参数：{}", e.getBindingResult().getFieldErrors());
         BindingResult bindingResult = e.getBindingResult();
+        log.error("表单验证错误, 参数：{}", bindingResult.getFieldErrors());
         return message.get(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
     }
 
@@ -170,6 +171,18 @@ public class ControllerAdvice {
     }
 
     /**
+     *
+     * @param e HttpRequestMethodNotSupportedException
+     * @return MessageVO
+     */
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public MessageVO httpRequestMethodNotSupported(HttpRequestMethodNotSupportedException e) {
+        log.error("请求方法不支持，支持方法：{}，请求方法：{}", e.getSupportedHttpMethods(), e.getMethod());
+        return message.get(SERVER_ERROR);
+    }
+
+    /**
      * 上传文件失败，521
      *
      * @return java.util.Map<java.lang.String, java.lang.String>
@@ -195,6 +208,6 @@ public class ControllerAdvice {
     public MessageVO serverException() {
         log.error("服务器异常，500");
         return message.get(SERVER_ERROR);
-
     }
+
 }
