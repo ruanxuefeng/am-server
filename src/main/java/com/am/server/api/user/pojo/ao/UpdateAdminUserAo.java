@@ -33,8 +33,8 @@ public class UpdateAdminUserAo {
     private String name;
 
     @ApiModelProperty("邮箱")
-    @NotBlank(message = "login.email.blank")
-    @Email(message = "login.email.error")
+    @NotBlank(message = "user.email.blank")
+    @Email(message = "user.email.format")
     private String email;
 
     @ApiModelProperty("性别")

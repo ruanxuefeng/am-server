@@ -74,7 +74,7 @@ public class LoginAdvice {
                     .setPermissions(permissionService.findAllPermissionRemarkList())
                     .setAvatar("https://ruanxuefeng.gitee.io/source/am/admin-avatar.gif")
                     .setEmail("admin@am.com")
-                    .setGender(Gender.男)
+                    .setGender(Gender.MALE)
                     .setName("超级管理员")
                     .setRoles(Arrays.asList("这管理员", "那管理员"));
         } else {
