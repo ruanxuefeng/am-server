@@ -91,7 +91,7 @@ public class AdminUserController extends BaseController {
             return new ResponseEntity<>(message.get(USERNAME_EXIST), HttpStatus.BAD_REQUEST);
         }
 
-        if (user.getImg() == null || user.getEmail().isEmpty()) {
+        if (user.getImg() == null || user.getImg().isEmpty()) {
             return new ResponseEntity<>(message.get(AVATAR_BLANK), HttpStatus.BAD_REQUEST);
         }
 
