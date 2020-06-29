@@ -65,7 +65,6 @@ public class AdminUserController extends BaseController {
     @ApiImplicitParams({@ApiImplicitParam(paramType = "header", dataType = "String", name = Constant.TOKEN, value = "登录凭证", required = true)})
     @GetMapping("/list")
     public ResponseEntity<PageVO<AdminUserListVo>> list(AdminUserListAo list) {
-
         return ResponseEntity.ok(adminUserService.list(list));
     }
 
