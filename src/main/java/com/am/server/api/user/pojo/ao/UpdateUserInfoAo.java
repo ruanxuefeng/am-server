@@ -1,6 +1,7 @@
 package com.am.server.api.user.pojo.ao;
 
 import com.am.server.common.base.enumerate.Gender;
+import com.am.server.common.constant.RegularConstant;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -26,7 +27,7 @@ public class UpdateUserInfoAo {
     private String name;
 
     @NotBlank(message = "user.email.blank")
-    @Email(message = "user.email.format")
+    @Email(regexp = RegularConstant.EMAIL, message = "user.email.format")
     @ApiModelProperty("邮箱")
     private String email;
 
