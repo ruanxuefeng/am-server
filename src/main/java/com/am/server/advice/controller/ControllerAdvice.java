@@ -9,6 +9,7 @@ import com.am.server.common.base.pojo.vo.MessageVO;
 import com.am.server.common.base.service.Message;
 import io.jsonwebtoken.JwtException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
@@ -99,6 +100,21 @@ public class ControllerAdvice {
         log.error("raw格式json数据校验, 参数：{}", e.getBindingResult().getFieldErrors());
         BindingResult bindingResult = e.getBindingResult();
         return message.get(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+    }
+
+    /**
+     * raw格式json数据校验
+     *
+     * @param e 错误信息
+     * @return java.util.Map<java.lang.String, java.lang.String>
+     * @author 阮雪峰
+     * @date 2019/2/13 12:45
+     */
+    @ExceptionHandler(EmptyResultDataAccessException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public MessageVO emptyResultDataAccessException(EmptyResultDataAccessException e) {
+        log.error(e.toString(),e);
+        return new MessageVO(e.getMessage());
     }
 
     /**
