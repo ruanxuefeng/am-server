@@ -7,7 +7,6 @@ import com.am.server.api.user.exception.UserNotExistException;
 import com.am.server.common.base.exception.NoTokenException;
 import com.am.server.common.base.pojo.vo.MessageVO;
 import com.am.server.common.base.service.Message;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import javax.annotation.Resource;
 import java.net.SocketTimeoutException;
@@ -62,6 +62,11 @@ public class ControllerAdvice {
      */
     private final static String FILE_UPLOAD_FAIL = "exception.file.upload.fail";
 
+    /**
+     * 方法参数类型错误
+     */
+    private final static String PARAMETER_TYPE_ERROR = "exception.parameter.type";
+
     private static final String VALIDATE_FAIL = "login.validate.fail";
 
     /**
@@ -94,6 +99,41 @@ public class ControllerAdvice {
         log.error("raw格式json数据校验, 参数：{}", e.getBindingResult().getFieldErrors());
         BindingResult bindingResult = e.getBindingResult();
         return message.get(Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage());
+    }
+
+    /**
+     * 参数转换异常
+     *
+     * @param e 错误信息
+     * @return java.util.Map<java.lang.String, java.lang.String>
+     * @author 阮雪峰
+     * @date 2019/2/13 12:45
+     */
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public MessageVO methodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e) {
+        String methodName = Objects.requireNonNull(e.getParameter().getMethod()).getName();
+        String parameterName = e.getName();
+        String parameterType = e.getParameter().getParameterType().getSimpleName();
+        String actualParameterType = Objects.requireNonNull(e.getValue()).getClass().getSimpleName();
+        String actualParameterValue = Objects.requireNonNull(e.getValue()).toString();
+        log.error("方法：{}，参数：{}，类型为：{}，实际类型为：{}，参数值：{}",
+                methodName,
+                parameterName,
+                parameterType,
+                actualParameterType,
+                actualParameterValue);
+
+        MessageVO messageVO = message.get(PARAMETER_TYPE_ERROR);
+        messageVO.setMessage(
+                String.format(messageVO.getMessage(),
+                        methodName,
+                        parameterName,
+                        parameterType,
+                        actualParameterType,
+                        actualParameterValue)
+        );
+        return messageVO;
     }
 
     /**
@@ -171,7 +211,6 @@ public class ControllerAdvice {
     }
 
     /**
-     *
      * @param e HttpRequestMethodNotSupportedException
      * @return MessageVO
      */
