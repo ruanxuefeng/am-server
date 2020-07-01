@@ -1,5 +1,6 @@
 package com.am.server.api.user.controller;
 
+import cn.hutool.core.util.StrUtil;
 import com.am.server.api.log.aspect.annotation.WriteLog;
 import com.am.server.api.permission.annotation.Menu;
 import com.am.server.api.permission.annotation.Permission;
@@ -120,6 +121,11 @@ public class AdminUserController extends BaseController {
 
         if (adminUserService.isUsernameExistWithId(user.getUsername(), user.getId())) {
             return new ResponseEntity<>(message.get(USERNAME_EXIST), HttpStatus.BAD_REQUEST);
+        }
+
+        boolean noAvatar = (user.getImg() == null || user.getImg().isEmpty()) && StrUtil.isBlank(user.getAvatar());
+        if (noAvatar) {
+            return new ResponseEntity<>(message.get(AVATAR_BLANK), HttpStatus.BAD_REQUEST);
         }
 
         adminUserService.update(user);

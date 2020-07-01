@@ -1,6 +1,7 @@
 package com.am.server.api.user.pojo.ao;
 
 import com.am.server.common.base.enumerate.Gender;
+import com.am.server.common.constant.RegularConstant;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -29,12 +30,14 @@ public class UpdateAdminUserAo {
     @Length(max = 64, message = "user.username.long")
     private String username;
 
+    @NotBlank(message = "user.name.blank")
+    @Length(max = 64, message = "user.name.long")
     @ApiModelProperty("姓名")
     private String name;
 
     @ApiModelProperty("邮箱")
     @NotBlank(message = "user.email.blank")
-    @Email(message = "user.email.format")
+    @Email(regexp = RegularConstant.EMAIL, message = "user.email.format")
     private String email;
 
     @ApiModelProperty("性别")
