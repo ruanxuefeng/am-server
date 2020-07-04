@@ -7,11 +7,13 @@ import com.am.server.api.user.exception.UserNotExistException;
 import com.am.server.common.base.exception.NoTokenException;
 import com.am.server.common.base.pojo.vo.MessageVO;
 import com.am.server.common.base.service.Message;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import io.jsonwebtoken.JwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -67,6 +69,10 @@ public class ControllerAdvice {
      * 方法参数类型错误
      */
     private final static String PARAMETER_TYPE_ERROR = "exception.parameter.type";
+    /**
+     * json参数类型错误
+     */
+    private final static String JSON_PARAMETER_TYPE_ERROR = "exception.json.parameter.type";
 
     private static final String VALIDATE_FAIL = "login.validate.fail";
 
@@ -103,7 +109,7 @@ public class ControllerAdvice {
     }
 
     /**
-     * raw格式json数据校验
+     * 空结果集异常
      *
      * @param e 错误信息
      * @return java.util.Map<java.lang.String, java.lang.String>
@@ -144,6 +150,38 @@ public class ControllerAdvice {
         messageVO.setMessage(
                 String.format(messageVO.getMessage(),
                         methodName,
+                        parameterName,
+                        parameterType,
+                        actualParameterType,
+                        actualParameterValue)
+        );
+        return messageVO;
+    }
+
+    /**
+     * 参数转换异常
+     *
+     * @param e 错误信息
+     * @return java.util.Map<java.lang.String, java.lang.String>
+     * @author 阮雪峰
+     * @date 2019/2/13 12:45
+     */
+    @ExceptionHandler(InvalidFormatException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public MessageVO invalidFormatException(InvalidFormatException e) {
+        String parameterName = e.getPathReference();
+        String parameterType = e.getTargetType().getSimpleName();
+        String actualParameterType = Objects.requireNonNull(e.getValue()).getClass().getSimpleName();
+        String actualParameterValue = Objects.requireNonNull(e.getValue()).toString();
+        log.error("参数：{}，类型为：{}，实际类型为：{}，参数值：{}",
+                parameterName,
+                parameterType,
+                actualParameterType,
+                actualParameterValue);
+
+        MessageVO messageVO = message.get(JSON_PARAMETER_TYPE_ERROR);
+        messageVO.setMessage(
+                String.format(messageVO.getMessage(),
                         parameterName,
                         parameterType,
                         actualParameterType,
