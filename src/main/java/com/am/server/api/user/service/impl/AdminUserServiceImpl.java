@@ -178,12 +178,12 @@ public class AdminUserServiceImpl implements AdminUserService {
     public void updateRole(Long id, List<Long> roleIdList) {
         adminuserDao.findById(id)
                 .ifPresent(adminUser -> {
+                    List<RoleDo> roles = Optional.ofNullable(roleIdList)
+                            .filter(list -> !list.isEmpty())
+                            .map(list -> roleDao.findAllById(roleIdList))
+                            .orElse(Collections.emptyList());
+                    adminUser.setRoles(roles);
 
-                    if (!roleIdList.isEmpty()) {
-                        adminUser.setRoles(roleDao.findAllById(roleIdList));
-                    } else {
-                        adminUser.setRoles(Collections.emptyList());
-                    }
                     adminuserDao.save(adminUser);
                     userPermissionCacheService.remove(id);
                     simpMessagingTemplate.convertAndSend("/topic/permission/" + id, true);
