@@ -196,8 +196,8 @@ public class AdminUserController extends BaseController {
     @ApiOperation(value = "修改角色")
     @ApiImplicitParams({@ApiImplicitParam(paramType = "header", dataType = "String", name = Constant.TOKEN, value = "登录凭证", required = true)})
     @WriteLog("修改角色")
-    @PostMapping("/updateRole")
-    public ResponseEntity<MessageVO> updateRole(@Validated(Id.class) @RequestBody UpdateRoleAo updateRole) {
+    @PostMapping("/update/role")
+    public ResponseEntity<MessageVO> updateRole(@Validated @RequestBody UpdateRoleAo updateRole) {
         adminUserService.updateRole(updateRole.getId(), updateRole.getRoleIdList());
         return ResponseEntity.ok(message.get(UPDATE_SUCCESS));
     }
