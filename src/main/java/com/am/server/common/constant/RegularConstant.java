@@ -7,6 +7,8 @@ package com.am.server.common.constant;
  */
 public class RegularConstant {
 
+    public static final String CHAR_NUMBER = "^[A-Za-z0-9]+$";
+
     /**
      * 整数或者小数
      */
