@@ -11,21 +11,6 @@ spring:
       filter:
         config:
           enabled: true
-  data:
-    mongodb:
-      host: mongodb
-      database: am-pro
-      username: am-pro
-      password: pro886.
-      option:
-        heartbeat-socket-timeout: 1000
-        socket-timeout: 3000
-        connectTimeout: 3000
-        socket-keep-alive: false
-        min-heartbeat-frequency: 50
-        heartbeat-frequency: 80
-        max-connection-idle-time: 30000
-        heartbeat-connect-timeout: 1000
   jpa:
     hibernate:
       ddl-auto: none

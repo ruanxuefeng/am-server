@@ -6,7 +6,7 @@ spring:
       username: rxf
       #java -cp druid-1.1.9.jar com.alibaba.druid.filter.config.ConfigTools you_password 加密密码命令
       #生成public-key和加密后的密码
-      password: Pf4guOQsxXByFuGXn1ifr/3W0wEJuiQX2zwOOfWwE88oWBRSaODpgm7f+eGiiG4vUnrD/RgTehf5A1c0eNo9VA==
+      password: Fmoe1KUzWjAtZTc3Tw+YzOkEv69c3XKJ0pJ3SaYsWd6W1gwQAItFr2g4bwtpTNZiAfxQkDfO0LikS64Z6KiCVQ==
       connection-properties: config.decrypt=true;config.decrypt.key=${public-key}
       filters: stat,wall,slf4j
       filter:
@@ -19,19 +19,6 @@ spring:
           statement-executable-sql-log-enable: false
           statement-log-error-enabled: true
           result-set-log-enabled: false
-  data:
-    mongodb:
-      host: localhost
-      database: am-server
-      option:
-        heartbeat-socket-timeout: 1000
-        socket-timeout: 3000
-        connectTimeout: 3000
-        socket-keep-alive: false
-        min-heartbeat-frequency: 50
-        heartbeat-frequency: 80
-        max-connection-idle-time: 30000
-        heartbeat-connect-timeout: 1000
   jpa:
     hibernate:
       ddl-auto: none
@@ -47,7 +34,7 @@ spring:
         max-active: 8
 server:
   port: 9527
-public-key: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJQHm7pDoMHVOmmFBs9EPYXIQcg9fS4BkyCUmZqqgTrp65g1EnV1iipCyhAi5VLCKy53/H33TYDv9eFMTAwTWzMCAwEAAQ==
+public-key: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJV4C7Im0QAvKYjjjvGYLR+F28dqngB6gURUn3KttmGzP1P7t+fGg7XuYGf++73s+lyu29mQ0jAXELGdVrpuFjUCAwEAAQ==
 logging:
   level:
     druid:
