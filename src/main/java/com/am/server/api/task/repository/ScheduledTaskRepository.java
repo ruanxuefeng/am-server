@@ -3,6 +3,9 @@ package com.am.server.api.task.repository;
 import com.am.server.api.task.enumerate.ScheduledTaskStatus;
 import com.am.server.api.task.pojo.po.ScheduledTaskDo;
 import com.am.server.common.base.repository.BaseRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 

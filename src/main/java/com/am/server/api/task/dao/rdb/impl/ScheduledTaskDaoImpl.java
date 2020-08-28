@@ -57,4 +57,9 @@ public class ScheduledTaskDaoImpl implements ScheduledTaskDao {
     public void deleteById(Long id) {
         scheduledTaskRepository.deleteById(id);
     }
+
+    @Override
+    public void update(ScheduledTaskDo scheduledTask) {
+        scheduledTaskRepository.saveAndFlush(scheduledTask);
+    }
 }

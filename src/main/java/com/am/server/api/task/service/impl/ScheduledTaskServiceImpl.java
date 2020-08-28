@@ -145,7 +145,7 @@ public class ScheduledTaskServiceImpl implements ScheduledTaskService {
                     scheduledTask.setExecuteStatus(executeStatus)
                             .setLatestDate(executeTime)
                             .setTimeConsuming(timeConsuming);
-                    scheduledTaskDao.save(scheduledTask);
+                    scheduledTaskDao.update(scheduledTask);
                 });
     }
 

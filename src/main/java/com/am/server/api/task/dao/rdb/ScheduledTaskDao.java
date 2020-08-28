@@ -50,4 +50,10 @@ public interface ScheduledTaskDao {
      * @param id id
      */
     void deleteById(Long id);
+
+    /**
+     * 更新数据
+     * @param scheduledTask scheduledTask
+     */
+    void update(ScheduledTaskDo scheduledTask);
 }
