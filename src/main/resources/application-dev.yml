@@ -1,27 +1,15 @@
 spring:
   datasource:
-    druid:
-      #基本属性 url、user、password
-      url: jdbc:mysql://localhost:3306/am-server?characterEncoding=utf-8&serverTimezone=UTC
-      username: rxf
-      #java -cp druid-1.1.9.jar com.alibaba.druid.filter.config.ConfigTools you_password 加密密码命令
-      #生成public-key和加密后的密码
-      password: Fmoe1KUzWjAtZTc3Tw+YzOkEv69c3XKJ0pJ3SaYsWd6W1gwQAItFr2g4bwtpTNZiAfxQkDfO0LikS64Z6KiCVQ==
-      connection-properties: config.decrypt=true;config.decrypt.key=${public-key}
-      filters: stat,wall,slf4j
-      filter:
-        config:
-          enabled: true
-        slf4j:
-          enabled: true
-          statement-create-after-log-enabled: false
-          statement-log-enabled: true
-          statement-executable-sql-log-enable: false
-          statement-log-error-enabled: true
-          result-set-log-enabled: false
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    #基本属性 url、user、password
+#    url: jdbc:mysql://localhost:3306/am-server?characterEncoding=utf-8&serverTimezone=UTC
+    url: jdbc:log4jdbc:mysql://localhost:3306/am-server?serverTimezone=UTC&useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8&zeroDateTimeBehavior=convertToNull
+    username: rxf
+    password: 123456
   jpa:
     hibernate:
       ddl-auto: none
+    show-sql: true
   redis:
     host: localhost
     port: 6379
@@ -34,11 +22,12 @@ spring:
         max-active: 8
 server:
   port: 9527
-public-key: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJV4C7Im0QAvKYjjjvGYLR+F28dqngB6gURUn3KttmGzP1P7t+fGg7XuYGf++73s+lyu29mQ0jAXELGdVrpuFjUCAwEAAQ==
 logging:
   level:
-    druid:
-      sql: debug
+    org.hibernate.SQL: debug
+    org.hibernate.engine.QueryParameters: debug
+    org.hibernate.engine.query.HQLQueryPlan: debug
+    org.hibernate.type.descriptor.sql.BasicBinder: trace
 local:
   file:
     file-path: D://file/

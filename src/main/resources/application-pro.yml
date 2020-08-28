@@ -1,16 +1,9 @@
 spring:
   datasource:
-    druid:
-      #基本属性 url、user、password
-      url: jdbc:mysql://mariadb:3306/am-pro?characterEncoding=utf-8&serverTimezone=UTC
-      username: ruanxuefeng
-      #java -cp druid-1.1.9.jar com.alibaba.druid.filter.config.ConfigTools you_password 加密密码命令
-      #生成public-key和加密后的密码
-      password: GhY3T30MVxj5Lg995Wu034HMtpKBNFnkpage++cM4WpH+rDZRyinQ+Mv5Jc/sHC22VuP8qibgFX0fTVRFDc5mA==
-      connection-properties: config.decrypt=true;config.decrypt.key=${public-key}
-      filter:
-        config:
-          enabled: true
+    #基本属性 url、user、password
+    url: jdbc:mysql://mariadb:3306/am-pro?characterEncoding=utf-8&serverTimezone=UTC
+    username: ruanxuefeng
+    password: 123456
   jpa:
     hibernate:
       ddl-auto: none
@@ -29,7 +22,6 @@ spring:
         max-active: 8
 server:
   port: 9527
-public-key: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAIGZ7YV84EEM1bLwpMvlrLU0gFsbSMIIesR0+imr/dlzcCC4mIIdziHb+zUuVLd7Pewg28/yE+455rEQQVG1rEUCAwEAAQ==
 local:
   file:
     file-path: /home/file/

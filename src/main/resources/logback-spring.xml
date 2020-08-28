@@ -29,6 +29,14 @@
             </layout>
         </appender>
 
+        <!--设置为OFF,即屏蔽; 留下sqltiming作为INFO级别输出-->
+        <logger name="jdbc.connection" level="OFF"/>
+        <logger name="jdbc.resultset" level="OFF"/>
+        <logger name="jdbc.resultsettable" level="OFF"/>
+        <logger name="jdbc.audit" level="OFF"/>
+        <logger name="jdbc.sqltiming" level="INFO"/>
+        <logger name="jdbc.sqlonly" level="OFF"/>
+
         <root level="info">
             <appender-ref ref="console"/>
             <appender-ref ref="httpAppender"/>
